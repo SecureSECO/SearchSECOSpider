@@ -4,10 +4,13 @@ Utrecht University within the Software Project course.
 © Copyright Utrecht University (Department of Information and Computing Sciences)
 */
 
-#include "RunSpider.h"
+#include "Spider.h"
 
-int main()
+// TODO: Add combining of exit codes.
+int Spider::download(std::string url, std::string filePath)
 {
-	RunSpider::runSpider("test");
+	downloadSource(url, filePath);
+	downloadMetaData(url, filePath);
+	downloadAuthor(url, filePath);
 	return 0;
 }

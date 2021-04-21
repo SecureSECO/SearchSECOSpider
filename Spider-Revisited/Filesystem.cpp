@@ -4,10 +4,4 @@ Utrecht University within the Software Project course.
 © Copyright Utrecht University (Department of Information and Computing Sciences)
 */
 
-#include "RunSpider.h"
-
-int main()
-{
-	RunSpider::runSpider("test");
-	return 0;
-}
+#include "Filesystem.h"

@@ -4,10 +4,14 @@ Utrecht University within the Software Project course.
 © Copyright Utrecht University (Department of Information and Computing Sciences)
 */
 
-#include "RunSpider.h"
+#include "Git.h"
 
-int main()
+int Git::clone(std::string url, std::string filePath)
 {
-	RunSpider::runSpider("test");
 	return 0;
+}
+
+std::string Git::blame(std::string filePath)
+{
+	return std::string();
 }
