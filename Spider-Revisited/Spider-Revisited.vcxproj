@@ -19,10 +19,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Filesystem.h" />
+    <ClInclude Include="Git.h" />
+    <ClInclude Include="GitSpider.h" />
     <ClInclude Include="RunSpider.h" />
+    <ClInclude Include="Spider.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Filesystem.cpp" />
+    <ClCompile Include="Git.cpp" />
+    <ClCompile Include="GitSpider.cpp" />
     <ClCompile Include="RunSpider.cpp" />
+    <ClCompile Include="Spider.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
