@@ -10,7 +10,7 @@ google-tests:
     DEBIAN_FRONTEND: "noninteractive"
   before_script:
     - apt-get -y update && apt-get -y dist-upgrade
-    - apt-get -y install gcc g++ cmake autoconf
+    - apt-get -y install gcc g++ cmake autoconf git
   script:
     - mkdir spider_build
     - cd spider_build
