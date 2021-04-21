@@ -5,9 +5,11 @@ Utrecht University within the Software Project course.
 */
 
 #include "GitSpider.h"
+#include "Git.h"
 
 int GitSpider::downloadSource(std::string url, std::string filePath)
 {
+	Git::clone(url, filePath);
 	return 0;
 }
 

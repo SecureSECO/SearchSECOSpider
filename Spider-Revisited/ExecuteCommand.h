@@ -4,10 +4,13 @@ Utrecht University within the Software Project course.
 © Copyright Utrecht University (Department of Information and Computing Sciences)
 */
 
-#include "RunSpider.h"
-
-int main()
+#pragma once
+class ExecuteCommand
 {
-	RunSpider::runSpider("https://github.com/grpc/grpc", "Downloads");
-	return 0;
-}
+public:
+	/// <summary>
+	/// Executes a given command.
+	/// </summary>
+	static void exec(const char* cmd);
+};
+
