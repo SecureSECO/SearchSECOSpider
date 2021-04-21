@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ExecuteCommand.h" />
     <ClInclude Include="Filesystem.h" />
     <ClInclude Include="Git.h" />
     <ClInclude Include="GitSpider.h" />
@@ -26,6 +27,7 @@
     <ClInclude Include="Spider.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ExecuteCommand.cpp" />
     <ClCompile Include="Filesystem.cpp" />
     <ClCompile Include="Git.cpp" />
     <ClCompile Include="GitSpider.cpp" />

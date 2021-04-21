@@ -8,6 +8,6 @@ Utrecht University within the Software Project course.
 
 int main()
 {
-	RunSpider::runSpider("github.com/torvalds/linux", "Downloads");
+	RunSpider::runSpider("https://github.com/grpc/grpc", "Downloads");
 	return 0;
 }
