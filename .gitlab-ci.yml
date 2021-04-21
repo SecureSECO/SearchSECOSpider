@@ -1,0 +1,30 @@
+# This program has been developed by students from the bachelor Computer Science at
+# Utrecht University within the Software Project course.
+# © Copyright Utrecht University (Department of Information and Computing Sciences)
+
+image: gcc
+
+google-tests:
+  stage: test
+  before_script:
+    - apt-get -y update && apt-get -y dist-upgrade
+    - apt-get -y install cmake autoconf
+  script:
+    - mkdir spider_build
+    - cd spider_build
+    - cmake ../Spider-Tests
+    - cmake --build .
+    - ./spider_tests --gtest_output="xml:report.xml"
+
+
+linting:
+  stage: test
+  before_script:
+    - apt-get -y update && apt-get -y dist-upgrade
+    - apt-get -y install cmake autoconf
+    - apt-get -y install clang clang-tidy clang-format
+  script:
+    - cd Spider-Revisited
+    - clang-tidy *.cpp --extra-arg=-std=c++20 --
+    - clang *.cpp -fsyntax-only -std=c++20
+    
