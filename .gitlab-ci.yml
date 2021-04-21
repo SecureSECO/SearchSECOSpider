@@ -2,13 +2,15 @@
 # Utrecht University within the Software Project course.
 # © Copyright Utrecht University (Department of Information and Computing Sciences)
 
-image: gcc
+image: ubuntu:latest
 
 google-tests:
-  stage: test
+  stage: test  
+  variables:
+    DEBIAN_FRONTEND: "noninteractive"
   before_script:
     - apt-get -y update && apt-get -y dist-upgrade
-    - apt-get -y install cmake autoconf
+    - apt-get -y install gcc g++ cmake autoconf
   script:
     - mkdir spider_build
     - cd spider_build
@@ -19,9 +21,11 @@ google-tests:
 
 linting:
   stage: test
+  variables:
+    DEBIAN_FRONTEND: "noninteractive"
   before_script:
     - apt-get -y update && apt-get -y dist-upgrade
-    - apt-get -y install cmake autoconf
+    - apt-get -y install gcc g++ cmake autoconf
     - apt-get -y install clang clang-tidy clang-format
   script:
     - cd Spider-Revisited

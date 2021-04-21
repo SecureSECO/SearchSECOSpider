@@ -7,6 +7,7 @@ Utrecht University within the Software Project course.
 #include "ExecuteCommand.h"
 #include <array>
 #include <iostream>
+#include <memory>
 
 #define bufferSize 1024
 
