@@ -21,7 +21,20 @@ int Git::clone(std::string url, std::string filePath)
 	return 0;
 }
 
-std::string Git::blame(std::string filePath)
+std::string Git::blame(std::string repoPath, std::string filePath)
 {
-	return std::string();
+	// Git blame can only be used from the Git folder itself, so go there...
+	std::string command = "cd " + repoPath;
+	// ...before blaming.
+	command.append(" && git blame -p " + filePath);
+	return ExecuteCommand::execOut(command.c_str());
+}
+
+void Git::blameToFile(std::string repoPath, std::string filePath, std::string outputFile)
+{
+	// Git blame can only be used from the Git folder itself, so go there...
+	std::string command = "cd " + repoPath;
+	// ...before blaming.
+	command.append(" && git blame -p " + filePath + " >> " + outputFile);
+	return ExecuteCommand::exec(command.c_str());
 }
