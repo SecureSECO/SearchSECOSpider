@@ -18,11 +18,11 @@ private:
 	/// <summary>
 	/// Implements the abstract downloadMetaData method from the Spider class.
 	/// </summary>
-	int downloadMetaData(std::string url, std::string filePath) override;
+	int downloadMetaData(std::string url, std::string repoPath) override;
 
 	/// <summary>
 	/// Implements the abstract downloadAuthor method from the Spider class.
 	/// </summary>
-	int downloadAuthor(std::string url, std::string filePath) override;
+	int downloadAuthor(std::string url, std::string repoPath) override;
 };
 
