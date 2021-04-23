@@ -124,45 +124,43 @@ std::vector<CodeBlock> Git::parseBlame(std::string arg)
 		{
 			settingCommitData = false;
 			previousCommitHash = currentCommitHash;
-			currentCommitHash = "";
+			continue;
 		}
+
+		// Split in line into parts.
+		auto arrLine = split(lines[i], ' ');
+
+		// Store data into commit data.
+		if (settingCommitData)
+		{
+			parseCommitLine(currentCommitHash, commitdata, arrLine);
+			continue;
+		}
+
+		// Store new commit.
+		currentCommitHash = arrLine[0];
+		// Check if commit is different from previous line.
+		if (currentCommitHash != previousCommitHash)
+		{
+			// Create new commitdata if commithash can't be found.
+			if (commitdata.find(currentCommitHash) == commitdata.end())
+			{
+				settingCommitData = true;
+				commitdata[currentCommitHash] = std::make_shared<CommitData>();
+			}
+					
+			// Add new codeblock.
+			codeblocks++;
+			codedata.push_back({
+				std::stoi(arrLine[2]),
+				1,
+				commitdata[currentCommitHash],
+			});
+		}
+		// Increase length of codeblock if commit is the same as previous.
 		else
 		{
-			auto arrLine = split(lines[i], ' ');
-
-			// Store data into commit data.
-			if (settingCommitData)
-			{
-				parseCommitLine(currentCommitHash, commitdata, arrLine);
-			}
-			// Store new commit.
-			else
-			{
-				currentCommitHash = arrLine[0];
-				// Check if commit is different from previous line.
-				if (currentCommitHash != previousCommitHash)
-				{
-					// Create new commitdata if commithash can't be found.
-					if (commitdata.find(currentCommitHash) == commitdata.end())
-					{
-						settingCommitData = true;
-						commitdata[currentCommitHash] = std::make_shared<CommitData>();
-					}
-					
-					// Add new codeblock.
-					codeblocks++;
-					codedata.push_back({
-						std::stoi(arrLine[2]),
-						1,
-						commitdata[currentCommitHash],
-					});
-				}
-				// Increase length of codeblock if commit is the same.
-				else
-				{
-					codedata[codeblocks].numLines++;
-				}
-			}
+			codedata[codeblocks].numLines++;
 		}
 	}
 	return codedata;
