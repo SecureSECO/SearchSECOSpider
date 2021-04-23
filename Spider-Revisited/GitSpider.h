@@ -6,6 +6,8 @@ Utrecht University within the Software Project course.
 
 #pragma once
 #include "Spider.h"
+#include <queue>
+#include <mutex>
 
 class GitSpider : public Spider
 {
@@ -24,5 +26,15 @@ private:
 	/// Implements the abstract downloadAuthor method from the Spider class.
 	/// </summary>
 	int downloadAuthor(std::string url, std::string repoPath) override;
+
+	/// <summary>
+	/// Downloads author data for a single given file. Thread-safe.
+	/// </summary>
+	void downloadSingleAuthor(std::string repoPath, std::string filePath);
+
+	/// <summary>
+	/// Run on a single thread, takes files from the queue and blames these sequentially.
+	/// </summary>
+	void singleThread(std::string repoPath, int &blamedPaths, const int &totalPaths, std::queue<std::string> &files, std::mutex &queueLock);
 };
 
