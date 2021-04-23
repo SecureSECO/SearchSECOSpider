@@ -74,6 +74,7 @@ public:
 	/// </summary>
 	static void blameToFile(std::string repoPath, std::string filePath, std::string outputFile);
 
+	/// <summary>
 	/// blameToFile mirrors the Blame functionality of the Git system; it requires the
 	/// path to a cloned Git Repo and the paths to the files to blame, together with the paths
 	/// to write the blame data to.
@@ -81,7 +82,7 @@ public:
 	static void blameToFile(std::string repoPath, std::vector<std::string> filePath, std::vector<std::string> outputFile);
 
 	/// <summary>
-	/// Parses the contents of a blame file puts it into a CodeBlock data structure
+	/// Parses the contents of a blame file puts it into a CodeBlock data structure.
 	/// </summary>
 	static std::vector<CodeBlock> parseBlame(std::string arg);
 };
