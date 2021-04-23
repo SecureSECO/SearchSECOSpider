@@ -6,6 +6,7 @@ Utrecht University within the Software Project course.
 
 #pragma once
 #include <string>
+#include <vector>
 
 class Git
 {
@@ -26,10 +27,24 @@ public:
 	static std::string blame(std::string repoPath, std::string filePath);
 
 	/// <summary>
+	/// blame mirrors the Blame functionality of the Git system; it requires the path
+	/// to a cloned Git Repo and a path to the file to blame, and returns a string 
+	/// containing the author data per line.
+	/// </summary>
+	static std::string blame(std::string repoPath, std::vector<std::string> filePath);
+
+	/// <summary>
 	/// blameToFile mirrors the Blame functionality of the Git system; it requires the
 	/// path to a cloned Git Repo and the path to a file to blame, together with a path 
 	/// to write the blame data to.
 	/// </summary>
 	static void blameToFile(std::string repoPath, std::string filePath, std::string outputFile);
+
+	/// <summary>
+	/// blameToFile mirrors the Blame functionality of the Git system; it requires the
+	/// path to a cloned Git Repo and the path to a file to blame, together with a path 
+	/// to write the blame data to.
+	/// </summary>
+	static void blameToFile(std::string repoPath, std::vector<std::string> filePath, std::vector<std::string> outputFile);
 };
 

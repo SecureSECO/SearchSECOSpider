@@ -13,6 +13,7 @@ Utrecht University within the Software Project course.
 #include <queue>
 
 #define MAX_THREADS 16
+#define FILES_PER_CALL 16
 
 // Global locks.
 std::mutex cmdLock;
@@ -66,31 +67,41 @@ int GitSpider::downloadAuthor(std::string url, std::string repoPath)
 	return 0;
 }
 
-void GitSpider::downloadSingleAuthor(std::string repoPath, std::string filePath)
+void GitSpider::blameFiles(std::string repoPath, std::vector<std::string> filePath)
 {
 	// Find path to file inside the Repo folder.
-	std::string relPath = filePath.substr(repoPath.length() + 1);
-	std::string outPath = relPath + ".meta";
-	Git::blameToFile(repoPath, relPath, outPath);
+	std::vector<std::string> outPaths;
+	for (int i = 0; i < filePath.size(); i++)
+	{
+		filePath[i] = filePath[i].substr(repoPath.length() + 1);
+		outPaths.push_back(filePath[i] + ".meta");
+	}
+	Git::blameToFile(repoPath, filePath, outPaths);
 }
 
 void GitSpider::singleThread(std::string repoPath, int &blamedPaths, const int &totalPaths, std::queue<std::string> &files, std::mutex &queueLock)
 {
 	while (true) 
 	{
+		// Lock the queue.
 		queueLock.lock();
 		if (files.size() <= 0)
 		{
 			queueLock.unlock();
 			return;
 		}
-		std::string s = files.front();
-		files.pop();
+		std::vector<std::string> blame;
+		// Add FILES_PER_CALL files or the amount that is remaining in the queue
+		for (int i = 0; i < FILES_PER_CALL && files.size() > 0; i++)
+		{
+			blame.push_back(files.front());
+			files.pop();
+		}
 		queueLock.unlock();
-		downloadSingleAuthor(repoPath, s);
+		blameFiles(repoPath, blame);
 		cmdLock.lock();
 		// Update progress.
-		blamedPaths++;
+		blamedPaths+=blame.size();
 		std::cout << '\r' << "Blaming files: " << (100 * blamedPaths) / totalPaths << "% ("
 			<< blamedPaths << '/' << totalPaths << ')';
 		cmdLock.unlock();
