@@ -30,7 +30,7 @@ private:
 	/// <summary>
 	/// Downloads author data for a single given file. Thread-safe.
 	/// </summary>
-	void downloadSingleAuthor(std::string repoPath, std::string filePath);
+	void blameFiles(std::string repoPath, std::vector<std::string> filePath);
 
 	/// <summary>
 	/// Run on a single thread, takes files from the queue and blames these sequentially.

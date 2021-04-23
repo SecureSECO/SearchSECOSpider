@@ -1,7 +1,7 @@
 /*
 This program has been developed by students from the bachelor Computer Science at
 Utrecht University within the Software Project course.
-© Copyright Utrecht University (Department of Information and Computing Sciences)
+ï¿½ Copyright Utrecht University (Department of Information and Computing Sciences)
 */
 #include <fstream>
 #include <memory>
@@ -35,6 +35,18 @@ std::string Git::blame(std::string repoPath, std::string filePath)
 	return ExecuteCommand::execOut(command.c_str());
 }
 
+std::string Git::blame(std::string repoPath, std::vector<std::string> filePath)
+{
+	// Git blame can only be used from the Git folder itself, so go there...
+	std::string command = "cd " + repoPath;
+	// ...before blaming.
+	for (int i = 0; i < filePath.size(); i++)
+	{
+		command.append(" && git blame -p " + filePath[i]);
+	}
+	return ExecuteCommand::execOut(command.c_str());
+}
+
 void Git::blameToFile(std::string repoPath, std::string filePath, std::string outputFile)
 {
 	// Git blame can only be used from the Git folder itself, so go there...
@@ -42,6 +54,18 @@ void Git::blameToFile(std::string repoPath, std::string filePath, std::string ou
 	// ...before blaming.
 	command.append(" && git blame -p " + filePath + " >> " + outputFile);
 	ExecuteCommand::exec(command.c_str());
+}
+
+void Git::blameToFile(std::string repoPath, std::vector<std::string> filePath, std::vector<std::string> outputFile)
+{
+	// Git blame can only be used from the Git folder itself, so go there...
+	std::string command = "cd " + repoPath;
+	// ...before blaming.
+	for (int i = 0; i < filePath.size(); i++)
+	{
+		command.append(" && git blame -p " + filePath[i] + " >> " + outputFile[i]);
+	}
+	return ExecuteCommand::exec(command.c_str());
 }
 
 // Separates a string on given character.
@@ -72,59 +96,6 @@ std::string combine(std::vector<std::string> &string)
         }
     }
     return res;
-}
-
-/*
- * Based on 'GitBlameParserJS' by Matt Pardee
- * https://github.com/mattpardee/GitBlameParserJS
- */
-void Git::parseCommitLine(std::string &commit, std::map<std::string, std::shared_ptr<CommitData>> &commitData,
-                          std::vector<std::string> &line)
-{
-    if (line[0] == "author")
-    {
-        commitData[commit]->author = combine(line);
-    }
-    else if (line[0] == "author-mail")
-    {
-        commitData[commit]->authorMail = line[1];
-    }
-    else if (line[0] == "author-time")
-    {
-        commitData[commit]->authorTime = line[1];
-    }
-    else if (line[0] == "author-tz")
-    {
-        commitData[commit]->authorTz = line[1];
-    }
-    else if (line[0] == "committer")
-    {
-        commitData[commit]->committer = combine(line);
-    }
-    else if (line[0] == "committer-mail")
-    {
-        commitData[commit]->committerMail = line[1];
-    }
-    else if (line[0] == "committer-time")
-    {
-        commitData[commit]->committerTime = line[1];
-    }
-    else if (line[0] == "committer-tz")
-    {
-        commitData[commit]->committerTz = line[1];
-    }
-    else if (line[0] == "summary")
-    {
-        commitData[commit]->summary = combine(line);
-    }
-    else if (line[0] == "filename")
-    {
-        commitData[commit]->fileName = line[1];
-    }
-    else if (line[0] == "previous")
-    {
-        commitData[commit]->previousHash = combine(line);
-    }
 }
 
 /*
@@ -195,4 +166,57 @@ std::vector<CodeBlock> Git::parseBlame(std::string arg)
         }
     }
     return codedata;
+}
+
+/*
+ * Based on 'GitBlameParserJS' by Matt Pardee
+ * https://github.com/mattpardee/GitBlameParserJS
+ */
+void Git::parseCommitLine(std::string &commit, std::map<std::string, std::shared_ptr<CommitData>> &commitData,
+                          std::vector<std::string> &line)
+{
+    if (line[0] == "author")
+    {
+        commitData[commit]->author = combine(line);
+    }
+    else if (line[0] == "author-mail")
+    {
+        commitData[commit]->authorMail = line[1];
+    }
+    else if (line[0] == "author-time")
+    {
+        commitData[commit]->authorTime = line[1];
+    }
+    else if (line[0] == "author-tz")
+    {
+        commitData[commit]->authorTz = line[1];
+    }
+    else if (line[0] == "committer")
+    {
+        commitData[commit]->committer = combine(line);
+    }
+    else if (line[0] == "committer-mail")
+    {
+        commitData[commit]->committerMail = line[1];
+    }
+    else if (line[0] == "committer-time")
+    {
+        commitData[commit]->committerTime = line[1];
+    }
+    else if (line[0] == "committer-tz")
+    {
+        commitData[commit]->committerTz = line[1];
+    }
+    else if (line[0] == "summary")
+    {
+        commitData[commit]->summary = combine(line);
+    }
+    else if (line[0] == "filename")
+    {
+        commitData[commit]->fileName = line[1];
+    }
+    else if (line[0] == "previous")
+    {
+        commitData[commit]->previousHash = combine(line);
+    }
 }
