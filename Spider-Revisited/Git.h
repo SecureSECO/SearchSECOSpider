@@ -5,10 +5,45 @@ Utrecht University within the Software Project course.
 */
 
 #pragma once
+#include <memory>
+#include <map>
 #include <string>
+#include <vector>
+
+/// <summary>
+/// Contains various data related to the blame of a commit.
+/// </summary>
+struct CommitData
+{
+    std::string author;
+    std::string authorMail;
+    std::string authorTime;
+    std::string authorTz;
+    std::string committer;
+    std::string committerMail;
+    std::string committerTime;
+    std::string committerTz;
+    std::string summary;
+    std::string previousHash;
+    std::string fileName;
+};
+
+/// <summary>
+/// Stores which lines belong to which commit.
+/// </summary>
+struct CodeBlock
+{
+    int line;
+    int numLines;
+    std::shared_ptr<CommitData> commit;
+};
 
 class Git
 {
+private:
+    void static parseCommitLine(std::string &commit, std::map<std::string, std::shared_ptr<CommitData>> &commitData,
+                         std::vector<std::string> &line);
+
 public:
 	/// <summary>
 	/// clone mirrors the full Clone functionality of the Git system; it requires
@@ -31,5 +66,10 @@ public:
 	/// to write the blame data to.
 	/// </summary>
 	static void blameToFile(std::string repoPath, std::string filePath, std::string outputFile);
+
+	/// <summary>
+	/// Parses the contents of a blame file puts it into a CodeBlock data structure
+	/// </summary>
+	static std::vector<CodeBlock> parseBlame(std::string arg);
 };
 
