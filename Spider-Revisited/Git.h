@@ -28,7 +28,7 @@ public:
 
 	/// <summary>
 	/// blame mirrors the Blame functionality of the Git system; it requires the path
-	/// to a cloned Git Repo and a path to the file to blame, and returns a string 
+	/// to a cloned Git Repo and the paths to the file to blame, and returns a string 
 	/// containing the author data per line.
 	/// </summary>
 	static std::string blame(std::string repoPath, std::vector<std::string> filePath);
@@ -42,7 +42,7 @@ public:
 
 	/// <summary>
 	/// blameToFile mirrors the Blame functionality of the Git system; it requires the
-	/// path to a cloned Git Repo and the path to a file to blame, together with a path 
+	/// path to a cloned Git Repo and the paths to the files to blame, together with the paths
 	/// to write the blame data to.
 	/// </summary>
 	static void blameToFile(std::string repoPath, std::vector<std::string> filePath, std::vector<std::string> outputFile);
