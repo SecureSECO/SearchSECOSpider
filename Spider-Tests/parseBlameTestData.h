@@ -2,7 +2,20 @@
 
 #include <string>
 
-std::string parseBlameBasicTestData = R"(hash0hash0hash0  1 1 1
+std::string parseBlameCommitDataTest = R"(hash0hash0hash0 1 1 1
+author author A
+author-mail author-email
+author-time author-time
+author-tz author-TZ
+committer committer A
+committer-mail committer-email
+committer-time committer-time
+committer-tz committer-TZ
+summary This is a test summary
+filename testfile.cpp
+	  test line)";
+
+std::string parseBlameBasicTest = R"(hash0hash0hash0  1 1 1
 author A
 	test line
 hash1hash1hash1  2 2 1

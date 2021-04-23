@@ -30,7 +30,7 @@ INSTANTIATE_TEST_CASE_P(
 
 TEST(BlameParse, BasicParse)
 {
-    auto codedata = Git::parseBlame(parseBlameBasicTestData);
+    auto codedata = Git::parseBlame(parseBlameBasicTest);
     EXPECT_TRUE(codedata.size() == 10);
     // Check if authors assigned correctly.
     EXPECT_TRUE(codedata[0].commit->author == "A");
@@ -63,4 +63,21 @@ TEST(BlameParse, BasicParse)
         count += codedata[i].numLines;
     }
     EXPECT_TRUE(count == testDataLines);
+}
+
+TEST(BlameParse, CheckCommitData)
+{
+    auto codedata = Git::parseBlame(parseBlameCommitDataTest);
+    EXPECT_TRUE(codedata.size() == 1);
+    CommitData cd = *codedata[0].commit;
+    EXPECT_TRUE(cd.author == "author A");
+    EXPECT_TRUE(cd.authorMail == "author-email");
+    EXPECT_TRUE(cd.authorTime == "author-time");
+    EXPECT_TRUE(cd.authorTz == "author-TZ");
+    EXPECT_TRUE(cd.committer == "committer A");
+    EXPECT_TRUE(cd.committerMail == "committer-email");
+    EXPECT_TRUE(cd.committerTime == "committer-time");
+    EXPECT_TRUE(cd.committerTz == "committer-TZ");
+    EXPECT_TRUE(cd.fileName == "testfile.cpp");
+    EXPECT_TRUE(cd.summary == "This is a test summary");
 }
