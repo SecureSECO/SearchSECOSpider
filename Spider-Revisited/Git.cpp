@@ -30,11 +30,35 @@ std::string Git::blame(std::string repoPath, std::string filePath)
 	return ExecuteCommand::execOut(command.c_str());
 }
 
+std::string Git::blame(std::string repoPath, std::vector<std::string> filePath)
+{
+	// Git blame can only be used from the Git folder itself, so go there...
+	std::string command = "cd " + repoPath;
+	// ...before blaming.
+	for (int i = 0; i < filePath.size(); i++)
+	{
+		command.append(" && git blame -p " + filePath[i]);
+	}
+	return ExecuteCommand::execOut(command.c_str());
+}
+
 void Git::blameToFile(std::string repoPath, std::string filePath, std::string outputFile)
 {
 	// Git blame can only be used from the Git folder itself, so go there...
 	std::string command = "cd " + repoPath;
 	// ...before blaming.
 	command.append(" && git blame -p " + filePath + " >> " + outputFile);
+	return ExecuteCommand::exec(command.c_str());
+}
+
+void Git::blameToFile(std::string repoPath, std::vector<std::string> filePath, std::vector<std::string> outputFile)
+{
+	// Git blame can only be used from the Git folder itself, so go there...
+	std::string command = "cd " + repoPath;
+	// ...before blaming.
+	for (int i = 0; i < filePath.size(); i++)
+	{
+		command.append(" && git blame -p " + filePath[i] + " >> " + outputFile[i]);
+	}
 	return ExecuteCommand::exec(command.c_str());
 }
