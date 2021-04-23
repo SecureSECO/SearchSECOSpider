@@ -5,12 +5,18 @@ Utrecht University within the Software Project course.
 */
 
 #include "Spider.h"
+#include <chrono>
+#include <iostream>
 
 // TODO: Add combining of exit codes.
 int Spider::download(std::string url, std::string filePath)
 {
 	downloadSource(url, filePath);
 	downloadMetaData(url, filePath);
+	//auto start = std::chrono::high_resolution_clock::now();
 	downloadAuthor(url, filePath);
+	//auto finish = std::chrono::high_resolution_clock::now();
+	//auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(finish - start);
+	//std::cout << microseconds.count() << "us\n";
 	return 0;
 }

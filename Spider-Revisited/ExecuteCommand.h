@@ -5,6 +5,8 @@ Utrecht University within the Software Project course.
 */
 
 #pragma once
+#include <string>
+
 class ExecuteCommand
 {
 public:
@@ -12,5 +14,10 @@ public:
 	/// Executes a given command.
 	/// </summary>
 	static void exec(const char* cmd);
+
+	/// <summary>
+	/// Executes a given command and returns the data sent to stdout.
+	/// </summary>
+	static std::string execOut(const char* cmd);
 };
 
