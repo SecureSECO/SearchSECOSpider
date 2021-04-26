@@ -80,4 +80,5 @@ TEST(BlameParse, CheckCommitData)
     EXPECT_TRUE(cd.committerTz == "committer-TZ");
     EXPECT_TRUE(cd.fileName == "testfile.cpp");
     EXPECT_TRUE(cd.summary == "This is a test summary");
+    EXPECT_TRUE(cd.previousHash == "previous-hash");
 }

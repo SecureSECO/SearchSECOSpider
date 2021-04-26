@@ -12,6 +12,7 @@ committer-mail committer-email
 committer-time committer-time
 committer-tz committer-TZ
 summary This is a test summary
+previous previous-hash
 filename testfile.cpp
 	  test line)";
 
