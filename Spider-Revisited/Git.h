@@ -82,6 +82,13 @@ public:
 	static void blameToFile(std::string repoPath, std::vector<std::string> filePath, std::vector<std::string> outputFile);
 
 	/// <summary>
+	/// Parses the blame data in a file and returns the corrosponding datastructure.
+	/// </summary>
+	/// <param name="filePath"> File to parse. </param>
+	/// <returns> Datastructure created from parsed blamedata. </returns>
+	static std::vector<CodeBlock> getBlameData(std::string filePath);
+
+	/// <summary>
 	/// Parses the contents of a blame file puts it into a CodeBlock data structure.
 	/// </summary>
 	static std::vector<CodeBlock> parseBlame(std::string arg);
