@@ -51,10 +51,10 @@ std::string ExecuteCommand::execOut(const char* cmd)
 	size_t bytesRead;
 
 	// Read until there is nothing more to read, insert chunks into stream.
-
 	while ((bytesRead = fread(buffer.data(), 1, bufferSize, pipe.get())) > 0) 
 	{
-		res += buffer.data();
+		std::string str = buffer.data();
+		res += str.erase(bytesRead, str.size() - bytesRead);
 	}
 	return res;
 }
