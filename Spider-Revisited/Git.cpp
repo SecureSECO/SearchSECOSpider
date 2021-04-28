@@ -71,12 +71,12 @@ void Git::blameToFile(std::string repoPath, std::vector<std::string> filePath, s
 
 std::vector<CodeBlock> Git::getBlameData(std::string filePath)
 {
-    std::string blameData = Filesystem::readFile(filePath);
-    if (blameData != "")
-    {
-        return parseBlame(blameData);
-    }
-    return std::vector<CodeBlock>();
+	std::string blameData = Filesystem::readFile(filePath);
+	if (blameData != "")
+	{
+		return parseBlame(blameData);
+	}
+	return std::vector<CodeBlock>();
 }
 
 // Separates a string on given character.

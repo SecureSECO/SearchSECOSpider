@@ -6,6 +6,7 @@ Utrecht University within the Software Project course.
 
 #pragma once
 #include <string>
+#include "CodeBlock.h"
 
 class Spider
 {
@@ -13,9 +14,10 @@ public:
 	/// <summary>
 	/// download downloads an entire project, including project and author meta-
 	/// data. It is supplied with an URL to the project in question and the name
-	/// of the directory into which to download all the data. Returns an exit code.
+	/// of the directory into which to download all the data. Returns a data
+	/// structure containing the author data.
 	/// </summary>
-	virtual int download(std::string url, std::string filePath);
+	virtual AuthorData download(std::string url, std::string filePath);
 
 private:
 	/// <summary>
@@ -39,8 +41,8 @@ private:
 	/// the URL to the project in question and the filePath into which to down-
 	/// load the author data. Required is that this is the same path as is sup-
 	/// plied to downloadSource. downloadSource needs to be called before this 
-	/// method. Returns an exit code.
+	/// method. Returns a data structure containing the author data.
 	/// </summary>
-	virtual int downloadAuthor(std::string url, std::string filePath) = 0;
+	virtual AuthorData downloadAuthor(std::string url, std::string filePath) = 0;
 };
 

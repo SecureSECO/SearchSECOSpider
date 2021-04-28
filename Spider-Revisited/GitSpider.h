@@ -6,8 +6,10 @@ Utrecht University within the Software Project course.
 
 #pragma once
 #include "Spider.h"
-#include <queue>
+#include "Git.h"
 #include <mutex>
+#include <queue>
+#include <map>
 
 class GitSpider : public Spider
 {
@@ -25,16 +27,23 @@ private:
 	/// <summary>
 	/// Implements the abstract downloadAuthor method from the Spider class.
 	/// </summary>
-	int downloadAuthor(std::string url, std::string repoPath) override;
+	AuthorData downloadAuthor(std::string url, std::string repoPath) override;
 
 	/// <summary>
 	/// Downloads author data for a single given file. Thread-safe.
 	/// </summary>
-	void blameFiles(std::string repoPath, std::vector<std::string> filePath);
+	void blameFiles(std::string repoPath, std::vector<std::string> filePaths);
 
 	/// <summary>
 	/// Run on a single thread, takes files from the queue and blames these sequentially.
 	/// </summary>
 	void singleThread(std::string repoPath, int &blamedPaths, const int &totalPaths, std::queue<std::string> &files, std::mutex &queueLock);
+
+	/// <summary>
+	/// Parses blame data from all .meta files in a directory.
+	/// </summary>
+	/// <param name="repoPath"> Directory containing files to parse. </param>
+	/// <returns> Map with original file path (without .meta) as key and CodeBlocks as value. </returns>
+	AuthorData parseBlameData(std::string repoPath);
 };
 

@@ -9,14 +9,14 @@ Utrecht University within the Software Project course.
 #include <iostream>
 
 // TODO: Add combining of exit codes.
-int Spider::download(std::string url, std::string filePath)
+AuthorData Spider::download(std::string url, std::string filePath)
 {
 	downloadSource(url, filePath);
 	downloadMetaData(url, filePath);
 	//auto start = std::chrono::high_resolution_clock::now();
-	downloadAuthor(url, filePath);
+	AuthorData output = downloadAuthor(url, filePath);
 	//auto finish = std::chrono::high_resolution_clock::now();
 	//auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(finish - start);
 	//std::cout << microseconds.count() << "us\n";
-	return 0;
+	return output;
 }
