@@ -13,6 +13,7 @@ set(SPIDER_HEADER_LIST
    GitSpider.h
    RunSpider.h
    Spider.h
+   CodeBlock.h
 )
 
 add_library(spider
