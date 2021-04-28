@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CodeBlock.h" />
     <ClInclude Include="ExecuteCommand.h" />
     <ClInclude Include="Filesystem.h" />
     <ClInclude Include="Git.h" />

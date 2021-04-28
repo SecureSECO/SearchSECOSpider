@@ -5,38 +5,10 @@ Utrecht University within the Software Project course.
 */
 
 #pragma once
-#include <memory>
 #include <map>
 #include <string>
 #include <vector>
-
-/// <summary>
-/// Contains various data related to the blame of a commit.
-/// </summary>
-struct CommitData
-{
-    std::string author;
-    std::string authorMail;
-    std::string authorTime;
-    std::string authorTz;
-    std::string committer;
-    std::string committerMail;
-    std::string committerTime;
-    std::string committerTz;
-    std::string summary;
-    std::string previousHash;
-    std::string fileName;
-};
-
-/// <summary>
-/// Stores which lines belong to which commit.
-/// </summary>
-struct CodeBlock
-{
-    int line;
-    int numLines;
-    std::shared_ptr<CommitData> commit;
-};
+#include "CodeBlock.h"
 
 class Git
 {

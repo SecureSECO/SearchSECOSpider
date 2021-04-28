@@ -5,12 +5,9 @@ Utrecht University within the Software Project course.
 */
 
 #include "GitSpider.h"
-#include "Git.h"
 #include <iostream>
 #include <filesystem>
 #include <thread>
-#include <mutex>
-#include <queue>
 
 #define MAX_THREADS 16
 #define FILES_PER_CALL 16
@@ -64,19 +61,20 @@ int GitSpider::downloadAuthor(std::string url, std::string repoPath)
 		th.join();
 	}
 	std::cout << ", done." << std::endl;
+    std::map<std::string, std::vector<CodeBlock>> output = parseBlameData(repoPath);
 	return 0;
 }
 
-void GitSpider::blameFiles(std::string repoPath, std::vector<std::string> filePath)
+void GitSpider::blameFiles(std::string repoPath, std::vector<std::string> filePaths)
 {
 	// Find path to file inside the Repo folder.
 	std::vector<std::string> outPaths;
-	for (int i = 0; i < filePath.size(); i++)
+	for (int i = 0; i < filePaths.size(); i++)
 	{
-		filePath[i] = filePath[i].substr(repoPath.length() + 1);
-		outPaths.push_back(filePath[i] + ".meta");
+		filePaths[i] = filePaths[i].substr(repoPath.length() + 1);
+		outPaths.push_back(filePaths[i] + ".meta");
 	}
-	Git::blameToFile(repoPath, filePath, outPaths);
+	Git::blameToFile(repoPath, filePaths, outPaths);
 }
 
 void GitSpider::singleThread(std::string repoPath, int &blamedPaths, const int &totalPaths, std::queue<std::string> &files, std::mutex &queueLock)
@@ -91,7 +89,7 @@ void GitSpider::singleThread(std::string repoPath, int &blamedPaths, const int &
 			return;
 		}
 		std::vector<std::string> blame;
-		// Add FILES_PER_CALL files or the amount that is remaining in the queue
+		// Add FILES_PER_CALL files or the amount that is remaining in the queue.
 		for (int i = 0; i < FILES_PER_CALL && files.size() > 0; i++)
 		{
 			blame.push_back(files.front());
@@ -106,4 +104,35 @@ void GitSpider::singleThread(std::string repoPath, int &blamedPaths, const int &
 			<< blamedPaths << '/' << totalPaths << ')';
 		cmdLock.unlock();
 	}
+}
+
+std::map<std::string, std::vector<CodeBlock>> GitSpider::parseBlameData(std::string repoPath)
+{
+    // Thread-safe map (with lock).
+    std::map<std::string, std::vector<CodeBlock>> authorData;
+    std::mutex mapLock;
+    auto dirIter = std::filesystem::recursive_directory_iterator(repoPath);
+
+	// Variables for displaying progress.
+    int processedPaths = 0;
+    const int totalPaths = std::count_if(begin(dirIter), end(dirIter), [&repoPath](auto &path) {
+        return !((path.path()).string().rfind(repoPath + "\\.git", 0) == 0) && path.is_regular_file();
+    });
+
+    // Loop over all files.
+    for (const auto &path : std::filesystem::recursive_directory_iterator(repoPath))
+    {
+        std::string s = (path.path()).string();
+        if (!(s.rfind(repoPath + "\\.git", 0) == 0) && path.is_regular_file() && path.path().extension() == ".meta")
+        {
+            authorData.insert(std::pair<std::string, std::vector<CodeBlock>>(s, Git::getBlameData(s)));
+
+            processedPaths ++;
+            std::cout << '\r' << "Processing blame data: " << (100 * processedPaths) / totalPaths << "% (" << processedPaths << '/'
+                      << totalPaths << ')';
+        }
+    }
+
+	std::cout << ", done." << std::endl;
+    return authorData;
 }
