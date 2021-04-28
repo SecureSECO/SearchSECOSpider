@@ -14,7 +14,7 @@ AuthorData Spider::download(std::string url, std::string filePath)
 	downloadSource(url, filePath);
 	downloadMetaData(url, filePath);
 	//auto start = std::chrono::high_resolution_clock::now();
-    AuthorData output = downloadAuthor(url, filePath);
+	AuthorData output = downloadAuthor(url, filePath);
 	//auto finish = std::chrono::high_resolution_clock::now();
 	//auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(finish - start);
 	//std::cout << microseconds.count() << "us\n";

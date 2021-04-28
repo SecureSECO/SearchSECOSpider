@@ -14,17 +14,17 @@ Utrecht University within the Software Project course.
 /// </summary>
 struct CommitData
 {
-    std::string author;
-    std::string authorMail;
-    std::string authorTime;
-    std::string authorTz;
-    std::string committer;
-    std::string committerMail;
-    std::string committerTime;
-    std::string committerTz;
-    std::string summary;
-    std::string previousHash;
-    std::string fileName;
+	std::string author;
+	std::string authorMail;
+	std::string authorTime;
+	std::string authorTz;
+	std::string committer;
+	std::string committerMail;
+	std::string committerTime;
+	std::string committerTz;
+	std::string summary;
+	std::string previousHash;
+	std::string fileName;
 };
 
 /// <summary>
@@ -32,9 +32,9 @@ struct CommitData
 /// </summary>
 struct CodeBlock
 {
-    int line;
-    int numLines;
-    std::shared_ptr<CommitData> commit;
+	int line;
+	int numLines;
+	std::shared_ptr<CommitData> commit;
 };
 
 typedef std::map<std::string, std::vector<CodeBlock>> AuthorData;

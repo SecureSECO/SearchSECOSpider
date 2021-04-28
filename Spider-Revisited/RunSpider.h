@@ -11,7 +11,7 @@ Utrecht University within the Software Project course.
 class RunSpider
 {
 public:
-    /// <summary>
+	/// <summary>
 	/// runSpider is the entry point of the Spider functionality. It is supplied
 	/// a HTTPS link to the Git repository to be spidered and the name of the directory 
 	/// into which the extracted files should be downloaded. It returns an exit code.

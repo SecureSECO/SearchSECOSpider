@@ -43,6 +43,6 @@ private:
 	/// plied to downloadSource. downloadSource needs to be called before this 
 	/// method. Returns a data structure containing the author data.
 	/// </summary>
-    virtual AuthorData downloadAuthor(std::string url, std::string filePath) = 0;
+	virtual AuthorData downloadAuthor(std::string url, std::string filePath) = 0;
 };
 

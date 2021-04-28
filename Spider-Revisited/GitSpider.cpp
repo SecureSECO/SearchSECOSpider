@@ -60,7 +60,7 @@ AuthorData GitSpider::downloadAuthor(std::string url, std::string repoPath)
 		th.join();
 	}
 	std::cout << ", done." << std::endl;
-    AuthorData output = parseBlameData(repoPath);
+	AuthorData output = parseBlameData(repoPath);
 	return output;
 }
 
@@ -107,32 +107,32 @@ void GitSpider::singleThread(std::string repoPath, int &blamedPaths, const int &
 
 AuthorData GitSpider::parseBlameData(std::string repoPath)
 {
-    // Thread-safe map (with lock).
-    AuthorData authorData;
-    std::mutex mapLock;
-    auto dirIter = std::filesystem::recursive_directory_iterator(repoPath);
+	// Thread-safe map (with lock).
+	AuthorData authorData;
+	std::mutex mapLock;
+	auto dirIter = std::filesystem::recursive_directory_iterator(repoPath);
 
 	// Variables for displaying progress.
-    int processedPaths = 0;
-    const int totalPaths = std::count_if(begin(dirIter), end(dirIter), [&repoPath](auto &path) {
-        return !((path.path()).string().rfind(repoPath + "\\.git", 0) == 0) && path.is_regular_file() &&
-               path.path().extension() == ".meta";
-    });
+	int processedPaths = 0;
+	const int totalPaths = std::count_if(begin(dirIter), end(dirIter), [&repoPath](auto &path) {
+		return !((path.path()).string().rfind(repoPath + "\\.git", 0) == 0) && path.is_regular_file() &&
+			   path.path().extension() == ".meta";
+	});
 
-    // Loop over all files.
-    for (const auto &path : std::filesystem::recursive_directory_iterator(repoPath))
-    {
-        std::string s = (path.path()).string();
-        if (!(s.rfind(repoPath + "\\.git", 0) == 0) && path.is_regular_file() && path.path().extension() == ".meta")
-        {
-            authorData.insert(std::pair<std::string, std::vector<CodeBlock>>(s, Git::getBlameData(s)));
+	// Loop over all files.
+	for (const auto &path : std::filesystem::recursive_directory_iterator(repoPath))
+	{
+		std::string s = (path.path()).string();
+		if (!(s.rfind(repoPath + "\\.git", 0) == 0) && path.is_regular_file() && path.path().extension() == ".meta")
+		{
+			authorData.insert(std::pair<std::string, std::vector<CodeBlock>>(s, Git::getBlameData(s)));
 
-            processedPaths ++;
-            std::cout << '\r' << "Processing blame data: " << (100 * processedPaths) / totalPaths << "% (" << processedPaths << '/'
-                      << totalPaths << ')';
-        }
-    }
+			processedPaths ++;
+			std::cout << '\r' << "Processing blame data: " << (100 * processedPaths) / totalPaths << "% (" << processedPaths << '/'
+					  << totalPaths << ')';
+		}
+	}
 
 	std::cout << ", done." << std::endl;
-    return authorData;
+	return authorData;
 }

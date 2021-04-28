@@ -13,8 +13,8 @@ Utrecht University within the Software Project course.
 class Git
 {
 private:
-    void static parseCommitLine(std::string &commit, std::map<std::string, std::shared_ptr<CommitData>> &commitData,
-                         std::vector<std::string> &line);
+	void static parseCommitLine(std::string &commit, std::map<std::string, std::shared_ptr<CommitData>> &commitData,
+						 std::vector<std::string> &line);
 
 public:
 	/// <summary>
