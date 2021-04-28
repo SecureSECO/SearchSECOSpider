@@ -6,6 +6,8 @@ Utrecht University within the Software Project course.
 
 #pragma once
 #include <memory>
+#include <map>
+#include <vector>
 
 /// <summary>
 /// Contains various data related to the blame of a commit.
@@ -34,3 +36,5 @@ struct CodeBlock
     int numLines;
     std::shared_ptr<CommitData> commit;
 };
+
+typedef std::map<std::string, std::vector<CodeBlock>> AuthorData;

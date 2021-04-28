@@ -27,8 +27,7 @@ int GitSpider::downloadMetaData(std::string url, std::string repoPath)
 	return 0;
 }
 
-// TODO: Return code.
-int GitSpider::downloadAuthor(std::string url, std::string repoPath)
+AuthorData GitSpider::downloadAuthor(std::string url, std::string repoPath)
 {
 	std::vector<std::thread> threads;
 
@@ -61,8 +60,8 @@ int GitSpider::downloadAuthor(std::string url, std::string repoPath)
 		th.join();
 	}
 	std::cout << ", done." << std::endl;
-    std::map<std::string, std::vector<CodeBlock>> output = parseBlameData(repoPath);
-	return 0;
+    AuthorData output = parseBlameData(repoPath);
+	return output;
 }
 
 void GitSpider::blameFiles(std::string repoPath, std::vector<std::string> filePaths)
@@ -106,10 +105,10 @@ void GitSpider::singleThread(std::string repoPath, int &blamedPaths, const int &
 	}
 }
 
-std::map<std::string, std::vector<CodeBlock>> GitSpider::parseBlameData(std::string repoPath)
+AuthorData GitSpider::parseBlameData(std::string repoPath)
 {
     // Thread-safe map (with lock).
-    std::map<std::string, std::vector<CodeBlock>> authorData;
+    AuthorData authorData;
     std::mutex mapLock;
     auto dirIter = std::filesystem::recursive_directory_iterator(repoPath);
 

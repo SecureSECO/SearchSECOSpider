@@ -27,7 +27,7 @@ private:
 	/// <summary>
 	/// Implements the abstract downloadAuthor method from the Spider class.
 	/// </summary>
-	int downloadAuthor(std::string url, std::string repoPath) override;
+    AuthorData downloadAuthor(std::string url, std::string repoPath) override;
 
 	/// <summary>
 	/// Downloads author data for a single given file. Thread-safe.
@@ -44,6 +44,6 @@ private:
 	/// </summary>
 	/// <param name="repoPath"> Directory containing files to parse. </param>
 	/// <returns> Map with original file path (without .meta) as key and CodeBlocks as value. </returns>
-        std::map<std::string, std::vector<CodeBlock>> parseBlameData(std::string repoPath);
+    AuthorData parseBlameData(std::string repoPath);
 };
 
