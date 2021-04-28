@@ -14,7 +14,7 @@ class Git
 {
 private:
 	void static parseCommitLine(std::string &commit, std::map<std::string, std::shared_ptr<CommitData>> &commitData,
-						 std::vector<std::string> &line);
+								std::vector<std::string> &line);
 
 public:
 	/// <summary>

@@ -115,8 +115,8 @@ AuthorData GitSpider::parseBlameData(std::string repoPath)
 	// Variables for displaying progress.
 	int processedPaths = 0;
 	const int totalPaths = std::count_if(begin(dirIter), end(dirIter), [&repoPath](auto &path) {
-		return !((path.path()).string().rfind(repoPath + "\\.git", 0) == 0) && path.is_regular_file() &&
-			   path.path().extension() == ".meta";
+			return !((path.path()).string().rfind(repoPath + "\\.git", 0) == 0) && path.is_regular_file() &&
+					path.path().extension() == ".meta";
 	});
 
 	// Loop over all files.
@@ -128,8 +128,8 @@ AuthorData GitSpider::parseBlameData(std::string repoPath)
 			authorData.insert(std::pair<std::string, std::vector<CodeBlock>>(s, Git::getBlameData(s)));
 
 			processedPaths ++;
-			std::cout << '\r' << "Processing blame data: " << (100 * processedPaths) / totalPaths << "% (" << processedPaths << '/'
-					  << totalPaths << ')';
+						std::cout << '\r' << "Processing blame data: " << (100 * processedPaths) / totalPaths << "% ("
+									<< processedPaths << '/' << totalPaths << ')';
 		}
 	}
 
