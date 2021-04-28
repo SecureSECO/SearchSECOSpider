@@ -7,9 +7,17 @@ Utrecht University within the Software Project course.
 #include "RunSpider.h"
 #include "Spider.h"
 #include "GitSpider.h"
+#include "ExecuteCommand.h"
 
 int RunSpider::runSpider(std::string url, std::string filePath)
 {
+    // Delete the folder at filepath, so that git does not throw an error.
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+    ExecuteCommand::exec(("rmdir \"" + filePath + "\"/S /Q").c_str());
+#else
+    ExecuteCommand::exec(("rm -rf " + filePath).c_str());
+#endif
+
     // For now, default to the Git Spider.
     Spider *spider = new GitSpider();
     spider->download(url, filePath);
