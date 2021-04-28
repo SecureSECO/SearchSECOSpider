@@ -9,8 +9,9 @@ Utrecht University within the Software Project course.
 #include <sstream>
 #include <vector>
 
-#include "Git.h"
 #include "ExecuteCommand.h"
+#include "Filesystem.h"
+#include "Git.h"
 
 int Git::clone(std::string url, std::string filePath)
 {
@@ -66,6 +67,16 @@ void Git::blameToFile(std::string repoPath, std::vector<std::string> filePath, s
 		command.append(" && git blame -p " + filePath[i] + " >> " + outputFile[i]);
 	}
 	return ExecuteCommand::exec(command.c_str());
+}
+
+std::vector<CodeBlock> Git::getBlameData(std::string filePath)
+{
+    std::string blameData = Filesystem::readFile(filePath);
+    if (blameData != "")
+    {
+        return parseBlame(blameData);
+    }
+    return std::vector<CodeBlock>();
 }
 
 // Separates a string on given character.
