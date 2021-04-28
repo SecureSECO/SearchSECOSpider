@@ -116,7 +116,8 @@ std::map<std::string, std::vector<CodeBlock>> GitSpider::parseBlameData(std::str
 	// Variables for displaying progress.
     int processedPaths = 0;
     const int totalPaths = std::count_if(begin(dirIter), end(dirIter), [&repoPath](auto &path) {
-        return !((path.path()).string().rfind(repoPath + "\\.git", 0) == 0) && path.is_regular_file();
+        return !((path.path()).string().rfind(repoPath + "\\.git", 0) == 0) && path.is_regular_file() &&
+               path.path().extension() == ".meta";
     });
 
     // Loop over all files.
