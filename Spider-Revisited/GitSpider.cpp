@@ -125,11 +125,14 @@ AuthorData GitSpider::parseBlameData(std::string repoPath)
 		std::string s = (path.path()).string();
 		if (!(s.rfind(repoPath + "\\.git", 0) == 0) && path.is_regular_file() && path.path().extension() == ".meta")
 		{
-			authorData.insert(std::pair<std::string, std::vector<CodeBlock>>(s, Git::getBlameData(s)));
+			
+            auto pos = s.find_first_of("/\\");
 
-			processedPaths ++;
-						std::cout << '\r' << "Processing blame data: " << (100 * processedPaths) / totalPaths << "% ("
-									<< processedPaths << '/' << totalPaths << ')';
+			authorData.insert(std::pair<std::string, std::vector<CodeBlock>>(s.substr(pos+1), Git::getBlameData(s)));
+
+			processedPaths++;
+			std::cout << '\r' << "Processing blame data: " << (100 * processedPaths) / totalPaths << "% ("
+								<< processedPaths << '/' << totalPaths << ')';
 		}
 	}
 
