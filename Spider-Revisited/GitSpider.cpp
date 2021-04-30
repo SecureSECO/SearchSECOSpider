@@ -1,7 +1,7 @@
 /*
 This program has been developed by students from the bachelor Computer Science at
 Utrecht University within the Software Project course.
-© Copyright Utrecht University (Department of Information and Computing Sciences)
+ï¿½ Copyright Utrecht University (Department of Information and Computing Sciences)
 */
 
 #include "GitSpider.h"
@@ -125,11 +125,14 @@ AuthorData GitSpider::parseBlameData(std::string repoPath)
 		std::string s = (path.path()).string();
 		if (!(s.rfind(repoPath + "\\.git", 0) == 0) && path.is_regular_file() && path.path().extension() == ".meta")
 		{
-			
-            auto pos = s.find_first_of("/\\");
+			// Trim string.
+            std::string str = s.substr(repoPath.length() + 1);
+            str.erase(str.length() - 5, 5);
+            
+			// Add blame data.
+			authorData.insert(std::pair<std::string, std::vector<CodeBlock>>(str, Git::getBlameData(s)));
 
-			authorData.insert(std::pair<std::string, std::vector<CodeBlock>>(s.substr(pos+1), Git::getBlameData(s)));
-
+			// Report progress.
 			processedPaths++;
 			std::cout << '\r' << "Processing blame data: " << (100 * processedPaths) / totalPaths << "% ("
 								<< processedPaths << '/' << totalPaths << ')';
