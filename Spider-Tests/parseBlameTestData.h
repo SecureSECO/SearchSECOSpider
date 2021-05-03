@@ -2,6 +2,20 @@
 
 #include <string>
 
+
+std::string parseBlameInvalidData = R"(hash0hash0hash0 1 1 1
+author author A
+author-mail author-email
+author-time
+	  test line)";
+
+std::string parseBlameInvalidCommit = R"(hash0hash0hash0 1 1 1
+author author A
+author-mail author-email
+	  test line
+hash1hash1hash1 1
+	  test line)";
+
 std::string parseBlameCommitDataTest = R"(hash0hash0hash0 1 1 1
 author author A
 author-mail author-email
@@ -16,13 +30,13 @@ previous previous-hash
 filename testfile.cpp
 	  test line)";
 
-std::string parseBlameBasicTest = R"(hash0hash0hash0  1 1 1
+std::string parseBlameBasicTest = R"(hash0hash0hash0 1 1 1
 author A
 	test line
-hash1hash1hash1  2 2 1
+hash1hash1hash1 2 2 1
 author B
 	  test line
-hash2hash2hash1  3 3 1
+hash2hash2hash1 3 3 1
 author C
 hash0hash0hash0 4 4 1
 	
