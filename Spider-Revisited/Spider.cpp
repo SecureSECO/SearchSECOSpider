@@ -5,18 +5,23 @@ Utrecht University within the Software Project course.
 */
 
 #include "Spider.h"
-#include <chrono>
 #include <iostream>
+#include <map>
 
 // TODO: Add combining of exit codes.
 AuthorData Spider::download(std::string url, std::string filePath)
 {
-	downloadSource(url, filePath);
+	int result = downloadSource(url, filePath);
+	// Check if downloading source failed.
+	if (result != 0)
+	{
+		std::cout << "Failed to clone '" << url << "'.";
+		return AuthorData();
+	}
+
 	downloadMetaData(url, filePath);
-	//auto start = std::chrono::high_resolution_clock::now();
+
 	AuthorData output = downloadAuthor(url, filePath);
-	//auto finish = std::chrono::high_resolution_clock::now();
-	//auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(finish - start);
-	//std::cout << microseconds.count() << "us\n";
+
 	return output;
 }

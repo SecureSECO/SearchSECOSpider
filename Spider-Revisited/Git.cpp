@@ -3,10 +3,13 @@ This program has been developed by students from the bachelor Computer Science a
 Utrecht University within the Software Project course.
 © Copyright Utrecht University (Department of Information and Computing Sciences)
 */
+#include <chrono>
 #include <fstream>
+#include <iostream>
 #include <memory>
 #include <map>
 #include <sstream>
+#include <thread>
 #include <vector>
 
 #include "ExecuteCommand.h"
@@ -23,7 +26,30 @@ int Git::clone(std::string url, std::string filePath)
 	//command.append(" ![Cc][Oo][Nn].* ![Pp][Rr][Nn].* ![Aa][Uu][Xx].* ![Nn][Uu][Ll].* ![Cc][Oo][Mm][123456789].* ![Ll][Pp][Tt][123456789].*");
 #endif
 	command.append(" && git checkout master");
-	ExecuteCommand::exec(command.c_str());
+	
+	int tries = RECONNECT_TRIES;
+	int delay = RECONNET_DELAY;
+
+	std::string str = ExecuteCommand::execOut(command.c_str());
+	
+	// Retry loop incase cloning fails to respond.
+	while (str == "")
+	{
+		// Exit with error code if no more tries left.
+		if (tries < 0)
+		{
+			return 1;
+		}
+
+		// Try again after delay.
+		std::cout << "Download failed, trying again in " << delay << " seconds... " << tries << " tries left." << std::endl;
+		std::this_thread::sleep_for(std::chrono::seconds(delay));
+		delay *= 2;
+		tries--;
+		
+		str = ExecuteCommand::execOut(command.c_str());
+	}
+
 	return 0;
 }
 
