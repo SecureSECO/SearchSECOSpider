@@ -15,11 +15,9 @@ Utrecht University within the Software Project course.
 // Global locks.
 std::mutex cmdLock;
 
-// TODO: Return code.
 int GitSpider::downloadSource(std::string url, std::string filePath)
 {
-	Git::clone(url, filePath);
-	return 0;
+	return Git::clone(url, filePath);
 }
 
 int GitSpider::downloadMetaData(std::string url, std::string repoPath)

@@ -10,6 +10,9 @@ Utrecht University within the Software Project course.
 #include <vector>
 #include "CodeBlock.h"
 
+#define RECONNECT_TRIES 5
+#define RECONNET_DELAY 1
+
 class Git
 {
 private:
