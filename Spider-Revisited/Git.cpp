@@ -174,6 +174,12 @@ std::vector<CodeBlock> Git::parseBlame(std::string arg)
 			continue;
 		}
 
+		// Verify that data is in a valid format.
+		if (arrLine.size() < 3)
+		{
+			throw "Blame data has incorrect format.";
+		}
+
 		// Store new commit.
 		currentCommitHash = arrLine[0];
 		// Check if commit is different from previous line.
@@ -185,7 +191,7 @@ std::vector<CodeBlock> Git::parseBlame(std::string arg)
 				settingCommitData = true;
 				commitdata[currentCommitHash] = std::make_shared<CommitData>();
 			}
-					
+
 			// Add new codeblock.
 			codeblocks++;
 			codedata.push_back({
@@ -210,6 +216,13 @@ std::vector<CodeBlock> Git::parseBlame(std::string arg)
 void Git::parseCommitLine(std::string &commit, std::map<std::string, std::shared_ptr<CommitData>> &commitData,
 						  std::vector<std::string> &line)
 {
+	// Verify that data is in a valid format.
+	if (line.size() < 2)
+	{
+		throw "Blame data has incorrect format.";
+	}
+
+	// Check what type of data is found and store it.
 	if (line[0] == "author")
 	{
 		commitData[commit]->author = combine(line);

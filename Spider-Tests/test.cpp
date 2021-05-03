@@ -82,3 +82,9 @@ TEST(BlameParse, CheckCommitData)
 	EXPECT_TRUE(cd.summary == "This is a test summary");
 	EXPECT_TRUE(cd.previousHash == "previous-hash");
 }
+
+TEST(BlameParse, InvalidData)
+{
+	EXPECT_ANY_THROW(Git::parseBlame(parseBlameInvalidCommit));
+	EXPECT_ANY_THROW(Git::parseBlame(parseBlameInvalidData));
+}
