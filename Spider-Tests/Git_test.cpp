@@ -6,31 +6,29 @@ Utrecht University within the Software Project course.
 
 #include "pch.h"
 #include "parseBlameTestData.h"
-#include "../Spider-Revisited/ExecuteCommand.h"
-#include "../Spider-Revisited/Git.h"
+#include "ExecuteCommand.h"
+#include "Git.h"
 #include <string>
 #include <iostream>
+#include "ExecuteCommandMock.h"
 
-class ExecuteCommandTestP :public ::testing::TestWithParam<std::string> {
-};
-
-TEST_P(ExecuteCommandTestP, EchoTest) 
+ExecuteCommandObjMock *setExecuteCommand()
 {
-	std::string s = GetParam();
-	std::string command = "echo " + s;
-	std::string echo = ExecuteCommand::execOut(command.c_str());
-	EXPECT_STREQ(echo.c_str(), (s + '\n').c_str());
+	ExecuteCommandObjMock* execMock = new ExecuteCommandObjMock();
+	ExecuteCommand::executeCommandObj = execMock;
+	return execMock;
 }
 
-INSTANTIATE_TEST_CASE_P(
-	ExecuteCommandTest,
-	ExecuteCommandTestP,
-	::testing::Values("hello world", "testing123", "_test_", "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
-		"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+void resetExecuteCommand(ExecuteCommandObjMock* execMock)
+{
+	delete execMock;
+	ExecuteCommand::executeCommandObj = new ExecuteCommandObj;
+}
 
 TEST(BlameParse, BasicParse)
 {
-	auto codedata = Git::parseBlame(parseBlameBasicTest);
+	Git git;
+	auto codedata = git.parseBlame(parseBlameBasicTest);
 	EXPECT_TRUE(codedata.size() == 10);
 	// Check if authors assigned correctly.
 	EXPECT_TRUE(codedata[0].commit->author == "A");
@@ -67,7 +65,8 @@ TEST(BlameParse, BasicParse)
 
 TEST(BlameParse, CheckCommitData)
 {
-	auto codedata = Git::parseBlame(parseBlameCommitDataTest);
+	Git git;
+	auto codedata = git.parseBlame(parseBlameCommitDataTest);
 	EXPECT_TRUE(codedata.size() == 1);
 	CommitData cd = *codedata[0].commit;
 	EXPECT_TRUE(cd.author == "author A");
@@ -85,6 +84,45 @@ TEST(BlameParse, CheckCommitData)
 
 TEST(BlameParse, InvalidData)
 {
-	EXPECT_ANY_THROW(Git::parseBlame(parseBlameInvalidCommit));
-	EXPECT_ANY_THROW(Git::parseBlame(parseBlameInvalidData));
+	Git git;
+	EXPECT_ANY_THROW(git.parseBlame(parseBlameInvalidCommit));
+	EXPECT_ANY_THROW(git.parseBlame(parseBlameInvalidData));
 }
+
+TEST(Blame, BasicBlame)
+{
+	Git git;
+	ExecuteCommandObjMock* execMock = setExecuteCommand();
+	git.blame("linux/torvalds", std::vector<std::string> {"local/path"});
+	EXPECT_EQ(execMock->execString, "cd linux/torvalds && git blame -p local/path");
+	resetExecuteCommand(execMock);
+}
+
+TEST(Blame, MultipleBlame)
+{
+	Git git;
+	ExecuteCommandObjMock* execMock = setExecuteCommand();
+	git.blame("linux/t0rvalds", std::vector<std::string> {"local/path1", "local/path2", "local2/path3"});
+	EXPECT_EQ(execMock->execString, "cd linux/t0rvalds && git blame -p local/path1 && git blame -p local/path2 && git blame -p local2/path3");
+	resetExecuteCommand(execMock);
+}
+
+
+TEST(BlameToFile, BasicBlameToFile)
+{
+	Git git;
+	ExecuteCommandObjMock* execMock = setExecuteCommand();
+	git.blameToFile("linux/torvalds", std::vector<std::string> {"local/path"}, std::vector<std::string> {"test/output/location"});
+	EXPECT_EQ(execMock->execString, "cd linux/torvalds && git blame -p local/path >> test/output/location");
+	resetExecuteCommand(execMock);
+}
+
+TEST(BlameToFile, MultipleBlameToFile)
+{
+	Git git;
+	ExecuteCommandObjMock* execMock = setExecuteCommand();
+	git.blameToFile("linux/torvalds2", std::vector<std::string> {"local/path", "local2/path1", "p"}, std::vector<std::string> {"test/output/location1", "output/location2", "test3"});
+	EXPECT_EQ(execMock->execString, "cd linux/torvalds2 && git blame -p local/path >> test/output/location1 && git blame -p local2/path1 >> output/location2 && git blame -p p >> test3");
+	resetExecuteCommand(execMock);
+}
+

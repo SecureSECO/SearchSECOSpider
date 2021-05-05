@@ -17,7 +17,7 @@ std::mutex cmdLock;
 
 int GitSpider::downloadSource(std::string url, std::string filePath)
 {
-	return Git::clone(url, filePath);
+	return git->clone(url, filePath);
 }
 
 int GitSpider::downloadMetaData(std::string url, std::string repoPath)
@@ -71,7 +71,7 @@ void GitSpider::blameFiles(std::string repoPath, std::vector<std::string> filePa
 		filePaths[i] = filePaths[i].substr(repoPath.length() + 1);
 		outPaths.push_back(filePaths[i] + ".meta");
 	}
-	Git::blameToFile(repoPath, filePaths, outPaths);
+	git->blameToFile(repoPath, filePaths, outPaths);
 }
 
 void GitSpider::singleThread(std::string repoPath, int &blamedPaths, const int &totalPaths, std::queue<std::string> &files, std::mutex &queueLock)
@@ -128,7 +128,7 @@ AuthorData GitSpider::parseBlameData(std::string repoPath)
             str.erase(str.length() - 5, 5);
             
 			// Add blame data.
-			authorData.insert(std::pair<std::string, std::vector<CodeBlock>>(str, Git::getBlameData(s)));
+			authorData.insert(std::pair<std::string, std::vector<CodeBlock>>(str, git->getBlameData(s)));
 
 			// Report progress.
 			processedPaths++;
