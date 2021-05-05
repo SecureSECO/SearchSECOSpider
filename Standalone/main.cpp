@@ -8,6 +8,6 @@ Utrecht University within the Software Project course.
 
 int main()
 {
-	RunSpider::runSpider("https://github.com/nlohmann/json", "Downloads");
+	RunSpider::runSpider("https://github.com/zavg/linux-0.01", "Downloads");
 	return 0;
 }

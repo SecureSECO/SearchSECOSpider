@@ -214,9 +214,14 @@ std::vector<CodeBlock> Git::parseBlame(std::string arg)
 void Git::parseCommitLine(std::string &commit, std::map<std::string, std::shared_ptr<CommitData>> &commitData,
 						  std::vector<std::string> &line)
 {
+
 	// Verify that data is in a valid format.
 	if (line.size() < 2)
 	{
+		if (line[0] == "boundary")
+		{
+			return;
+		}
 		throw "Blame data has incorrect format.";
 	}
 
