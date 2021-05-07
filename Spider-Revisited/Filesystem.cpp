@@ -9,10 +9,13 @@ Utrecht University within the Software Project course.
 #include <string>
 #include "Filesystem.h"
 
-
-std::string Filesystem::readFile(std::string filePath)
+std::string FilesystemImp::readFile(std::string filePath)
 {
 	std::ifstream file(filePath);
 	std::string res((std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()));
 	return res;
+}
+
+FilesystemImp::~FilesystemImp()
+{
 }

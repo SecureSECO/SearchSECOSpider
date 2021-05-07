@@ -1,6 +1,6 @@
 # This program has been developed by students from the bachelor Computer Science at
 # Utrecht University within the Software Project course.
-# © Copyright Utrecht University (Department of Information and Computing Sciences)
+# Â© Copyright Utrecht University (Department of Information and Computing Sciences)
 
 
 # Required by FetchContent_MakeAvailable
@@ -25,7 +25,7 @@ endif()
 
 set(CMAKE_CXX_STANDARD 20)
 set(TEST_NAME spider_tests)
-add_executable(${TEST_NAME} Git_test.cpp ExecuteCommand_test.cpp)
+add_executable(${TEST_NAME} Git_test.cpp ExecuteCommand_test.cpp testMocks.cpp)
 target_link_libraries(${TEST_NAME} gtest_main spider )
 
 

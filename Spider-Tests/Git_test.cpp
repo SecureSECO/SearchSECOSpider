@@ -1,16 +1,19 @@
 /*
 This program has been developed by students from the bachelor Computer Science at
 Utrecht University within the Software Project course.
-© Copyright Utrecht University (Department of Information and Computing Sciences)
+Â© Copyright Utrecht University (Department of Information and Computing Sciences)
 */
 
 #include "pch.h"
-#include "parseBlameTestData.h"
+
 #include "ExecuteCommand.h"
-#include "Git.h"
-#include <string>
-#include <iostream>
 #include "ExecuteCommandMock.h"
+#include "Filesystem.h"
+#include "Git.h"
+#include "parseBlameTestData.h"
+#include "testMocks.h"
+#include <iostream>
+#include <string>
 
 ExecuteCommandObjMock *setExecuteCommand()
 {
@@ -87,6 +90,24 @@ TEST(BlameParse, InvalidData)
 	Git git;
 	EXPECT_ANY_THROW(git.parseBlame(parseBlameInvalidCommit));
 	EXPECT_ANY_THROW(git.parseBlame(parseBlameInvalidData));
+}
+
+TEST(GitTest, ReadExtensionsFile)
+{
+	// Setup mock.
+	FilesystemMock* mock = new FilesystemMock();
+	Node ext = Node("extentions", ".c\n.cpp\n.h\n.cs\n");
+	mock->mainNode->children["extentions"] = ext;
+	Filesystem::fs = mock;
+
+	// Run test.
+	std::string exts = Git::GetFileExtensions("extentions");
+	EXPECT_EQ(exts, "*.c *.cpp *.h *.cs");
+
+	
+	// Reset filesystem implementation.
+	Filesystem::fs = new FilesystemImp();
+	delete mock;
 }
 
 TEST(Blame, BasicBlame)

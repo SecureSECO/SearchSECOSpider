@@ -8,6 +8,7 @@ Utrecht University within the Software Project course.
 #include <iostream>
 #include <memory>
 #include <map>
+#include <memory>
 #include <sstream>
 #include <thread>
 #include <vector>
@@ -20,11 +21,14 @@ std::string Git::getCloneCommand(std::string url, std::string filePath)
 {
 	std::string command = "git clone " + url + " " + filePath + " --no-checkout --branch master";
 	command.append(" && cd " + filePath + " && git sparse-checkout set ");
-	command.append("*.c *.cpp *.h *.cs *.cc *.hpp *.java"); // TODO: read these from file;
+	command.append(GetFileExtensions("extensions"));
+
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 	// Sadly does not work, although it should.
-	//command.append(" ![Cc][Oo][Nn].* ![Pp][Rr][Nn].* ![Aa][Uu][Xx].* ![Nn][Uu][Ll].* ![Cc][Oo][Mm][123456789].* ![Ll][Pp][Tt][123456789].*");
+	// command.append(" ![Cc][Oo][Nn].* ![Pp][Rr][Nn].* ![Aa][Uu][Xx].* ![Nn][Uu][Ll].* ![Cc][Oo][Mm][123456789].*
+	// ![Ll][Pp][Tt][123456789].*");
 #endif
+
 	command.append(" && git checkout master");
 	return command;
 }
@@ -33,7 +37,7 @@ int Git::clone(std::string url, std::string filePath)
 {
 	std::string command = getCloneCommand(url, filePath);
 	int tries = RECONNECT_TRIES;
-	int delay = RECONNET_DELAY;
+	int delay = RECONNECT_DELAY;
 
 	std::string str = ExecuteCommand::execOut(command.c_str());
 	
@@ -101,6 +105,36 @@ std::vector<CodeBlock> Git::getBlameData(std::string filePath)
 		return parseBlame(blameData);
 	}
 	return std::vector<CodeBlock>();
+}
+
+std::string Git::GetFileExtensions(std::string extensionsFile)
+{
+	// Read extentions from file.
+	std::string contents = Filesystem::readFile(extensionsFile);
+	std::vector<std::string> fileExts;
+
+	// Based on https://stackoverflow.com/questions/12514510/iterate-through-lines-in-a-string-c.
+	std::istringstream iss(contents);
+	for (std::string line; std::getline(iss, line);)
+	{
+		if (line.length() > 0)
+		{
+			fileExts.push_back(line);
+		}
+	}
+
+	// Format file extentions in a string.
+	std::string output;
+	for (int i = 0; i < fileExts.size(); i++)
+	{
+		output += "*" + fileExts[i];
+		if (i != fileExts.size() - 1)
+		{
+			output += " ";
+		}
+	}
+
+	return output;
 }
 
 // Separates a string on given character.
