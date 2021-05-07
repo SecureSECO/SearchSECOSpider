@@ -7,17 +7,38 @@ Utrecht University within the Software Project course.
 #pragma once
 #include <string>
 
-class ExecuteCommand
+class ExecuteCommandObj
 {
 public:
 	/// <summary>
 	/// Executes a given command.
 	/// </summary>
-	static void exec(const char* cmd);
+	virtual void exec(const char* cmd);
 
 	/// <summary>
 	/// Executes a given command and returns the data sent to stdout.
 	/// </summary>
-	static std::string execOut(const char* cmd);
+	virtual std::string execOut(const char* cmd);
+};
+
+class ExecuteCommand
+{
+public:
+	inline static ExecuteCommandObj *executeCommandObj = new ExecuteCommandObj();
+	/// <summary>
+	/// Executes a given command.
+	/// </summary>
+	static void exec(const char *cmd)
+	{
+		executeCommandObj->exec(cmd);
+	}
+
+	/// <summary>
+	/// Executes a given command and returns the data sent to stdout.
+	/// </summary>
+	static std::string execOut(const char* cmd)
+	{
+		return executeCommandObj->execOut(cmd);
+	}
 };
 

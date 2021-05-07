@@ -11,7 +11,7 @@ Utrecht University within the Software Project course.
 
 #define bufferSize 1024
 
-void ExecuteCommand::exec(const char* cmd)
+void ExecuteCommandObj::exec(const char* cmd)
 {
 	std::array<char, bufferSize> buffer = std::array<char, bufferSize>();
 
@@ -33,7 +33,7 @@ void ExecuteCommand::exec(const char* cmd)
 	while ((bytesRead = fread(buffer.data(), 1, bufferSize, pipe.get())) > 0);
 }
 
-std::string ExecuteCommand::execOut(const char* cmd)
+std::string ExecuteCommandObj::execOut(const char *cmd)
 {
 	std::array<char, bufferSize> buffer = std::array<char, bufferSize>();
 	std::string res;
