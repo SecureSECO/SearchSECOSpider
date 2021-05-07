@@ -5,13 +5,13 @@ Utrecht University within the Software Project course.
 */
 
 #pragma once
+#include "CodeBlock.h"
 #include <map>
 #include <string>
 #include <vector>
-#include "CodeBlock.h"
 
 #define RECONNECT_TRIES 5
-#define RECONNET_DELAY 1
+#define RECONNECT_DELAY 1
 
 class Git
 {
@@ -57,5 +57,10 @@ public:
 	/// Parses the contents of a blame file puts it into a CodeBlock data structure.
 	/// </summary>
 	std::vector<CodeBlock> parseBlame(std::string arg);
-};
 
+	/// <summary>
+	/// Reads all file extensions from the 'extentions' file.
+	/// </summary>
+	/// <returns>< Returns all file extensions as string in a vector. /returns>
+	static std::string GetFileExtensions(std::string extensionsFile);
+};

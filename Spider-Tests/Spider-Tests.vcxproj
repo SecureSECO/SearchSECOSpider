@@ -36,6 +36,7 @@
     <ClInclude Include="ExecuteCommandMock.h" />
     <ClInclude Include="parseBlameTestData.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="testMocks.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ExecuteCommand_test.cpp" />
@@ -46,6 +47,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="testMocks.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spider-Revisited\Spider-Revisited.vcxproj">

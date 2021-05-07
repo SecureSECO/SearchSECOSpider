@@ -7,14 +7,31 @@ Utrecht University within the Software Project course.
 #pragma once
 #include <string>
 
-class Filesystem
+class FilesystemImp
 {
-public:
+  public:
+	  FilesystemImp() {};
 	/// <summary>
 	/// Reads all data from a file and stores it into a string.
 	/// </summary>
 	/// <param name="filePath"> Path to the file that should be read. </param>
 	/// <returns></returns>
-	static std::string readFile(std::string filePath);
+	virtual std::string readFile(std::string filePath);
+	virtual ~FilesystemImp();
 };
 
+class Filesystem
+{
+public:
+	inline static FilesystemImp *fs = new FilesystemImp();
+
+	/// <summary>
+	/// Reads all data from a file and stores it into a string.
+	/// </summary>
+	/// <param name="filePath"> Path to the file that should be read. </param>
+	/// <returns></returns>
+	static std::string readFile(std::string filePath)
+	{
+		return fs->readFile(filePath);
+	}
+};
