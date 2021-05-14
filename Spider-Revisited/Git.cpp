@@ -49,6 +49,7 @@ int Git::clone(std::string url, std::string filePath)
 		// Exit with error code if no more tries left.
 		if (tries < 0)
 		{
+			Logger::logFatal(Error::getErrorMessage(ErrorType::GitCloneError), __FILE__, __LINE__, (int)ErrorType::GitCloneError);
 			throw 1;
 		}
 
@@ -211,7 +212,7 @@ std::vector<CodeBlock> Git::parseBlame(std::string arg)
 		// Verify that data is in a valid format.
 		if (arrLine.size() < 3)
 		{
-			Logger::logFatal(Error::getErrorMessage(ErrorType::BlameIncorrectFormat), __FILE__, __LINE__);
+			Logger::logFatal(Error::getErrorMessage(ErrorType::BlameIncorrectFormat), __FILE__, __LINE__, (int)ErrorType::BlameIncorrectFormat);
 			//throw "Blame data has incorrect format.";
 		}
 
@@ -259,7 +260,7 @@ void Git::parseCommitLine(std::string &commit, std::map<std::string, std::shared
 		{
 			return;
 		}
-		Logger::logFatal(Error::getErrorMessage(ErrorType::BlameIncorrectFormat), __FILE__, __LINE__);
+		Logger::logFatal(Error::getErrorMessage(ErrorType::BlameIncorrectFormat), __FILE__, __LINE__, (int)ErrorType::BlameIncorrectFormat);
 		//throw "Blame data has incorrect format.";
 	}
 

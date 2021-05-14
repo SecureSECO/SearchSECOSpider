@@ -4,20 +4,29 @@ Utrecht University within the Software Project course.
 #include "loguru.hpp"
 #include "Logger.h"
 #include <stdlib.h> 
-void Logger::logInfo(const char* message, const char* file, unsigned int line)
+#define BASE 100
+
+void Logger::logInfo(const char* message, const char* file, unsigned int line, int code)
 {
-    loguru::log(loguru::Verbosity_INFO, file, line, message);
+    loguru::log(loguru::Verbosity_INFO, file, line, "%s", getMessage(message, code).c_str());
 }
-void Logger::logWarn(const char* message, const char* file, unsigned int line)
+void Logger::logWarn(const char* message, const char* file, unsigned int line, int code)
 {
-    loguru::log(loguru::Verbosity_WARNING, file, line, message);
+    loguru::log(loguru::Verbosity_WARNING, file, line, "%s", getMessage(message, code).c_str());
 }
-void Logger::logFatal(const char* message, const char* file, unsigned int line)
+void Logger::logFatal(const char* message, const char* file, unsigned int line, int code)
 {
-    loguru::log(loguru::Verbosity_ERROR, file, line, message);
-    exit(0);
+    loguru::log(loguru::Verbosity_ERROR, file, line, "%s", getMessage(message, code).c_str());
+    errno = 1;
 }
-void Logger::logDebug(const char* message, const char* file, unsigned int line)
+void Logger::logDebug(const char* message, const char* file, unsigned int line, int code)
 {
-    loguru::log(loguru::Verbosity_1, file, line, message);
+    loguru::log(1, file, line, "%s", getMessage(message, code).c_str());
+}
+
+std::string Logger::getMessage(const char* message, int code)
+{
+    std::string c = std::to_string(BASE + code);
+    std::string s = "E" + c + ": " + message;
+    return s;
 }
