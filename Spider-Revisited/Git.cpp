@@ -16,6 +16,8 @@ Utrecht University within the Software Project course.
 #include "ExecuteCommand.h"
 #include "Filesystem.h"
 #include "Git.h"
+#include "Logger.h"
+#include "Error.h"
 
 std::string Git::getCloneCommand(std::string url, std::string filePath)
 {
@@ -47,7 +49,7 @@ int Git::clone(std::string url, std::string filePath)
 		// Exit with error code if no more tries left.
 		if (tries < 0)
 		{
-			return 1;
+			throw 1;
 		}
 
 		// Try again after delay.
@@ -94,7 +96,7 @@ std::string Git::blame(std::string repoPath, std::vector<std::string> filePath)
 void Git::blameToFile(std::string repoPath, std::vector<std::string> filePath, std::vector<std::string> outputFile)
 {
 	std::string command = getBlameToFileCommand(repoPath, filePath, outputFile);
-	return ExecuteCommand::exec(command.c_str());
+	ExecuteCommand::exec(command.c_str());
 }
 
 std::vector<CodeBlock> Git::getBlameData(std::string filePath)
@@ -209,7 +211,8 @@ std::vector<CodeBlock> Git::parseBlame(std::string arg)
 		// Verify that data is in a valid format.
 		if (arrLine.size() < 3)
 		{
-			throw "Blame data has incorrect format.";
+			Logger::logFatal(Error::getErrorMessage(ErrorType::BlameIncorrectFormat), __FILE__, __LINE__);
+			//throw "Blame data has incorrect format.";
 		}
 
 		// Store new commit.
@@ -256,7 +259,8 @@ void Git::parseCommitLine(std::string &commit, std::map<std::string, std::shared
 		{
 			return;
 		}
-		throw "Blame data has incorrect format.";
+		Logger::logFatal(Error::getErrorMessage(ErrorType::BlameIncorrectFormat), __FILE__, __LINE__);
+		//throw "Blame data has incorrect format.";
 	}
 
 	// Check what type of data is found and store it.

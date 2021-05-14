@@ -10,7 +10,7 @@ Utrecht University within the Software Project course.
 #include "GitSpider.h"
 #include "ExecuteCommand.h"
 
-AuthorData RunSpider::runSpider(std::string url, std::string filePath)
+AuthorData RunSpider::runSpider(std::string url, std::string filePath, int &code)
 {
 	// Delete the folder at filepath, so that git does not throw an error.
 	std::cout << "Deleting old files..." << std::endl;
@@ -22,7 +22,15 @@ AuthorData RunSpider::runSpider(std::string url, std::string filePath)
 
 	// For now, default to the Git Spider.
 	Spider *spider = new GitSpider();
-	AuthorData output = spider->download(url, filePath);
+	AuthorData output;
+	try
+	{
+		output = spider->download(url, filePath);
+	}
+	catch (int e)
+	{
+		code = e;
+	}
 	delete spider;
 	return output;
 }

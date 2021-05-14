@@ -11,17 +11,9 @@ Utrecht University within the Software Project course.
 // TODO: Add combining of exit codes.
 AuthorData Spider::download(std::string url, std::string filePath)
 {
-	int result = downloadSource(url, filePath);
-	// Check if downloading source failed.
-	if (result != 0)
-	{
-		std::cout << "Failed to clone '" << url << "'.";
-		return AuthorData();
-	}
-
-	downloadMetaData(url, filePath);
-
+	downloadSource(url, filePath);
 	AuthorData output = downloadAuthor(url, filePath);
+
 
 	return output;
 }

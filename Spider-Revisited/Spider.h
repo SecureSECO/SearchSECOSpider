@@ -28,15 +28,6 @@ private:
 	virtual int downloadSource(std::string url, std::string filePath) = 0;
 
 	/// <summary>
-	/// Downloads the project metadata. It is supplied with an
-	/// URL to the project in question and the filePath into which to download
-	/// the metadata. Required is that this is the same path as is supplied to 
-	/// downloadSource. downloadSource needs to be called before this method.
-	/// Returns an exit code.
-	/// </summary>
-	virtual int downloadMetaData(std::string url, std::string filePath) = 0;
-
-	/// <summary>
 	/// downloadAuthor downloads the author data per file. It is supplied with
 	/// the URL to the project in question and the filePath into which to down-
 	/// load the author data. Required is that this is the same path as is sup-

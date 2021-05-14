@@ -20,11 +20,6 @@ int GitSpider::downloadSource(std::string url, std::string filePath)
 	return git->clone(url, filePath);
 }
 
-int GitSpider::downloadMetaData(std::string url, std::string repoPath)
-{
-	return 0;
-}
-
 AuthorData GitSpider::downloadAuthor(std::string url, std::string repoPath)
 {
 	std::vector<std::thread> threads;
