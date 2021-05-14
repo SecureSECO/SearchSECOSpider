@@ -4,7 +4,7 @@ Utrecht University within the Software Project course.
 #include "loguru.hpp"
 #include "Logger.h"
 #include <stdlib.h> 
-#define BASE 100
+#define BASE 200
 
 void Logger::logInfo(const char* message, const char* file, unsigned int line, int code)
 {
@@ -17,7 +17,6 @@ void Logger::logWarn(const char* message, const char* file, unsigned int line, i
 void Logger::logFatal(const char* message, const char* file, unsigned int line, int code)
 {
     loguru::log(loguru::Verbosity_ERROR, file, line, "%s", getMessage(message, code).c_str());
-    errno = 1;
 }
 void Logger::logDebug(const char* message, const char* file, unsigned int line, int code)
 {

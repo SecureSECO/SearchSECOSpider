@@ -27,7 +27,6 @@ void ExecuteCommandObj::exec(const char* cmd)
 	{
 		Logger::logFatal(Error::getErrorMessage(ErrorType::PipeOpenFailed), __FILE__, __LINE__, (int) ErrorType::PipeOpenFailed);
 		throw 1;
-		//throw std::runtime_error("popen() failed!");
 	}
 	// Amount of data read, is less then bufferSize if output ends.
 	size_t bytesRead;
