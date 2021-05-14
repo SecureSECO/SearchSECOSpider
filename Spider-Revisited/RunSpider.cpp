@@ -5,10 +5,11 @@ Utrecht University within the Software Project course.
 */
 
 #include <iostream>
+#include <regex>
+#include "ExecuteCommand.h"
+#include "GitSpider.h"
 #include "RunSpider.h"
 #include "Spider.h"
-#include "GitSpider.h"
-#include "ExecuteCommand.h"
 
 AuthorData RunSpider::runSpider(std::string url, std::string filePath)
 {
@@ -19,10 +20,26 @@ AuthorData RunSpider::runSpider(std::string url, std::string filePath)
 #else
 	ExecuteCommand::exec(("rm -rf " + filePath).c_str());
 #endif
+	
+	// Check which spider to use for link.
+	Spider *spider = getSpider(url);
+	if (spider == nullptr)
+	{
+		return AuthorData();
+	}
 
-	// For now, default to the Git Spider.
-	Spider *spider = new GitSpider();
 	AuthorData output = spider->download(url, filePath);
 	delete spider;
 	return output;
+}
+
+Spider* RunSpider::getSpider(std::string url)
+{
+	// Check if link belongs to github or gitlab.
+	if (std::regex_match(url, std::regex("https://(www\\.)?(github|gitlab)\\.com([^ ]*)")))
+	{
+		return new GitSpider();
+	}
+
+	return nullptr;
 }
