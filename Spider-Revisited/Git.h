@@ -10,7 +10,7 @@ Utrecht University within the Software Project course.
 #include <string>
 #include <vector>
 
-#define RECONNECT_TRIES 5
+#define RECONNECT_TRIES 2
 #define RECONNECT_DELAY 1
 
 class Git
