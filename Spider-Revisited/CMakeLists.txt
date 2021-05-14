@@ -16,6 +16,7 @@ set(SPIDER_HEADER_LIST
    CodeBlock.h
    Error.h
    Logger.h
+   loguru/loguru.hpp
 )
 
 add_library(spider
@@ -27,5 +28,6 @@ add_library(spider
    Spider.cpp
    Error.cpp
    Logger.cpp
+   loguru/loguru.cpp
   ${SPIDER_HEADER_LIST}
 )

@@ -74,7 +74,7 @@
     <ClCompile Include="Error.cpp">
       <Filter>Source Files\ErrorHandling</Filter>
     </ClCompile>
-    <ClCompile Include="..\loguru-master\loguru.cpp">
+    <ClCompile Include="loguru\loguru.cpp">
       <Filter>Source Files\ErrorHandling</Filter>
     </ClCompile>
   </ItemGroup>

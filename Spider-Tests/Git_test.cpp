@@ -15,7 +15,7 @@ Utrecht University within the Software Project course.
 #include <iostream>
 #include <string>
 
-ExecuteCommandObjMock *setExecuteCommand()
+ExecuteCommandObjMock* setExecuteCommand()
 {
 	ExecuteCommandObjMock* execMock = new ExecuteCommandObjMock();
 	ExecuteCommand::executeCommandObj = execMock;

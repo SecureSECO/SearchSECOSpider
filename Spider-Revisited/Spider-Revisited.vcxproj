@@ -30,13 +30,13 @@
     <ClInclude Include="Spider.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\loguru-master\loguru.cpp" />
     <ClCompile Include="Error.cpp" />
     <ClCompile Include="ExecuteCommand.cpp" />
     <ClCompile Include="Filesystem.cpp" />
     <ClCompile Include="Git.cpp" />
     <ClCompile Include="GitSpider.cpp" />
     <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="loguru\loguru.cpp" />
     <ClCompile Include="RunSpider.cpp" />
     <ClCompile Include="Spider.cpp" />
   </ItemGroup>
