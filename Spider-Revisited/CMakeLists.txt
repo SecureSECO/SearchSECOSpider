@@ -14,6 +14,8 @@ set(SPIDER_HEADER_LIST
    RunSpider.h
    Spider.h
    CodeBlock.h
+   Error.h
+   Logger.h
 )
 
 add_library(spider
@@ -23,5 +25,7 @@ add_library(spider
    GitSpider.cpp
    RunSpider.cpp
    Spider.cpp
+   Error.cpp
+   Logger.cpp
   ${SPIDER_HEADER_LIST}
 )
