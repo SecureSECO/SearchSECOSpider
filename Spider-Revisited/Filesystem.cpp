@@ -11,7 +11,9 @@ Utrecht University within the Software Project course.
 
 std::string FilesystemImp::readFile(std::string filePath)
 {
-	std::ifstream file(filePath);
+	std::ifstream file;
+	file.exceptions(std::ifstream::badbit);
+	file.open(filePath);
 	std::string res((std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()));
 	return res;
 }

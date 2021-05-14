@@ -112,8 +112,16 @@ std::vector<CodeBlock> Git::getBlameData(std::string filePath)
 
 std::string Git::GetFileExtensions(std::string extensionsFile)
 {
-	// Read extentions from file.
-	std::string contents = Filesystem::readFile(extensionsFile);
+	// Read extentions from file. Error catching based on https://stackoverflow.com/questions/9670396/exception-handling-and-opening-a-file.
+	std::string contents;
+	try
+	{
+		contents = Filesystem::readFile(extensionsFile);
+	}
+	catch (const std::ifstream::failure& e)
+	{
+		Logger::logWarn(Error::getErrorMessage(ErrorType::FileExtensionsNotFound), __FILE__, __LINE__, (int)ErrorType::FileExtensionsNotFound);
+	}
 	std::vector<std::string> fileExts;
 
 	// Based on https://stackoverflow.com/questions/12514510/iterate-through-lines-in-a-string-c.
