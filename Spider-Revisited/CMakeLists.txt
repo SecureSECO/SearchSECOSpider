@@ -31,3 +31,7 @@ add_library(spider
    loguru/loguru.cpp
   ${SPIDER_HEADER_LIST}
 )
+
+if(CMAKE_DL_LIBS)
+    target_link_libraries(${Spider-Revisited} ${CMAKE_DL_LIBS})
+endif()
