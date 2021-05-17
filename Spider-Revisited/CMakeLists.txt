@@ -33,5 +33,5 @@ add_library(spider
 )
 
 if(CMAKE_DL_LIBS)
-    target_link_libraries(spider CMAKE_DL_LIBS)
+    target_link_libraries(spider ${CMAKE_DL_LIBS})
 endif()
