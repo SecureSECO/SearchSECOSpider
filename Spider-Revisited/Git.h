@@ -21,7 +21,7 @@ private:
 
 	std::string getBlameCommand(std::string repoPath, std::vector<std::string> filePath);
 	std::string getBlameToFileCommand(std::string repoPath, std::vector<std::string> filePath, std::vector<std::string> outputFile);
-	std::string getCloneCommand(std::string url, std::string filePath);
+	std::string getCloneCommand(std::string url, std::string filePath, std::string branch);
 
 public:
 	/// <summary>
@@ -30,7 +30,7 @@ public:
 	/// where the repository should be cloned into and returns an integer to indicate
 	/// the result of the clone operation (success or specific failure).
 	/// </summary>
-	int clone(std::string url, std::string filePath);
+	int clone(std::string url, std::string filePath, std::string branch);
 
 	/// <summary>
 	/// Mirrors the Blame functionality of the Git system; it requires the path

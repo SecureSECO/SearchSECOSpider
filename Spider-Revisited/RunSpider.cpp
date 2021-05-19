@@ -11,7 +11,7 @@ Utrecht University within the Software Project course.
 #include "RunSpider.h"
 #include "Spider.h"
 
-AuthorData RunSpider::runSpider(std::string url, std::string filePath)
+AuthorData RunSpider::runSpider(std::string url, std::string filePath, std::string branch)
 {
 	// Delete the folder at filepath, so that git does not throw an error.
 	std::cout << "Deleting old files..." << std::endl;
@@ -28,7 +28,8 @@ AuthorData RunSpider::runSpider(std::string url, std::string filePath)
 		return AuthorData();
 	}
 
-	AuthorData output = spider->download(url, filePath);
+	AuthorData output = spider->download(url, filePath, branch);
+	
 	delete spider;
 	return output;
 }

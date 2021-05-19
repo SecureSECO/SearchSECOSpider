@@ -15,9 +15,9 @@ Utrecht University within the Software Project course.
 // Global locks.
 std::mutex cmdLock;
 
-int GitSpider::downloadSource(std::string url, std::string filePath)
+int GitSpider::downloadSource(std::string url, std::string filePath, std::string branch)
 {
-	return git->clone(url, filePath);
+	return git->clone(url, filePath, branch);
 }
 
 int GitSpider::downloadMetaData(std::string url, std::string repoPath)
@@ -124,9 +124,9 @@ AuthorData GitSpider::parseBlameData(std::string repoPath)
 		if (!(s.rfind(repoPath + "\\.git", 0) == 0) && path.is_regular_file() && path.path().extension() == ".meta")
 		{
 			// Trim string.
-            std::string str = s.substr(repoPath.length() + 1);
-            str.erase(str.length() - 5, 5);
-            
+			std::string str = s.substr(repoPath.length() + 1);
+			str.erase(str.length() - 5, 5);
+			
 			// Add blame data.
 			authorData.insert(std::pair<std::string, std::vector<CodeBlock>>(str, git->getBlameData(s)));
 
