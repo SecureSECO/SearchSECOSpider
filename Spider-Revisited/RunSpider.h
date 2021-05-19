@@ -1,7 +1,7 @@
 /*
 This program has been developed by students from the bachelor Computer Science at
 Utrecht University within the Software Project course.
-© Copyright Utrecht University (Department of Information and Computing Sciences)
+ï¿½ Copyright Utrecht University (Department of Information and Computing Sciences)
 */
 
 #pragma once
@@ -17,7 +17,7 @@ public:
 	/// a HTTPS link to the Git repository to be spidered and the name of the directory 
 	/// into which the extracted files should be downloaded. It returns an exit code.
 	/// </summary>
-	static AuthorData runSpider(std::string url, std::string filePath);
+	static AuthorData runSpider(std::string url, std::string filePath, std::string branch = "master");
 
 	/// <summary>
 	/// Checks if an URL is valid and returns the appropriate spider subclass to download the url.
