@@ -25,3 +25,18 @@ AuthorData Spider::download(std::string url, std::string filePath, std::string b
 
 	return output;
 }
+
+void Spider::setThreads(int threads)
+{
+	if (threads < 1)
+	{
+		throw "Can't set amount of threads lower than 1.";
+	}
+
+	threadsCount = threads;
+}
+
+int Spider::getThreads()
+{
+	return threadsCount;
+}

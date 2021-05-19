@@ -9,7 +9,6 @@ Utrecht University within the Software Project course.
 #include <filesystem>
 #include <thread>
 
-#define MAX_THREADS 16
 #define FILES_PER_CALL 16
 
 // Global locks.
@@ -49,7 +48,7 @@ AuthorData GitSpider::downloadAuthor(std::string url, std::string repoPath)
 	}
 
 	// Construct threads to process the queue.
-	for (int i = 0; i < MAX_THREADS; i++) {
+	for (int i = 0; i < threadsCount; i++) {
 		threads.push_back(std::thread(&GitSpider::singleThread, this, repoPath, std::ref(blamedPaths), std::ref(totalPaths), std::ref(files), std::ref(queueLock)));
 	}
 

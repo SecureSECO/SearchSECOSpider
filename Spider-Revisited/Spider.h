@@ -19,6 +19,22 @@ public:
 	/// </summary>
 	virtual AuthorData download(std::string url, std::string filePath, std::string branch);
 
+	/// <summary>
+	/// Sets the amount of threads the Spider can use.
+	/// </summary>
+	/// <param name="threads"> Amount of threads. </param>
+	virtual void setThreads(int threads);
+	
+	/// <summary>
+	/// Returns the amount of threads the Spider can use.
+	/// </summary>
+	/// <returns> Amount of threads. </returns>
+	virtual int getThreads();
+
+protected:
+	// Amount of threads the spider can use.
+	int threadsCount;
+
 private:
 	/// <summary>
 	/// Downloads the source files of the supplied project. It
