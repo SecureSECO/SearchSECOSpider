@@ -19,26 +19,34 @@ private:
 	/// <summary>
 	/// Implements the abstract downloadSource method from the Spider class.
 	/// </summary>
+	/// <param name="url"> Url to repository to download. </param>
+	/// <param name="filePath"> Local path where to store the repository. </param>
+	/// <param name="branch"> Branch of the source to download. </param>
+	/// <returns></returns>
 	int downloadSource(std::string url, std::string filePath, std::string branch) override;
-
-	/// <summary>
-	/// Implements the abstract downloadMetaData method from the Spider class.
-	/// </summary>
-	int downloadMetaData(std::string url, std::string repoPath) override;
 
 	/// <summary>
 	/// Implements the abstract downloadAuthor method from the Spider class.
 	/// </summary>
-	AuthorData downloadAuthor(std::string url, std::string repoPath) override;
+	/// <param name="filePath"> Local location of the repository. </param>
+	/// <returns> AuthorData of the files in the repository. </returns>
+	AuthorData downloadAuthor(std::string repoPath) override;
 
 	/// <summary>
-	/// Downloads author data for a single given file. Thread-safe.
+	/// Downloads author data for every file in vector file. Thread-safe.
 	/// </summary>
+	/// <param name="repoPath"> Path to local repository. </param>
+	/// <param name="filePaths"> Files to get blamedata from. </param>
 	void blameFiles(std::string repoPath, std::vector<std::string> filePaths);
 
 	/// <summary>
 	/// Run on a single thread, takes files from the queue and blames these sequentially.
 	/// </summary>
+	/// <param name="repoPath"> Path to local repository. </param>
+	/// <param name="blamedPaths"> Amount of paths blamed. </param>
+	/// <param name="totalPaths"> Total paths that need to be blamed. </param>
+	/// <param name="files"> Queue containing all files to be blamed. </param>
+	/// <param name="queueLock"> Lock to prevent racing conditions. </param>
 	void singleThread(std::string repoPath, int &blamedPaths, const int &totalPaths, std::queue<std::string> &files, std::mutex &queueLock);
 
 	/// <summary>

@@ -85,12 +85,6 @@ std::string Git::getBlameToFileCommand(std::string repoPath, std::vector<std::st
 	return command;
 }
 
-std::string Git::blame(std::string repoPath, std::vector<std::string> filePath)
-{
-	std::string command = getBlameCommand(repoPath, filePath);
-	return ExecuteCommand::execOut(command.c_str());
-}
-
 void Git::blameToFile(std::string repoPath, std::vector<std::string> filePath, std::vector<std::string> outputFile)
 {
 	std::string command = getBlameToFileCommand(repoPath, filePath, outputFile);
@@ -109,7 +103,7 @@ std::vector<CodeBlock> Git::getBlameData(std::string filePath)
 
 std::string Git::GetFileExtensions(std::string extensionsFile)
 {
-	// Read extentions from file.
+	// Read extensions from file.
 	std::string contents = Filesystem::readFile(extensionsFile);
 	std::vector<std::string> fileExts;
 
@@ -123,7 +117,7 @@ std::string Git::GetFileExtensions(std::string extensionsFile)
 		}
 	}
 
-	// Format file extentions in a string.
+	// Format file extensions in a string.
 	std::string output;
 	for (int i = 0; i < fileExts.size(); i++)
 	{
@@ -171,10 +165,10 @@ std::string combine(std::vector<std::string> &string)
  * Based on 'GitBlameParserJS' by Matt Pardee.
  * https://github.com/mattpardee/GitBlameParserJS
  */
-std::vector<CodeBlock> Git::parseBlame(std::string arg)
+std::vector<CodeBlock> Git::parseBlame(std::string blameData)
 {
 	// Split file into lines.
-	std::vector<std::string> lines = split(arg, '\n');
+	std::vector<std::string> lines = split(blameData, '\n');
 
 	// Set up data.
 	std::map<std::string, std::shared_ptr<CommitData>> commitdata;

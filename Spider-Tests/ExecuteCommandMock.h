@@ -13,6 +13,7 @@ public:
 	/// <summary>
 	/// Mock of the exec function, saves the input as a string so it can later be retrieved.
 	/// </summary>
+	/// <param name="cmd"> Commandline command to run. </param>
 	void exec(const char* cmd)
 	{
 		execString = cmd;
@@ -20,6 +21,8 @@ public:
 	/// <summary>
 	/// Mock of the execOut function, saves the input as a string so it can later be retrieved.
 	/// </summary>
+	/// <param name="cmd"> Commandline command to run. </param>
+	/// <returns> Response from console. </returns>
 	std::string execOut(const char* cmd)
 	{
 		execString = cmd;

@@ -97,12 +97,12 @@ TEST(GitTest, ReadExtensionsFile)
 {
 	// Setup mock.
 	FilesystemMock* mock = new FilesystemMock();
-	Node ext = Node("extentions", ".c\n.cpp\n.h\n.cs\n");
-	mock->mainNode->children["extentions"] = ext;
+	Node ext = Node("extensions", ".c\n.cpp\n.h\n.cs\n");
+	mock->mainNode->children["extensions"] = ext;
 	Filesystem::fs = mock;
 
 	// Run test.
-	std::string exts = Git::GetFileExtensions("extentions");
+	std::string exts = Git::GetFileExtensions("extensions");
 	EXPECT_EQ(exts, "*.c *.cpp *.h *.cs");
 
 	
@@ -110,25 +110,6 @@ TEST(GitTest, ReadExtensionsFile)
 	Filesystem::fs = new FilesystemImp();
 	delete mock;
 }
-
-TEST(Blame, BasicBlame)
-{
-	Git git;
-	ExecuteCommandObjMock* execMock = setExecuteCommand();
-	git.blame("linux/torvalds", std::vector<std::string> {"local/path"});
-	EXPECT_EQ(execMock->execString, "cd \"linux/torvalds\" && git blame -p \"local/path\"");
-	resetExecuteCommand(execMock);
-}
-
-TEST(Blame, MultipleBlame)
-{
-	Git git;
-	ExecuteCommandObjMock* execMock = setExecuteCommand();
-	git.blame("linux/t0rvalds", std::vector<std::string> {"local/path1", "local/path2", "local2/path3"});
-	EXPECT_EQ(execMock->execString, "cd \"linux/t0rvalds\" && git blame -p \"local/path1\" && git blame -p \"local/path2\" && git blame -p \"local2/path3\"");
-	resetExecuteCommand(execMock);
-}
-
 
 TEST(BlameToFile, BasicBlameToFile)
 {
@@ -148,16 +129,37 @@ TEST(BlameToFile, MultipleBlameToFile)
 	resetExecuteCommand(execMock);
 }
 
-TEST(GetSpider, LinkValidation)
+
+class LinkValidationParameterizedTestFixture : public ::testing::TestWithParam<std::tuple<std::string, bool>>
 {
-	EXPECT_EQ(nullptr, RunSpider::getSpider("nonsensehttps://www.github.com"));
-	EXPECT_EQ(nullptr, RunSpider::getSpider("github.com/repository"));
-	EXPECT_EQ(nullptr, RunSpider::getSpider("https://labhub.com/repository"));
-	EXPECT_EQ(nullptr, RunSpider::getSpider("https://gitlab,com/repository"));
-	auto ptr = RunSpider::getSpider("https://github.com/repository");
-	EXPECT_NE(nullptr, ptr);
-	delete ptr;
-	ptr = RunSpider::getSpider("https://www.gitlab.com/repository/sub/sub");
-	EXPECT_NE(nullptr, ptr);
-	delete ptr;
+};
+
+INSTANTIATE_TEST_CASE_P(GetSpider, LinkValidationParameterizedTestFixture, 
+	::testing::Values(
+			std::make_tuple("nonsensehttps://www.github.com", false), 
+			std::make_tuple("github.com/repository", false), 
+			std::make_tuple("https://labhub.com/repository", false), 
+			std::make_tuple("https://gitlab,com/repository", false),
+			std::make_tuple("https://github.com/repository", true),
+			std::make_tuple("https://www.gitlab.com/repository/sub/sub", true)
+		)
+);
+
+TEST_P(LinkValidationParameterizedTestFixture, LinkValidity)
+{
+	auto data = GetParam();
+	std::string link = std::get<0>(data);
+
+	// Invalid links.
+	if (!std::get<1>(data))
+	{
+		EXPECT_EQ(nullptr, RunSpider::getSpider(link));
+	}
+	// Valid links.
+	else
+	{
+		auto ptr = RunSpider::getSpider(link);
+		EXPECT_NE(nullptr, ptr);
+		delete ptr;
+	}
 }
