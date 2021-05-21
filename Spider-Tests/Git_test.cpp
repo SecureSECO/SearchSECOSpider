@@ -147,3 +147,10 @@ TEST(BlameToFile, MultipleBlameToFile)
 	resetExecuteCommand(execMock);
 }
 
+TEST(CloneProject, ThrowError)
+{
+	Git git;
+	ExecuteCommandObjMock* execMock = setExecuteCommand();
+	EXPECT_THROW(git.clone("invalidURL", "invalidFilePath"), int);
+	resetExecuteCommand(execMock);
+}
