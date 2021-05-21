@@ -17,6 +17,10 @@ public:
 	/// of the directory into which to download all the data. Returns a data
 	/// structure containing the author data.
 	/// </summary>
+	/// <param name="url"> Source to download. </param>
+	/// <param name="filePath"> Where to store the source locally. </param>
+	/// <param name="branch"> Which branch of the source to download. </param>
+	/// <returns></returns>
 	virtual AuthorData download(std::string url, std::string filePath, std::string branch);
 
 	/// <summary>
@@ -37,28 +41,23 @@ protected:
 
 private:
 	/// <summary>
-	/// Downloads the source files of the supplied project. It
-	/// needs an URL to the project and the filePath into which to download the
-	/// source files. Returns an exit code.
+	/// Downloads a repository of a given source and stores it
+	/// locally at the location defined by filePath.
 	/// </summary>
+	/// <param name="url"> Url to source to download. </param>
+	/// <param name="filePath"> Local path where to store the source.</param>
+	/// <param name="branch"> Branch of the source to download. </param>
+	/// <returns> Error code. </returns>
 	virtual int downloadSource(std::string url, std::string filePath, std::string branch) = 0;
 
 	/// <summary>
-	/// Downloads the project metadata. It is supplied with an
-	/// URL to the project in question and the filePath into which to download
-	/// the metadata. Required is that this is the same path as is supplied to 
-	/// downloadSource. downloadSource needs to be called before this method.
-	/// Returns an exit code.
-	/// </summary>
-	virtual int downloadMetaData(std::string url, std::string filePath) = 0;
-
-	/// <summary>
-	/// downloadAuthor downloads the author data per file. It is supplied with
-	/// the URL to the project in question and the filePath into which to down-
-	/// load the author data. Required is that this is the same path as is sup-
-	/// plied to downloadSource. downloadSource needs to be called before this 
+	/// downloadAuthor gets the author data for each file using git blame.
+	/// Required is that this is the same path as is supplied
+	/// to downloadSource. downloadSource needs to be called before this 
 	/// method. Returns a data structure containing the author data.
 	/// </summary>
-	virtual AuthorData downloadAuthor(std::string url, std::string filePath) = 0;
+	/// <param name="filePath"> Local location of the repository. </param>
+	/// <returns> AuthorData of the files in the repository. </returns>
+	virtual AuthorData downloadAuthor(std::string filePath) = 0;
 };
 

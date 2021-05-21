@@ -14,9 +14,14 @@ class RunSpider
 public:
 	/// <summary>
 	/// This is the entry point of the Spider functionality. It is supplied
-	/// a HTTPS link to the Git repository to be spidered and the name of the directory 
+	/// a HTTPS link to the Git repository to be spidered and the name of the directory
 	/// into which the extracted files should be downloaded. It returns an exit code.
 	/// </summary>
+	/// <param name="url"> Link to repository to download. </param>
+	/// <param name="filePath"> Local path where to store the repository. </param>
+	/// <param name="threads"> Amount of threads the spider can use. </param>
+	/// <param name="branch"> Which branchs of the repository to download. </param>
+	/// <returns> Authordata which contains which lines were written by which author. </returns>
 	static AuthorData runSpider(std::string url, std::string filePath, int threads, std::string branch = "master");
 
 	/// <summary>
