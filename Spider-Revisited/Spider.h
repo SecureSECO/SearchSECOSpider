@@ -17,7 +17,23 @@ public:
 	/// of the directory into which to download all the data. Returns a data
 	/// structure containing the author data.
 	/// </summary>
-	virtual AuthorData download(std::string url, std::string filePath);
+	virtual AuthorData download(std::string url, std::string filePath, std::string branch);
+
+	/// <summary>
+	/// Sets the amount of threads the Spider can use.
+	/// </summary>
+	/// <param name="threads"> Amount of threads. </param>
+	virtual void setThreads(int threads);
+	
+	/// <summary>
+	/// Returns the amount of threads the Spider can use.
+	/// </summary>
+	/// <returns> Amount of threads. </returns>
+	virtual int getThreads();
+
+protected:
+	// Amount of threads the spider can use.
+	int threadsCount;
 
 private:
 	/// <summary>
@@ -25,7 +41,7 @@ private:
 	/// needs an URL to the project and the filePath into which to download the
 	/// source files. Returns an exit code.
 	/// </summary>
-	virtual int downloadSource(std::string url, std::string filePath) = 0;
+	virtual int downloadSource(std::string url, std::string filePath, std::string branch) = 0;
 
 	/// <summary>
 	/// downloadAuthor downloads the author data per file. It is supplied with

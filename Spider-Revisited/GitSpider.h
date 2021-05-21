@@ -19,7 +19,7 @@ private:
 	/// <summary>
 	/// Implements the abstract downloadSource method from the Spider class.
 	/// </summary>
-	int downloadSource(std::string url, std::string filePath) override;
+	int downloadSource(std::string url, std::string filePath, std::string branch) override;
 
 	/// <summary>
 	/// Implements the abstract downloadAuthor method from the Spider class.

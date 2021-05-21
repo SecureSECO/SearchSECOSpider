@@ -19,10 +19,10 @@ Utrecht University within the Software Project course.
 #include "Logger.h"
 #include "Error.h"
 
-std::string Git::getCloneCommand(std::string url, std::string filePath)
+std::string Git::getCloneCommand(std::string url, std::string filePath, std::string branch)
 {
-	std::string command = "git clone " + url + " " + filePath + " --no-checkout --branch master";
-	command.append(" && cd " + filePath + " && git sparse-checkout set ");
+	std::string command = "git clone " + url + " \"" + filePath + "\" --no-checkout --branch " + branch;
+	command.append(" && cd \"" + filePath + "\" && git sparse-checkout set ");
 	command.append(GetFileExtensions("extensions"));
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
@@ -31,13 +31,13 @@ std::string Git::getCloneCommand(std::string url, std::string filePath)
 	// ![Ll][Pp][Tt][123456789].*");
 #endif
 
-	command.append(" && git checkout master");
+	command.append(" && git checkout " + branch);
 	return command;
 }
 
-int Git::clone(std::string url, std::string filePath)
+int Git::clone(std::string url, std::string filePath, std::string branch)
 {
-	std::string command = getCloneCommand(url, filePath);
+	std::string command = getCloneCommand(url, filePath, branch);
 	int tries = RECONNECT_TRIES;
 	int delay = RECONNECT_DELAY;
 
@@ -68,22 +68,22 @@ int Git::clone(std::string url, std::string filePath)
 std::string Git::getBlameCommand(std::string repoPath, std::vector<std::string> filePath)
 {
 	// Git blame can only be used from the Git folder itself, so go there...
-	std::string command = "cd " + repoPath;
+	std::string command = "cd \"" + repoPath + "\"";
 	// ...before blaming.
 	for (int i = 0; i < filePath.size(); i++)
 	{
-		command.append(" && git blame -p " + filePath[i]);
+		command.append(" && git blame -p \"" + filePath[i] + "\"");
 	}
 	return command;
 }
 std::string Git::getBlameToFileCommand(std::string repoPath, std::vector<std::string> filePath, std::vector<std::string> outputFile)
 {
 	// Git blame can only be used from the Git folder itself, so go there...
-	std::string command = "cd " + repoPath;
+	std::string command = "cd \"" + repoPath + "\"";
 	// ...before blaming.
 	for (int i = 0; i < filePath.size(); i++)
 	{
-		command.append(" && git blame -p " + filePath[i] + " >> " + outputFile[i]);
+		command.append(" && git blame -p \"" + filePath[i] + "\" >> \"" + outputFile[i] + "\"");
 	}
 	return command;
 }

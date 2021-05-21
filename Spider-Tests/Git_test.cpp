@@ -11,6 +11,7 @@ Utrecht University within the Software Project course.
 #include "Filesystem.h"
 #include "Git.h"
 #include "parseBlameTestData.h"
+#include "RunSpider.h"
 #include "testMocks.h"
 #include <iostream>
 #include <string>
@@ -115,7 +116,7 @@ TEST(Blame, BasicBlame)
 	Git git;
 	ExecuteCommandObjMock* execMock = setExecuteCommand();
 	git.blame("linux/torvalds", std::vector<std::string> {"local/path"});
-	EXPECT_EQ(execMock->execString, "cd linux/torvalds && git blame -p local/path");
+	EXPECT_EQ(execMock->execString, "cd \"linux/torvalds\" && git blame -p \"local/path\"");
 	resetExecuteCommand(execMock);
 }
 
@@ -124,7 +125,7 @@ TEST(Blame, MultipleBlame)
 	Git git;
 	ExecuteCommandObjMock* execMock = setExecuteCommand();
 	git.blame("linux/t0rvalds", std::vector<std::string> {"local/path1", "local/path2", "local2/path3"});
-	EXPECT_EQ(execMock->execString, "cd linux/t0rvalds && git blame -p local/path1 && git blame -p local/path2 && git blame -p local2/path3");
+	EXPECT_EQ(execMock->execString, "cd \"linux/t0rvalds\" && git blame -p \"local/path1\" && git blame -p \"local/path2\" && git blame -p \"local2/path3\"");
 	resetExecuteCommand(execMock);
 }
 
@@ -134,7 +135,7 @@ TEST(BlameToFile, BasicBlameToFile)
 	Git git;
 	ExecuteCommandObjMock* execMock = setExecuteCommand();
 	git.blameToFile("linux/torvalds", std::vector<std::string> {"local/path"}, std::vector<std::string> {"test/output/location"});
-	EXPECT_EQ(execMock->execString, "cd linux/torvalds && git blame -p local/path >> test/output/location");
+	EXPECT_EQ(execMock->execString, "cd \"linux/torvalds\" && git blame -p \"local/path\" >> \"test/output/location\"");
 	resetExecuteCommand(execMock);
 }
 
@@ -143,7 +144,7 @@ TEST(BlameToFile, MultipleBlameToFile)
 	Git git;
 	ExecuteCommandObjMock* execMock = setExecuteCommand();
 	git.blameToFile("linux/torvalds2", std::vector<std::string> {"local/path", "local2/path1", "p"}, std::vector<std::string> {"test/output/location1", "output/location2", "test3"});
-	EXPECT_EQ(execMock->execString, "cd linux/torvalds2 && git blame -p local/path >> test/output/location1 && git blame -p local2/path1 >> output/location2 && git blame -p p >> test3");
+	EXPECT_EQ(execMock->execString, "cd \"linux/torvalds2\" && git blame -p \"local/path\" >> \"test/output/location1\" && git blame -p \"local2/path1\" >> \"output/location2\" && git blame -p \"p\" >> \"test3\"");
 	resetExecuteCommand(execMock);
 }
 
@@ -153,4 +154,17 @@ TEST(CloneProject, ThrowError)
 	ExecuteCommandObjMock* execMock = setExecuteCommand();
 	EXPECT_THROW(git.clone("invalidURL", "invalidFilePath"), int);
 	resetExecuteCommand(execMock);
+}
+TEST(GetSpider, LinkValidation)
+{
+	EXPECT_EQ(nullptr, RunSpider::getSpider("nonsensehttps://www.github.com"));
+	EXPECT_EQ(nullptr, RunSpider::getSpider("github.com/repository"));
+	EXPECT_EQ(nullptr, RunSpider::getSpider("https://labhub.com/repository"));
+	EXPECT_EQ(nullptr, RunSpider::getSpider("https://gitlab,com/repository"));
+	auto ptr = RunSpider::getSpider("https://github.com/repository");
+	EXPECT_NE(nullptr, ptr);
+	delete ptr;
+	ptr = RunSpider::getSpider("https://www.gitlab.com/repository/sub/sub");
+	EXPECT_NE(nullptr, ptr);
+	delete ptr;
 }
