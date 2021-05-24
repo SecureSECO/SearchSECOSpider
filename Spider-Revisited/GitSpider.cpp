@@ -9,23 +9,17 @@ Utrecht University within the Software Project course.
 #include <filesystem>
 #include <thread>
 
-#define MAX_THREADS 16
 #define FILES_PER_CALL 16
 
 // Global locks.
 std::mutex cmdLock;
 
-int GitSpider::downloadSource(std::string url, std::string filePath)
+int GitSpider::downloadSource(std::string url, std::string filePath, std::string branch)
 {
-	return git->clone(url, filePath);
+	return git->clone(url, filePath, branch);
 }
 
-int GitSpider::downloadMetaData(std::string url, std::string repoPath)
-{
-	return 0;
-}
-
-AuthorData GitSpider::downloadAuthor(std::string url, std::string repoPath)
+AuthorData GitSpider::downloadAuthor(std::string repoPath)
 {
 	std::vector<std::thread> threads;
 
@@ -49,7 +43,7 @@ AuthorData GitSpider::downloadAuthor(std::string url, std::string repoPath)
 	}
 
 	// Construct threads to process the queue.
-	for (int i = 0; i < MAX_THREADS; i++) {
+	for (int i = 0; i < threadsCount; i++) {
 		threads.push_back(std::thread(&GitSpider::singleThread, this, repoPath, std::ref(blamedPaths), std::ref(totalPaths), std::ref(files), std::ref(queueLock)));
 	}
 
@@ -124,9 +118,9 @@ AuthorData GitSpider::parseBlameData(std::string repoPath)
 		if (!(s.rfind(repoPath + "\\.git", 0) == 0) && path.is_regular_file() && path.path().extension() == ".meta")
 		{
 			// Trim string.
-            std::string str = s.substr(repoPath.length() + 1);
-            str.erase(str.length() - 5, 5);
-            
+			std::string str = s.substr(repoPath.length() + 1);
+			str.erase(str.length() - 5, 5);
+			
 			// Add blame data.
 			authorData.insert(std::pair<std::string, std::vector<CodeBlock>>(str, git->getBlameData(s)));
 

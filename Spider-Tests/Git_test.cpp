@@ -11,6 +11,7 @@ Utrecht University within the Software Project course.
 #include "Filesystem.h"
 #include "Git.h"
 #include "parseBlameTestData.h"
+#include "RunSpider.h"
 #include "testMocks.h"
 #include <iostream>
 #include <string>
@@ -96,12 +97,12 @@ TEST(GitTest, ReadExtensionsFile)
 {
 	// Setup mock.
 	FilesystemMock* mock = new FilesystemMock();
-	Node ext = Node("extentions", ".c\n.cpp\n.h\n.cs\n");
-	mock->mainNode->children["extentions"] = ext;
+	Node ext = Node("extensions", ".c\n.cpp\n.h\n.cs\n");
+	mock->mainNode->children["extensions"] = ext;
 	Filesystem::fs = mock;
 
 	// Run test.
-	std::string exts = Git::GetFileExtensions("extentions");
+	std::string exts = Git::GetFileExtensions("extensions");
 	EXPECT_EQ(exts, "*.c *.cpp *.h *.cs");
 
 	
@@ -110,31 +111,12 @@ TEST(GitTest, ReadExtensionsFile)
 	delete mock;
 }
 
-TEST(Blame, BasicBlame)
-{
-	Git git;
-	ExecuteCommandObjMock* execMock = setExecuteCommand();
-	git.blame("linux/torvalds", std::vector<std::string> {"local/path"});
-	EXPECT_EQ(execMock->execString, "cd linux/torvalds && git blame -p local/path");
-	resetExecuteCommand(execMock);
-}
-
-TEST(Blame, MultipleBlame)
-{
-	Git git;
-	ExecuteCommandObjMock* execMock = setExecuteCommand();
-	git.blame("linux/t0rvalds", std::vector<std::string> {"local/path1", "local/path2", "local2/path3"});
-	EXPECT_EQ(execMock->execString, "cd linux/t0rvalds && git blame -p local/path1 && git blame -p local/path2 && git blame -p local2/path3");
-	resetExecuteCommand(execMock);
-}
-
-
 TEST(BlameToFile, BasicBlameToFile)
 {
 	Git git;
 	ExecuteCommandObjMock* execMock = setExecuteCommand();
 	git.blameToFile("linux/torvalds", std::vector<std::string> {"local/path"}, std::vector<std::string> {"test/output/location"});
-	EXPECT_EQ(execMock->execString, "cd linux/torvalds && git blame -p local/path >> test/output/location");
+	EXPECT_EQ(execMock->execString, "cd \"linux/torvalds\" && git blame -p \"local/path\" >> \"test/output/location\"");
 	resetExecuteCommand(execMock);
 }
 
@@ -143,7 +125,41 @@ TEST(BlameToFile, MultipleBlameToFile)
 	Git git;
 	ExecuteCommandObjMock* execMock = setExecuteCommand();
 	git.blameToFile("linux/torvalds2", std::vector<std::string> {"local/path", "local2/path1", "p"}, std::vector<std::string> {"test/output/location1", "output/location2", "test3"});
-	EXPECT_EQ(execMock->execString, "cd linux/torvalds2 && git blame -p local/path >> test/output/location1 && git blame -p local2/path1 >> output/location2 && git blame -p p >> test3");
+	EXPECT_EQ(execMock->execString, "cd \"linux/torvalds2\" && git blame -p \"local/path\" >> \"test/output/location1\" && git blame -p \"local2/path1\" >> \"output/location2\" && git blame -p \"p\" >> \"test3\"");
 	resetExecuteCommand(execMock);
 }
 
+
+class LinkValidationParameterizedTestFixture : public ::testing::TestWithParam<std::tuple<std::string, bool>>
+{
+};
+
+INSTANTIATE_TEST_CASE_P(GetSpider, LinkValidationParameterizedTestFixture, 
+	::testing::Values(
+			std::make_tuple("nonsensehttps://www.github.com", false), 
+			std::make_tuple("github.com/repository", false), 
+			std::make_tuple("https://labhub.com/repository", false), 
+			std::make_tuple("https://gitlab,com/repository", false),
+			std::make_tuple("https://github.com/repository", true),
+			std::make_tuple("https://www.gitlab.com/repository/sub/sub", true)
+		)
+);
+
+TEST_P(LinkValidationParameterizedTestFixture, LinkValidity)
+{
+	auto data = GetParam();
+	std::string link = std::get<0>(data);
+
+	// Invalid links.
+	if (!std::get<1>(data))
+	{
+		EXPECT_EQ(nullptr, RunSpider::getSpider(link));
+	}
+	// Valid links.
+	else
+	{
+		auto ptr = RunSpider::getSpider(link);
+		EXPECT_NE(nullptr, ptr);
+		delete ptr;
+	}
+}

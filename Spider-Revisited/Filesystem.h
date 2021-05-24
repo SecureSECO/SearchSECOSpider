@@ -15,7 +15,7 @@ class FilesystemImp
 	/// Reads all data from a file and stores it into a string.
 	/// </summary>
 	/// <param name="filePath"> Path to the file that should be read. </param>
-	/// <returns></returns>
+	/// <returns> Contents of the file. </returns>
 	virtual std::string readFile(std::string filePath);
 	virtual ~FilesystemImp();
 };
@@ -29,7 +29,7 @@ public:
 	/// Reads all data from a file and stores it into a string.
 	/// </summary>
 	/// <param name="filePath"> Path to the file that should be read. </param>
-	/// <returns></returns>
+	/// <returns> Contents of the file. </returns>
 	static std::string readFile(std::string filePath)
 	{
 		return fs->readFile(filePath);
