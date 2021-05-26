@@ -9,7 +9,7 @@ Utrecht University within the Software Project course.
 #include <map>
 
 // TODO: Add combining of exit codes.
-AuthorData Spider::download(std::string url, std::string filePath, std::string branch)
+AuthorData Spider::download(std::string const &url, std::string const &filePath, std::string const &branch)
 {
 	int result = downloadSource(url, filePath, branch);
 

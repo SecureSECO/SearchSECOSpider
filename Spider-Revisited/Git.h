@@ -22,16 +22,8 @@ private:
 	/// <param name="commit"> Which commit the data is part of. </param>
 	/// <param name="commitData"> Commitdata structure to store data in. </param>
 	/// <param name="line"> The line to parse. </param>
-	void parseCommitLine(std::string &commit, std::map<std::string, std::shared_ptr<CommitData>> &commitData,
-								std::vector<std::string> &line);
-
-	/// <summary>
-	/// Gets the command to blame a file.
-	/// </summary>
-	/// <param name="repoPath">The path to the local repository.</param>
-	/// <param name="filePath">A list of paths to the files.</param>
-	/// <returns>A string representing the command.</returns>
-	std::string getBlameCommand(std::string repoPath, std::vector<std::string> filePath);
+	void parseCommitLine(std::string const &commit, std::map<std::string, std::shared_ptr<CommitData>> &commitData,
+								std::vector<std::string> const &line);
 
 	/// <summary>
 	/// Gets the command to blame a file to a file.
@@ -40,7 +32,7 @@ private:
 	/// <param name="filePath">A list of paths to the files.</param>
 	/// <param name="outputFile">A list of paths to the in which the output needs to be written.</param>
 	/// <returns>A string representing the command.</returns>
-	std::string getBlameToFileCommand(std::string repoPath, std::vector<std::string> filePath, std::vector<std::string> outputFile);
+	std::string getBlameToFileCommand(std::string const &repoPath, std::vector<std::string> const &filePath, std::vector<std::string> const &outputFile);
 
 	/// <summary>
 	/// Gets the command to clone a project.
@@ -50,7 +42,7 @@ private:
 	/// <param name="branch">The branch that needs to be cloned. 
 	/// Giving an empty string will return the master branch.</param>
 	/// <returns>A string representing the command.</returns>
-	std::string getCloneCommand(std::string url, std::string filePath, std::string branch);
+	std::string getCloneCommand(std::string const &url, std::string const &filePath, std::string const &branch);
 
 public:
 	/// <summary>
@@ -63,7 +55,7 @@ public:
 	/// <param name="filePath"> Location to store repository locally. </param>
 	/// <param name="branch"> Branch of repository to download. </param>
 	/// <returns> Error code. </returns>
-	int clone(std::string url, std::string filePath, std::string branch);
+	int clone(std::string const &url, std::string const &filePath, std::string const &branch);
 
 	/// <summary>
 	/// Mirrors the Blame functionality of the Git system; it requires the
@@ -73,26 +65,26 @@ public:
 	/// <param name="repoPath"> Path to local repository. </param>
 	/// <param name="filePath"> Files to blame inside local repository. </param>
 	/// <param name="outputFile"> Files to write output to. </param>
-	void blameToFile(std::string repoPath, std::vector<std::string> filePath, std::vector<std::string> outputFile);
+	void blameToFile(std::string const &repoPath, std::vector<std::string> const &filePath, std::vector<std::string> const &outputFile);
 
 	/// <summary>
 	/// Parses the blame data in a file and returns the corrosponding datastructure.
 	/// </summary>
 	/// <param name="filePath"> File to parse. </param>
 	/// <returns> Datastructure created from parsed blamedata. </returns>
-	std::vector<CodeBlock> getBlameData(std::string filePath);
+	std::vector<CodeBlock> getBlameData(std::string const &filePath);
 	
 	/// <summary>
 	/// Parses the contents of a blame file puts it into a CodeBlock data structure.
 	/// </summary>
 	/// <param name="blameData"> Blame data to parse. </param>
 	/// <returns> Codeblock created from blame data. </returns>
-	std::vector<CodeBlock> parseBlame(std::string blameData);
+	std::vector<CodeBlock> parseBlame(std::string const &blameData);
 
 	/// <summary>
 	/// Reads all file extensions from the 'extensions' file.
 	/// </summary>
 	/// <param name="extensionsFile"> Name of the file containing the extensions. </param>
 	/// <returns>< Returns all file extensions as string in a vector. /returns>
-	static std::string GetFileExtensions(std::string extensionsFile);
+	static std::string GetFileExtensions(std::string const &extensionsFile);
 };

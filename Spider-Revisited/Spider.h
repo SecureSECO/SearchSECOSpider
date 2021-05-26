@@ -21,7 +21,7 @@ public:
 	/// <param name="filePath"> Where to store the source locally. </param>
 	/// <param name="branch"> Which branch of the source to download. </param>
 	/// <returns></returns>
-	virtual AuthorData download(std::string url, std::string filePath, std::string branch);
+	virtual AuthorData download(std::string const &url, std::string const &filePath, std::string const &branch);
 
 	/// <summary>
 	/// Sets the amount of threads the Spider can use.
@@ -48,7 +48,7 @@ private:
 	/// <param name="filePath"> Local path where to store the source.</param>
 	/// <param name="branch"> Branch of the source to download. </param>
 	/// <returns> Error code. </returns>
-	virtual int downloadSource(std::string url, std::string filePath, std::string branch) = 0;
+	virtual int downloadSource(std::string const &url, std::string const &filePath, std::string const &branch) = 0;
 
 	/// <summary>
 	/// downloadAuthor gets the author data for each file using git blame.
@@ -58,6 +58,6 @@ private:
 	/// </summary>
 	/// <param name="filePath"> Local location of the repository. </param>
 	/// <returns> AuthorData of the files in the repository. </returns>
-	virtual AuthorData downloadAuthor(std::string filePath) = 0;
+	virtual AuthorData downloadAuthor(std::string const &filePath) = 0;
 };
 

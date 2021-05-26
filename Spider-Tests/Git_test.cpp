@@ -96,10 +96,9 @@ TEST(BlameParse, InvalidData)
 TEST(GitTest, ReadExtensionsFile)
 {
 	// Setup mock.
-	FilesystemMock* mock = new FilesystemMock();
+	FilesystemMock *mock = FilesystemMock::setFilesystemMock();
 	Node ext = Node("extensions", ".c\n.cpp\n.h\n.cs\n");
 	mock->mainNode->children["extensions"] = ext;
-	Filesystem::fs = mock;
 
 	// Run test.
 	std::string exts = Git::GetFileExtensions("extensions");
@@ -107,26 +106,52 @@ TEST(GitTest, ReadExtensionsFile)
 
 	
 	// Reset filesystem implementation.
-	Filesystem::fs = new FilesystemImp();
-	delete mock;
+	FilesystemMock::resetFileSystem(mock);
+}
+
+TEST(GitTest, Clone)
+{
+	// Setup mocks.
+	FilesystemMock *fsMock = FilesystemMock::setFilesystemMock();
+	Node ext = Node("extentions", ".c\n.cpp\n.h\n.cs\n");
+	fsMock->mainNode->children["extensions"] = ext;
+
+	ExecuteCommandObjMock *execMock = ExecuteCommandObjMock::setExecuteCommand();
+
+	// Run tests.
+	Git git;
+	// Timeout.
+	EXPECT_ANY_THROW(git.clone("testurl", "path", "master"));
+
+	// Reconnect.
+	execMock->responses.push("");
+	execMock->responses.push("succes");
+	EXPECT_EQ(git.clone("testurl", "path", "master"), 0);
+
+	// Cleanup.
+	FilesystemMock::resetFileSystem(fsMock);
+	ExecuteCommandObjMock::resetExecuteCommand(execMock);
 }
 
 TEST(BlameToFile, BasicBlameToFile)
 {
 	Git git;
-	ExecuteCommandObjMock* execMock = setExecuteCommand();
+	ExecuteCommandObjMock *execMock = ExecuteCommandObjMock::setExecuteCommand();
 	git.blameToFile("linux/torvalds", std::vector<std::string> {"local/path"}, std::vector<std::string> {"test/output/location"});
 	EXPECT_EQ(execMock->execString, "cd \"linux/torvalds\" && git blame -p \"local/path\" >> \"test/output/location\"");
-	resetExecuteCommand(execMock);
+	ExecuteCommandObjMock::resetExecuteCommand(execMock);
 }
 
 TEST(BlameToFile, MultipleBlameToFile)
 {
 	Git git;
-	ExecuteCommandObjMock* execMock = setExecuteCommand();
-	git.blameToFile("linux/torvalds2", std::vector<std::string> {"local/path", "local2/path1", "p"}, std::vector<std::string> {"test/output/location1", "output/location2", "test3"});
-	EXPECT_EQ(execMock->execString, "cd \"linux/torvalds2\" && git blame -p \"local/path\" >> \"test/output/location1\" && git blame -p \"local2/path1\" >> \"output/location2\" && git blame -p \"p\" >> \"test3\"");
-	resetExecuteCommand(execMock);
+	ExecuteCommandObjMock *execMock = ExecuteCommandObjMock::setExecuteCommand();
+	git.blameToFile("linux/torvalds2", std::vector<std::string>{"local/path", "local2/path1", "p"},
+					std::vector<std::string>{"test/output/location1", "output/location2", "test3"});
+	EXPECT_EQ(execMock->execString,
+			  "cd \"linux/torvalds2\" && git blame -p \"local/path\" >> \"test/output/location1\" && git blame -p "
+			  "\"local2/path1\" >> \"output/location2\" && git blame -p \"p\" >> \"test3\"");
+	ExecuteCommandObjMock::resetExecuteCommand(execMock);
 }
 
 TEST(CloneProject, ThrowError)
