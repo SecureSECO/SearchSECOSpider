@@ -59,5 +59,5 @@ std::string FilesystemMock::readFile(std::string filePath)
 
 FilesystemMock::~FilesystemMock()
 {
-    delete mainNode;
+	delete mainNode;
 }

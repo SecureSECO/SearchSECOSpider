@@ -19,7 +19,7 @@ int GitSpider::downloadSource(std::string url, std::string filePath, std::string
 	return git->clone(url, filePath, branch);
 }
 
-AuthorData GitSpider::downloadAuthor(std::string url, std::string repoPath)
+AuthorData GitSpider::downloadAuthor(std::string repoPath)
 {
 	std::vector<std::thread> threads;
 

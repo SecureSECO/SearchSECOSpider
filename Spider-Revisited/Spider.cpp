@@ -19,9 +19,7 @@ AuthorData Spider::download(std::string url, std::string filePath, std::string b
 	// 	return AuthorData();
 	// }
 
-	downloadMetaData(url, filePath);
-
-	AuthorData output = downloadAuthor(url, filePath);
+	AuthorData output = downloadAuthor(filePath);
 
 
 	return output;
