@@ -133,7 +133,7 @@ TEST(CloneProject, ThrowError)
 {
 	Git git;
 	ExecuteCommandObjMock* execMock = setExecuteCommand();
-	EXPECT_THROW(git.clone("invalidURL", "invalidFilePath"), int);
+	EXPECT_THROW(git.clone("invalidURL", "invalidFilePath", "invalidBranch"), int);
 	resetExecuteCommand(execMock);
 }
 

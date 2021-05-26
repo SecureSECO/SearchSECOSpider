@@ -17,7 +17,7 @@ public:
 	/// a HTTPS link to the Git repository to be spidered and the name of the directory
 	/// into which the extracted files should be downloaded. It returns an exit code.
 	/// </summary>
-	static AuthorData runSpider(std::string url, std::string filePath, int threads, std::string branch = "master", int &code);
+	static AuthorData runSpider(std::string url, std::string filePath, int threads, int &code, std::string branch = "master");
 
 	/// <summary>
 	/// Checks if an URL is valid and returns the appropriate spider subclass to download the url.
