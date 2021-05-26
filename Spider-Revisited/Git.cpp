@@ -16,6 +16,8 @@ Utrecht University within the Software Project course.
 #include "ExecuteCommand.h"
 #include "Filesystem.h"
 #include "Git.h"
+#include "Logger.h"
+#include "Error.h"
 
 std::string Git::getCloneCommand(std::string url, std::string filePath, std::string branch)
 {
@@ -47,7 +49,8 @@ int Git::clone(std::string url, std::string filePath, std::string branch)
 		// Exit with error code if no more tries left.
 		if (tries < 0)
 		{
-			return 1;
+			Logger::logFatal(Error::getErrorMessage(ErrorType::GitCloneError), __FILE__, __LINE__, (int)ErrorType::GitCloneError);
+			throw 1;
 		}
 
 		// Try again after delay.
@@ -88,7 +91,7 @@ std::string Git::getBlameToFileCommand(std::string repoPath, std::vector<std::st
 void Git::blameToFile(std::string repoPath, std::vector<std::string> filePath, std::vector<std::string> outputFile)
 {
 	std::string command = getBlameToFileCommand(repoPath, filePath, outputFile);
-	return ExecuteCommand::exec(command.c_str());
+	ExecuteCommand::exec(command.c_str());
 }
 
 std::vector<CodeBlock> Git::getBlameData(std::string filePath)
@@ -103,8 +106,16 @@ std::vector<CodeBlock> Git::getBlameData(std::string filePath)
 
 std::string Git::GetFileExtensions(std::string extensionsFile)
 {
-	// Read extensions from file.
-	std::string contents = Filesystem::readFile(extensionsFile);
+	// Read extentions from file. Error catching based on https://stackoverflow.com/questions/9670396/exception-handling-and-opening-a-file.
+	std::string contents;
+	try
+	{
+		contents = Filesystem::readFile(extensionsFile);
+	}
+	catch (const std::ifstream::failure& e)
+	{
+		Logger::logWarn(Error::getErrorMessage(ErrorType::FileExtensionsNotFound), __FILE__, __LINE__);
+	}
 	std::vector<std::string> fileExts;
 
 	// Based on https://stackoverflow.com/questions/12514510/iterate-through-lines-in-a-string-c.
@@ -203,7 +214,8 @@ std::vector<CodeBlock> Git::parseBlame(std::string blameData)
 		// Verify that data is in a valid format.
 		if (arrLine.size() < 3)
 		{
-			throw "Blame data has incorrect format.";
+			Logger::logFatal(Error::getErrorMessage(ErrorType::BlameIncorrectFormat), __FILE__, __LINE__, (int)ErrorType::BlameIncorrectFormat);
+			throw 1;
 		}
 
 		// Store new commit.
@@ -250,7 +262,8 @@ void Git::parseCommitLine(std::string &commit, std::map<std::string, std::shared
 		{
 			return;
 		}
-		throw "Blame data has incorrect format.";
+		Logger::logFatal(Error::getErrorMessage(ErrorType::BlameIncorrectFormat), __FILE__, __LINE__, (int)ErrorType::BlameIncorrectFormat);
+		throw 1;
 	}
 
 	// Check what type of data is found and store it.

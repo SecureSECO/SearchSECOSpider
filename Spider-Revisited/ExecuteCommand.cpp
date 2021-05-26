@@ -5,9 +5,11 @@ Utrecht University within the Software Project course.
 */
 
 #include "ExecuteCommand.h"
+#include "Logger.h"
 #include <array>
 #include <iostream>
 #include <memory>
+#include "Error.h"
 
 #define bufferSize 1024
 
@@ -23,7 +25,8 @@ void ExecuteCommandObj::exec(const char* cmd)
 #endif
 	if (!pipe)
 	{
-		throw std::runtime_error("popen() failed!");
+		Logger::logFatal(Error::getErrorMessage(ErrorType::PipeOpenFailed), __FILE__, __LINE__, (int) ErrorType::PipeOpenFailed);
+		throw 1;
 	}
 	// Amount of data read, is less then bufferSize if output ends.
 	size_t bytesRead;
@@ -45,7 +48,8 @@ std::string ExecuteCommandObj::execOut(const char *cmd)
 #endif
 	if (!pipe)
 	{
-		throw std::runtime_error("popen() failed!");
+		Logger::logFatal(Error::getErrorMessage(ErrorType::PipeOpenFailed), __FILE__, __LINE__, (int)ErrorType::PipeOpenFailed);
+		throw 1;
 	}
 	// Amount of data read, is less then bufferSize if output ends.
 	size_t bytesRead;

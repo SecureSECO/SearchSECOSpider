@@ -4,10 +4,10 @@ Utrecht University within the Software Project course.
 © Copyright Utrecht University (Department of Information and Computing Sciences)
 */
 
+#include "pch.h"
 #include <map>
 #include <string>
 #include <vector>
-#include "pch.h"
 #include "testMocks.h"
 
 // Splits a filepath into directories.

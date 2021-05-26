@@ -1,7 +1,7 @@
 /*
 This program has been developed by students from the bachelor Computer Science at
 Utrecht University within the Software Project course.
-© Copyright Utrecht University (Department of Information and Computing Sciences)
+Â© Copyright Utrecht University (Department of Information and Computing Sciences)
 */
 
 #include "Spider.h"
@@ -12,14 +12,9 @@ Utrecht University within the Software Project course.
 AuthorData Spider::download(std::string url, std::string filePath, std::string branch)
 {
 	int result = downloadSource(url, filePath, branch);
-	// Check if downloading source failed.
-	if (result != 0)
-	{
-		std::cout << "Failed to clone '" << url << "'.";
-		return AuthorData();
-	}
 
 	AuthorData output = downloadAuthor(filePath);
+
 
 	return output;
 }

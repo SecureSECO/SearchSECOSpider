@@ -16,7 +16,7 @@ Utrecht University within the Software Project course.
 #include <iostream>
 #include <string>
 
-ExecuteCommandObjMock *setExecuteCommand()
+ExecuteCommandObjMock* setExecuteCommand()
 {
 	ExecuteCommandObjMock* execMock = new ExecuteCommandObjMock();
 	ExecuteCommand::executeCommandObj = execMock;
@@ -129,6 +129,13 @@ TEST(BlameToFile, MultipleBlameToFile)
 	resetExecuteCommand(execMock);
 }
 
+TEST(CloneProject, ThrowError)
+{
+	Git git;
+	ExecuteCommandObjMock* execMock = setExecuteCommand();
+	EXPECT_THROW(git.clone("invalidURL", "invalidFilePath", "invalidBranch"), int);
+	resetExecuteCommand(execMock);
+}
 
 class LinkValidationParameterizedTestFixture : public ::testing::TestWithParam<std::tuple<std::string, bool>>
 {

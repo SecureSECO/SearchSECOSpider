@@ -22,7 +22,7 @@ public:
 	/// <param name="threads"> Amount of threads the spider can use. </param>
 	/// <param name="branch"> Which branchs of the repository to download. </param>
 	/// <returns> Authordata which contains which lines were written by which author. </returns>
-	static AuthorData runSpider(std::string url, std::string filePath, int threads, std::string branch = "master");
+	static AuthorData runSpider(std::string url, std::string filePath, int threads, int &code, std::string branch = "master");
 
 	/// <summary>
 	/// Checks if an URL is valid and returns the appropriate spider subclass to download the url.

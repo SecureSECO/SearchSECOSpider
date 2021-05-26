@@ -14,6 +14,9 @@ set(SPIDER_HEADER_LIST
    RunSpider.h
    Spider.h
    CodeBlock.h
+   Error.h
+   Logger.h
+   loguru/loguru.hpp
 )
 
 add_library(spider
@@ -23,5 +26,12 @@ add_library(spider
    GitSpider.cpp
    RunSpider.cpp
    Spider.cpp
+   Error.cpp
+   Logger.cpp
+   loguru/loguru.cpp
   ${SPIDER_HEADER_LIST}
 )
+
+if(CMAKE_DL_LIBS)
+    target_link_libraries(spider ${CMAKE_DL_LIBS})
+endif()
