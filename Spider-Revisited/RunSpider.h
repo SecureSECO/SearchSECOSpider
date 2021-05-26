@@ -23,7 +23,7 @@ public:
 	/// <param name="branch"> Which branchs of the repository to download. </param>
 	/// <returns> Authordata which contains which lines were written by which author. </returns>
 	static AuthorData runSpider(std::string const &url, std::string const &filePath, int threads,
-							  int &code, std::string const &branch = "master");
+							  std::string const &branch = "master");
 
 	/// <summary>
 	/// Checks if an URL is valid and returns the appropriate spider subclass to download the url.
@@ -32,4 +32,3 @@ public:
 	/// <returns> Spider object capable of downloading the url. </returns>
 	static Spider *getSpider(std::string const &url);
 };
-

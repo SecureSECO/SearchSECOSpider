@@ -16,7 +16,7 @@ private:
     /// <param name="message">The text message.</param>
     /// <param name="code">The error code.</param>
     /// <returns>A string consisting of an error code and then a message.</returns>
-    static std::string getErrorMessage(const char* message, int code);
+    static std::string getErrorMessage(std::string message, int code);
 public:
     /// <summary>
     /// Log an info message.
@@ -24,14 +24,14 @@ public:
     /// <param name="message">The message.</param>
     /// <param name="file">The file in which this function was called from.</param>
     /// <param name="line">The line number from which this function was called from.</param>
-    static void logInfo(const char* message, const char* file, unsigned int line);
+    static void logInfo(std::string message, const char* file, unsigned int line);
     /// <summary>
     /// Log a warning message.
     /// </summary>
     /// <param name="message">The message.</param>
     /// <param name="file">The file in which this function was called from.</param>
     /// <param name="line">The line number from which this function was called from.</param>
-    static void logWarn(const char* message, const char* file, unsigned int line);
+    static void logWarn(std::string message, const char* file, unsigned int line);
     /// <summary>
     /// Log an error message.
     /// </summary>
@@ -39,12 +39,12 @@ public:
     /// <param name="file">The file in which this function was called from.</param>
     /// <param name="line">The line number from which this function was called from.</param>
     /// <param name="code">The relevant error code.</param>
-    static void logFatal(const char* message, const char* file, unsigned int line, int code);
+    static void logFatal(std::string message, const char* file, unsigned int line, int code);
     /// <summary>
     /// Log a debug message.
     /// </summary>
     /// <param name="message">The message.</param>
     /// <param name="file">The file in which this function was called from.</param>
     /// <param name="line">The line number from which this function was called from.</param>
-    static void logDebug(const char* message, const char* file, unsigned int line);
+    static void logDebug(std::string message, const char* file, unsigned int line);
 };
