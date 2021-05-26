@@ -114,7 +114,7 @@ std::string Git::GetFileExtensions(std::string extensionsFile)
 	}
 	catch (const std::ifstream::failure& e)
 	{
-		Logger::logWarn(Error::getErrorMessage(ErrorType::FileExtensionsNotFound), __FILE__, __LINE__, (int)ErrorType::FileExtensionsNotFound);
+		Logger::logWarn(Error::getErrorMessage(ErrorType::FileExtensionsNotFound), __FILE__, __LINE__);
 	}
 	std::vector<std::string> fileExts;
 
