@@ -1,3 +1,6 @@
+#ifndef _LOGURU_CPP_IMPLEMENTATION
+#define _LOGURU_CPP_IMPLEMENTATION
+
 #ifndef _WIN32
 // Disable all warnings from gcc/clang:
 #pragma GCC diagnostic push
@@ -1963,3 +1966,5 @@ namespace loguru
 #endif // _WIN32
 
 #endif // LOGURU_IMPLEMENTATION
+
+#endif // Already defined
