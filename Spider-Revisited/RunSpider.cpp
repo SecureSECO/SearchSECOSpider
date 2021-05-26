@@ -11,7 +11,8 @@ Utrecht University within the Software Project course.
 #include "RunSpider.h"
 #include "Spider.h"
 
-AuthorData RunSpider::runSpider(std::string url, std::string filePath, int threads, int &code, std::string branch)
+AuthorData RunSpider::runSpider(std::string const &url, std::string const &filePath, int threads,
+								int &code, std::string const &branch)
 {
 	// Delete the folder at filepath, so that git does not throw an error.
 	std::cout << "Deleting old files..." << std::endl;
@@ -42,7 +43,7 @@ AuthorData RunSpider::runSpider(std::string url, std::string filePath, int threa
 	return output;
 }
 
-Spider* RunSpider::getSpider(std::string url)
+Spider *RunSpider::getSpider(std::string const &url)
 {
 	// Check if link belongs to github or gitlab.
 	if (std::regex_match(url, std::regex("https://(www\\.)?(github|gitlab)\\.com([^ ]*)")))

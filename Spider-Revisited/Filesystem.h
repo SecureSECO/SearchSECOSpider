@@ -1,10 +1,13 @@
 /*
 This program has been developed by students from the bachelor Computer Science at
 Utrecht University within the Software Project course.
-© Copyright Utrecht University (Department of Information and Computing Sciences)
+Â© Copyright Utrecht University (Department of Information and Computing Sciences)
 */
 
 #pragma once
+#include <filesystem>
+#include <functional>
+#include <queue>
 #include <string>
 
 class FilesystemImp
@@ -16,7 +19,24 @@ class FilesystemImp
 	/// </summary>
 	/// <param name="filePath"> Path to the file that should be read. </param>
 	/// <returns> Contents of the file. </returns>
-	virtual std::string readFile(std::string filePath);
+	virtual std::string readFile(std::string const &filePath);
+
+	/// <summary>
+	/// Recursively returns all filepaths to files in a folder.
+	/// Ignores paths that don't fulfill the predicate.
+	/// </summary>
+	/// <param name="repoPath"> From which folder to get the files. </param>
+	/// <returns> Queue containing the filepaths. </returns>
+	virtual std::queue<std::string>getFilepaths(std::string const &repoPath, 
+		std::function<bool(std::filesystem::directory_entry)> predicate);
+
+	/// <summary>
+	/// Checks if file at location is a regular file.
+	/// </summary>
+	/// <param name="path"> Path to check. </param>
+	/// <returns> True if file is a regular file, false otherwise. </returns>
+	virtual bool isRegularFile(std::string const &path);
+	
 	virtual ~FilesystemImp();
 };
 
@@ -33,5 +53,27 @@ public:
 	static std::string readFile(std::string filePath)
 	{
 		return fs->readFile(filePath);
+	}
+
+	/// <summary>
+	/// Recursively returns all filepaths to files in a folder.
+	/// Ignores paths that don't fulfill the predicate.
+	/// </summary>
+	/// <param name="repoPath"> From which folder to get the files. </param>
+	/// <returns> Queue containing the filepaths. </returns>
+	static std::queue<std::string> getFilepaths(std::string const &repoPath, 
+		std::function<bool(std::filesystem::directory_entry)> predicate)
+	{
+		return fs->getFilepaths(repoPath, predicate);    
+	}
+
+	/// <summary>
+	/// Checks if file at location is a regular file.
+	/// </summary>
+	/// <param name="path"> Path to check. </param>
+	/// <returns> True if file is a regular file, false otherwise. </returns>
+	static bool isRegularFile(std::string const &path)
+	{
+		return fs->isRegularFile(path);
 	}
 };

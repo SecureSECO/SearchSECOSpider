@@ -19,7 +19,7 @@ Utrecht University within the Software Project course.
 #include "Logger.h"
 #include "Error.h"
 
-std::string Git::getCloneCommand(std::string url, std::string filePath, std::string branch)
+std::string Git::getCloneCommand(std::string const &url, std::string const &filePath, std::string const &branch)
 {
 	std::string command = "git clone " + url + " \"" + filePath + "\" --no-checkout --branch " + branch;
 	command.append(" && cd \"" + filePath + "\" && git sparse-checkout set ");
@@ -35,7 +35,7 @@ std::string Git::getCloneCommand(std::string url, std::string filePath, std::str
 	return command;
 }
 
-int Git::clone(std::string url, std::string filePath, std::string branch)
+int Git::clone(std::string const &url, std::string const &filePath, std::string const &branch)
 {
 	std::string command = getCloneCommand(url, filePath, branch);
 	int tries = RECONNECT_TRIES;
@@ -65,18 +65,8 @@ int Git::clone(std::string url, std::string filePath, std::string branch)
 	return 0;
 }
 
-std::string Git::getBlameCommand(std::string repoPath, std::vector<std::string> filePath)
-{
-	// Git blame can only be used from the Git folder itself, so go there...
-	std::string command = "cd \"" + repoPath + "\"";
-	// ...before blaming.
-	for (int i = 0; i < filePath.size(); i++)
-	{
-		command.append(" && git blame -p \"" + filePath[i] + "\"");
-	}
-	return command;
-}
-std::string Git::getBlameToFileCommand(std::string repoPath, std::vector<std::string> filePath, std::vector<std::string> outputFile)
+std::string Git::getBlameToFileCommand(std::string const &repoPath, std::vector<std::string> const &filePath,
+									   std::vector<std::string> const &outputFile)
 {
 	// Git blame can only be used from the Git folder itself, so go there...
 	std::string command = "cd \"" + repoPath + "\"";
@@ -88,13 +78,13 @@ std::string Git::getBlameToFileCommand(std::string repoPath, std::vector<std::st
 	return command;
 }
 
-void Git::blameToFile(std::string repoPath, std::vector<std::string> filePath, std::vector<std::string> outputFile)
+void Git::blameToFile(std::string const &repoPath, std::vector<std::string> const &filePath, std::vector<std::string> const &outputFile)
 {
 	std::string command = getBlameToFileCommand(repoPath, filePath, outputFile);
 	ExecuteCommand::exec(command.c_str());
 }
 
-std::vector<CodeBlock> Git::getBlameData(std::string filePath)
+std::vector<CodeBlock> Git::getBlameData(std::string const &filePath)
 {
 	std::string blameData = Filesystem::readFile(filePath);
 	if (blameData != "")
@@ -104,7 +94,7 @@ std::vector<CodeBlock> Git::getBlameData(std::string filePath)
 	return std::vector<CodeBlock>();
 }
 
-std::string Git::GetFileExtensions(std::string extensionsFile)
+std::string Git::GetFileExtensions(std::string const &extensionsFile)
 {
 	// Read extentions from file. Error catching based on https://stackoverflow.com/questions/9670396/exception-handling-and-opening-a-file.
 	std::string contents;
@@ -143,7 +133,7 @@ std::string Git::GetFileExtensions(std::string extensionsFile)
 }
 
 // Separates a string on given character.
-std::vector<std::string> split(std::string str, char c)
+std::vector<std::string> split(std::string const &str, char c)
 {
 	// Prepare input
 	std::stringstream ss(str);
@@ -158,7 +148,7 @@ std::vector<std::string> split(std::string str, char c)
 }
 
 // Combines all string in a vector separated by a space, first element is ignored.
-std::string combine(std::vector<std::string> &string)
+std::string combine(std::vector<std::string> const &string)
 {
 	std::string res;
 	for (int i = 1; i < string.size(); i++)
@@ -176,7 +166,7 @@ std::string combine(std::vector<std::string> &string)
  * Based on 'GitBlameParserJS' by Matt Pardee.
  * https://github.com/mattpardee/GitBlameParserJS
  */
-std::vector<CodeBlock> Git::parseBlame(std::string blameData)
+std::vector<CodeBlock> Git::parseBlame(std::string const &blameData)
 {
 	// Split file into lines.
 	std::vector<std::string> lines = split(blameData, '\n');
@@ -251,8 +241,8 @@ std::vector<CodeBlock> Git::parseBlame(std::string blameData)
  * Based on 'GitBlameParserJS' by Matt Pardee.
  * https://github.com/mattpardee/GitBlameParserJS
  */
-void Git::parseCommitLine(std::string &commit, std::map<std::string, std::shared_ptr<CommitData>> &commitData,
-						  std::vector<std::string> &line)
+void Git::parseCommitLine(std::string const &commit, std::map<std::string, std::shared_ptr<CommitData>> &commitData,
+						  std::vector<std::string> const &line)
 {
 
 	// Verify that data is in a valid format.

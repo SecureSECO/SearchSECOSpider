@@ -4,6 +4,7 @@ Utrecht University within the Software Project course.
 © Copyright Utrecht University (Department of Information and Computing Sciences)
 */
 
+#include "Filesystem.h"
 #include "GitSpider.h"
 #include <iostream>
 #include <filesystem>
@@ -14,36 +15,31 @@ Utrecht University within the Software Project course.
 // Global locks.
 std::mutex cmdLock;
 
-int GitSpider::downloadSource(std::string url, std::string filePath, std::string branch)
+int GitSpider::downloadSource(std::string const &url, std::string const &filePath, std::string const &branch)
 {
 	return git->clone(url, filePath, branch);
 }
 
-AuthorData GitSpider::downloadAuthor(std::string repoPath)
+AuthorData GitSpider::downloadAuthor(std::string const &repoPath)
 {
 	std::vector<std::thread> threads;
 
 	// Thread-safe queue (with lock).
-	std::queue<std::string> files;
+	auto pred = [repoPath](std::filesystem::directory_entry path)
+	{
+		std::string str = path.path().string();
+		return !(str.rfind(repoPath + "\\.git", 0) == 0) && Filesystem::isRegularFile(str);
+	};
+	std::queue<std::string> files = Filesystem::getFilepaths(repoPath, pred);
 	std::mutex queueLock;
-	auto dirIter = std::filesystem::recursive_directory_iterator(repoPath);
 
 	// Variables for displaying progress.
 	int blamedPaths = 0;
-	const int totalPaths = std::count_if(begin(dirIter), end(dirIter), [&repoPath](auto& path)
-		{ return !((path.path()).string().rfind(repoPath + "\\.git", 0) == 0) && path.is_regular_file(); });
-
-	// Loop over all files.
-	for (const auto& path : std::filesystem::recursive_directory_iterator(repoPath))
-	{
-		std::string s = (path.path()).string();
-		if (!(s.rfind(repoPath + "\\.git", 0) == 0) && path.is_regular_file()) {
-			files.push(s);
-		}
-	}
+	const int totalPaths = files.size();
 
 	// Construct threads to process the queue.
-	for (int i = 0; i < threadsCount; i++) {
+	for (int i = 0; i < threadsCount; i++)
+	{
 		threads.push_back(std::thread(&GitSpider::singleThread, this, repoPath, std::ref(blamedPaths), std::ref(totalPaths), std::ref(files), std::ref(queueLock)));
 	}
 
@@ -56,7 +52,7 @@ AuthorData GitSpider::downloadAuthor(std::string repoPath)
 	return output;
 }
 
-void GitSpider::blameFiles(std::string repoPath, std::vector<std::string> filePaths)
+void GitSpider::blameFiles(std::string const &repoPath, std::vector<std::string> &filePaths)
 {
 	// Find path to file inside the Repo folder.
 	std::vector<std::string> outPaths;
@@ -68,7 +64,8 @@ void GitSpider::blameFiles(std::string repoPath, std::vector<std::string> filePa
 	git->blameToFile(repoPath, filePaths, outPaths);
 }
 
-void GitSpider::singleThread(std::string repoPath, int &blamedPaths, const int &totalPaths, std::queue<std::string> &files, std::mutex &queueLock)
+void GitSpider::singleThread(std::string const &repoPath, int &blamedPaths, const int &totalPaths,
+							 std::queue<std::string> &files, std::mutex &queueLock)
 {
 	while (true) 
 	{
@@ -86,49 +83,54 @@ void GitSpider::singleThread(std::string repoPath, int &blamedPaths, const int &
 			blame.push_back(files.front());
 			files.pop();
 		}
+		int filesCount = blame.size();
 		queueLock.unlock();
+		
 		blameFiles(repoPath, blame);
+		
 		cmdLock.lock();
 		// Update progress.
-		blamedPaths+=blame.size();
+		blamedPaths += filesCount;
 		std::cout << '\r' << "Blaming files: " << (100 * blamedPaths) / totalPaths << "% ("
 			<< blamedPaths << '/' << totalPaths << ')';
 		cmdLock.unlock();
 	}
 }
 
-AuthorData GitSpider::parseBlameData(std::string repoPath)
+AuthorData GitSpider::parseBlameData(std::string const &repoPath)
 {
 	// Thread-safe map (with lock).
 	AuthorData authorData;
 	std::mutex mapLock;
-	auto dirIter = std::filesystem::recursive_directory_iterator(repoPath);
 
 	// Variables for displaying progress.
+	auto pred = [repoPath](std::filesystem::directory_entry path)
+	{
+		std::string str = path.path().string();
+		return !(str.rfind(repoPath + "\\.git", 0) == 0) && Filesystem::isRegularFile(str) &&
+				path.path().extension() == ".meta";
+	};
+	auto paths = Filesystem::getFilepaths(repoPath, pred);
 	int processedPaths = 0;
-	const int totalPaths = std::count_if(begin(dirIter), end(dirIter), [&repoPath](auto &path) {
-			return !((path.path()).string().rfind(repoPath + "\\.git", 0) == 0) && path.is_regular_file() &&
-					path.path().extension() == ".meta";
-	});
+	const int totalPaths = paths.size();
 
 	// Loop over all files.
-	for (const auto &path : std::filesystem::recursive_directory_iterator(repoPath))
+	while (paths.size() > 0)
 	{
-		std::string s = (path.path()).string();
-		if (!(s.rfind(repoPath + "\\.git", 0) == 0) && path.is_regular_file() && path.path().extension() == ".meta")
-		{
-			// Trim string.
-			std::string str = s.substr(repoPath.length() + 1);
-			str.erase(str.length() - 5, 5);
-			
-			// Add blame data.
-			authorData.insert(std::pair<std::string, std::vector<CodeBlock>>(str, git->getBlameData(s)));
+		auto path = paths.front();
+		paths.pop();
 
-			// Report progress.
-			processedPaths++;
-			std::cout << '\r' << "Processing blame data: " << (100 * processedPaths) / totalPaths << "% ("
-								<< processedPaths << '/' << totalPaths << ')';
-		}
+		// Trim string.
+		std::string str = path.substr(repoPath.length() + 1);
+		str.erase(str.length() - 5, 5);
+
+		// Add blame data.
+		authorData.insert(std::pair<std::string, std::vector<CodeBlock>>(str, git->getBlameData(path)));
+
+		// Report progress.
+		processedPaths++;
+		std::cout << '\r' << "Processing blame data: " << (100 * processedPaths) / totalPaths << "% ("
+					<< processedPaths << '/' << totalPaths << ')';
 	}
 
 	std::cout << ", done." << std::endl;
