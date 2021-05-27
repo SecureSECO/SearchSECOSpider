@@ -10,29 +10,29 @@ Utrecht University within the Software Project course.
 
 #define BASE 200
 
-void Logger::logDebug(std::string message, const char* file, unsigned int line)
+void Logger::logDebug(std::string const &message, const char *file, unsigned int line)
 {
-    loguru::log(loguru::Verbosity_1, file, line, "%s", message.c_str());
+	loguru::log(loguru::Verbosity_1, file, line, "%s", message.c_str());
 }
 
-void Logger::logInfo(std::string message, const char* file, unsigned int line)
+void Logger::logInfo(std::string const &message, const char *file, unsigned int line)
 {
-    loguru::log(loguru::Verbosity_INFO, file, line, "%s", message.c_str());
+	loguru::log(loguru::Verbosity_INFO, file, line, "%s", message.c_str());
 }
 
-void Logger::logWarn(std::string message, const char* file, unsigned int line)
+void Logger::logWarn(std::string const &message, const char *file, unsigned int line)
 {
-    loguru::log(loguru::Verbosity_WARNING, file, line, "%s", message.c_str());
+	loguru::log(loguru::Verbosity_WARNING, file, line, "%s", message.c_str());
 }
 
-void Logger::logFatal(std::string message, const char* file, unsigned int line, int code)
+void Logger::logFatal(std::string const &message, const char *file, unsigned int line, int code)
 {
-    loguru::log(loguru::Verbosity_ERROR, file, line, "%s", getErrorMessage(message, code).c_str());
+	loguru::log(loguru::Verbosity_ERROR, file, line, "%s", getErrorMessage(message, code).c_str());
 }
 
-std::string Logger::getErrorMessage(std::string message, int code)
+std::string Logger::getErrorMessage(std::string const &message, int code)
 {
-    std::string c = std::to_string(BASE + code);
-    std::string s = "E" + c + " - " + message;
-    return s;
+	std::string c = std::to_string(BASE + code);
+	std::string s = "E" + c + " - " + message;
+	return s;
 }
