@@ -27,6 +27,7 @@ AuthorData RunSpider::runSpider(std::string const &url, std::string const &fileP
 	Spider *spider = getSpider(url);
 	if (spider == nullptr)
 	{
+		errno = 1;
 		return AuthorData();
 	}
 	spider->setThreads(threads);
@@ -39,8 +40,11 @@ AuthorData RunSpider::runSpider(std::string const &url, std::string const &fileP
 	catch (int e)
 	{
 		errno = e;
+		return AuthorData();
 	}
 	delete spider;
+
+	errno = 0;
 	return output;
 }
 
