@@ -21,7 +21,7 @@ Utrecht University within the Software Project course.
 
 std::string Git::getCloneCommand(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts)
 {
-	std::string command = "git clone " + url + " \"" + filePath + "\" --no-checkout --branch " + branch;
+	std::string command = "git clone " + url + " \"" + filePath + "\" --no-checkout";
 	command.append(" && cd \"" + filePath + "\" && git sparse-checkout set ");
 	command.append(exts);
 
@@ -31,7 +31,12 @@ std::string Git::getCloneCommand(std::string const &url, std::string const &file
 	// ![Ll][Pp][Tt][123456789].*");
 #endif
 
-	command.append(" && git checkout " + branch);
+	// Switch branch if specified.
+	if (!branch.empty())
+	{
+		command.append(" && git checkout " + branch);
+	}
+		
 	return command;
 }
 
