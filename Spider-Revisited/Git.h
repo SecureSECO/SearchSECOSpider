@@ -42,7 +42,7 @@ private:
 	/// <param name="branch">The branch that needs to be cloned. 
 	/// Giving an empty string will return the master branch.</param>
 	/// <returns>A string representing the command.</returns>
-	std::string getCloneCommand(std::string const &url, std::string const &filePath, std::string const &branch);
+	std::string getCloneCommand(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts);
 
 public:
 	/// <summary>
@@ -55,7 +55,7 @@ public:
 	/// <param name="filePath"> Location to store repository locally. </param>
 	/// <param name="branch"> Branch of repository to download. </param>
 	/// <returns> Error code. </returns>
-	int clone(std::string const &url, std::string const &filePath, std::string const &branch);
+	int clone(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts);
 
 	/// <summary>
 	/// Mirrors the Blame functionality of the Git system; it requires the
@@ -80,11 +80,4 @@ public:
 	/// <param name="blameData"> Blame data to parse. </param>
 	/// <returns> Codeblock created from blame data. </returns>
 	std::vector<CodeBlock> parseBlame(std::string const &blameData);
-
-	/// <summary>
-	/// Reads all file extensions from the 'extensions' file.
-	/// </summary>
-	/// <param name="extensionsFile"> Name of the file containing the extensions. </param>
-	/// <returns>< Returns all file extensions as string in a vector. /returns>
-	static std::string GetFileExtensions(std::string const &extensionsFile);
 };

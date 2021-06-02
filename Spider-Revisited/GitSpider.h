@@ -55,5 +55,8 @@ private:
 	/// <param name="repoPath"> Directory containing files to parse. </param>
 	/// <returns> Map with original file path (without .meta) as key and CodeBlocks as value. </returns>
 	AuthorData parseBlameData(std::string const &repoPath);
+
+public:
+	void setParsableExts(std::string const &exts) override;
 };
 
