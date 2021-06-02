@@ -8,7 +8,6 @@ Utrecht University within the Software Project course.
 
 int main()
 {
-	int code = 0;
-	RunSpider::runSpider("https://github.com/zavg/linux-0.01", "Downloads", 2, code);
-	return code;
+	RunSpider::runSpider("https://github.com/zavg/linux-0.01", "Downloads", 2);
+	return 0;
 }
