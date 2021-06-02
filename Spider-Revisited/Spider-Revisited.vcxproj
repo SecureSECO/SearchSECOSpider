@@ -36,7 +36,6 @@
     <ClCompile Include="Git.cpp" />
     <ClCompile Include="GitSpider.cpp" />
     <ClCompile Include="Logger.cpp" />
-    <ClCompile Include="loguru\loguru.cpp" />
     <ClCompile Include="RunSpider.cpp" />
     <ClCompile Include="Spider.cpp" />
   </ItemGroup>
@@ -141,7 +140,6 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>../loguru-master</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -157,7 +155,6 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>../loguru-master</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

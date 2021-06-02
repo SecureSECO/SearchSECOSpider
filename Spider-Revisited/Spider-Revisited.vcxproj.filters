@@ -74,8 +74,5 @@
     <ClCompile Include="ErrorSpider.cpp">
       <Filter>Source Files\ErrorHandling</Filter>
     </ClCompile>
-    <ClCompile Include="loguru\loguru.cpp">
-      <Filter>Source Files\ErrorHandling</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>
