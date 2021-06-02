@@ -1,10 +1,12 @@
 # This program has been developed by students from the bachelor Computer Science at
 # Utrecht University within the Software Project course.
-# © Copyright Utrecht University (Department of Information and Computing Sciences)
+# Â© Copyright Utrecht University (Department of Information and Computing Sciences)
 
 
 cmake_minimum_required(VERSION 3.13)
 set(CMAKE_CXX_STANDARD 20)
+
+message("Building the spider...")
 
 set(SPIDER_HEADER_LIST
    ExecuteCommand.h
