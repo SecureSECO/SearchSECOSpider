@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CodeBlock.h" />
-    <ClInclude Include="Error.h" />
+    <ClInclude Include="ErrorSpider.h" />
     <ClInclude Include="ExecuteCommand.h" />
     <ClInclude Include="Filesystem.h" />
     <ClInclude Include="Git.h" />
@@ -30,7 +30,7 @@
     <ClInclude Include="Spider.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Error.cpp" />
+    <ClCompile Include="ErrorSpider.cpp" />
     <ClCompile Include="ExecuteCommand.cpp" />
     <ClCompile Include="Filesystem.cpp" />
     <ClCompile Include="Git.cpp" />

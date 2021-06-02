@@ -42,7 +42,7 @@
     <ClInclude Include="CodeBlock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Error.h">
+    <ClInclude Include="ErrorSpider.h">
       <Filter>Header Files\ErrorHandling</Filter>
     </ClInclude>
     <ClInclude Include="Logger.h">
@@ -71,7 +71,7 @@
     <ClCompile Include="Logger.cpp">
       <Filter>Source Files\ErrorHandling</Filter>
     </ClCompile>
-    <ClCompile Include="Error.cpp">
+    <ClCompile Include="ErrorSpider.cpp">
       <Filter>Source Files\ErrorHandling</Filter>
     </ClCompile>
     <ClCompile Include="loguru\loguru.cpp">
