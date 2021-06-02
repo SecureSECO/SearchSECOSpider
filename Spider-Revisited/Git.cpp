@@ -17,7 +17,7 @@ Utrecht University within the Software Project course.
 #include "Filesystem.h"
 #include "Git.h"
 #include "Logger.h"
-#include "Error.h"
+#include "ErrorSpider.h"
 
 std::string Git::getCloneCommand(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts)
 {

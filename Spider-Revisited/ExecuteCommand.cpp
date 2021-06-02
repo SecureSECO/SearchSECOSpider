@@ -9,7 +9,7 @@ Utrecht University within the Software Project course.
 #include <array>
 #include <iostream>
 #include <memory>
-#include "Error.h"
+#include "ErrorSpider.h"
 
 #define bufferSize 1024
 
