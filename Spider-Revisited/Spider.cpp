@@ -33,3 +33,8 @@ int Spider::getThreads()
 {
 	return threadsCount;
 }
+
+void Spider::setParsableExts(std::string const &exts)
+{
+	parsableExts = exts;
+}

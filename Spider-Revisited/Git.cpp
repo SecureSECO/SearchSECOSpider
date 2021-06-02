@@ -19,11 +19,11 @@ Utrecht University within the Software Project course.
 #include "Logger.h"
 #include "Error.h"
 
-std::string Git::getCloneCommand(std::string const &url, std::string const &filePath, std::string const &branch)
+std::string Git::getCloneCommand(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts)
 {
 	std::string command = "git clone " + url + " \"" + filePath + "\" --no-checkout --branch " + branch;
 	command.append(" && cd \"" + filePath + "\" && git sparse-checkout set ");
-	command.append(GetFileExtensions("extensions"));
+	command.append(exts);
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 	// Sadly does not work, although it should.
@@ -35,9 +35,9 @@ std::string Git::getCloneCommand(std::string const &url, std::string const &file
 	return command;
 }
 
-int Git::clone(std::string const &url, std::string const &filePath, std::string const &branch)
+int Git::clone(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts)
 {
-	std::string command = getCloneCommand(url, filePath, branch);
+	std::string command = getCloneCommand(url, filePath, branch, exts);
 	int tries = RECONNECT_TRIES;
 	int delay = RECONNECT_DELAY;
 
@@ -92,44 +92,6 @@ std::vector<CodeBlock> Git::getBlameData(std::string const &filePath)
 		return parseBlame(blameData);
 	}
 	return std::vector<CodeBlock>();
-}
-
-std::string Git::GetFileExtensions(std::string const &extensionsFile)
-{
-	// Read extentions from file. Error catching based on https://stackoverflow.com/questions/9670396/exception-handling-and-opening-a-file.
-	std::string contents;
-	try
-	{
-		contents = Filesystem::readFile(extensionsFile);
-	}
-	catch (const std::ifstream::failure& e)
-	{
-		Logger::logWarn(Error::getErrorMessage(ErrorType::FileExtensionsNotFound), __FILE__, __LINE__);
-	}
-	std::vector<std::string> fileExts;
-
-	// Based on https://stackoverflow.com/questions/12514510/iterate-through-lines-in-a-string-c.
-	std::istringstream iss(contents);
-	for (std::string line; std::getline(iss, line);)
-	{
-		if (line.length() > 0)
-		{
-			fileExts.push_back(line);
-		}
-	}
-
-	// Format file extensions in a string.
-	std::string output;
-	for (int i = 0; i < fileExts.size(); i++)
-	{
-		output += "*" + fileExts[i];
-		if (i != fileExts.size() - 1)
-		{
-			output += " ";
-		}
-	}
-
-	return output;
 }
 
 // Separates a string on given character.

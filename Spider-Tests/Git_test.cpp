@@ -16,19 +16,6 @@ Utrecht University within the Software Project course.
 #include <iostream>
 #include <string>
 
-ExecuteCommandObjMock* setExecuteCommand()
-{
-	ExecuteCommandObjMock* execMock = new ExecuteCommandObjMock();
-	ExecuteCommand::executeCommandObj = execMock;
-	return execMock;
-}
-
-void resetExecuteCommand(ExecuteCommandObjMock* execMock)
-{
-	delete execMock;
-	ExecuteCommand::executeCommandObj = new ExecuteCommandObj;
-}
-
 TEST(BlameParse, BasicParse)
 {
 	Git git;
@@ -93,50 +80,10 @@ TEST(BlameParse, InvalidData)
 	EXPECT_ANY_THROW(git.parseBlame(parseBlameInvalidData));
 }
 
-TEST(GitTest, ReadExtensionsFile)
-{
-	// Setup mock.
-	FilesystemMock *mock = FilesystemMock::setFilesystemMock();
-	Node ext = Node("extensions", ".c\n.cpp\n.h\n.cs\n");
-	mock->mainNode->children["extensions"] = ext;
-
-	// Run test.
-	std::string exts = Git::GetFileExtensions("extensions");
-	EXPECT_EQ(exts, "*.c *.cpp *.h *.cs");
-
-	
-	// Reset filesystem implementation.
-	FilesystemMock::resetFileSystem(mock);
-}
-
-TEST(GitTest, Clone)
-{
-	// Setup mocks.
-	FilesystemMock *fsMock = FilesystemMock::setFilesystemMock();
-	Node ext = Node("extentions", ".c\n.cpp\n.h\n.cs\n");
-	fsMock->mainNode->children["extensions"] = ext;
-
-	ExecuteCommandObjMock *execMock = ExecuteCommandObjMock::setExecuteCommand();
-
-	// Run tests.
-	Git git;
-	// Timeout.
-	EXPECT_ANY_THROW(git.clone("testurl", "path", "master"));
-
-	// Reconnect.
-	execMock->responses.push("");
-	execMock->responses.push("succes");
-	EXPECT_EQ(git.clone("testurl", "path", "master"), 0);
-
-	// Cleanup.
-	FilesystemMock::resetFileSystem(fsMock);
-	ExecuteCommandObjMock::resetExecuteCommand(execMock);
-}
-
 TEST(BlameToFile, BasicBlameToFile)
 {
 	Git git;
-	ExecuteCommandObjMock *execMock = ExecuteCommandObjMock::setExecuteCommand();
+	ExecuteCommandObjMock* execMock = ExecuteCommandObjMock::setExecuteCommand();
 	git.blameToFile("linux/torvalds", std::vector<std::string> {"local/path"}, std::vector<std::string> {"test/output/location"});
 	EXPECT_EQ(execMock->execString, "cd \"linux/torvalds\" && git blame -p \"local/path\" >> \"test/output/location\"");
 	ExecuteCommandObjMock::resetExecuteCommand(execMock);
@@ -146,21 +93,11 @@ TEST(BlameToFile, MultipleBlameToFile)
 {
 	Git git;
 	ExecuteCommandObjMock *execMock = ExecuteCommandObjMock::setExecuteCommand();
-	git.blameToFile("linux/torvalds2", std::vector<std::string>{"local/path", "local2/path1", "p"},
-					std::vector<std::string>{"test/output/location1", "output/location2", "test3"});
-	EXPECT_EQ(execMock->execString,
-			  "cd \"linux/torvalds2\" && git blame -p \"local/path\" >> \"test/output/location1\" && git blame -p "
-			  "\"local2/path1\" >> \"output/location2\" && git blame -p \"p\" >> \"test3\"");
+	git.blameToFile("linux/torvalds2", std::vector<std::string> {"local/path", "local2/path1", "p"}, std::vector<std::string> {"test/output/location1", "output/location2", "test3"});
+	EXPECT_EQ(execMock->execString, "cd \"linux/torvalds2\" && git blame -p \"local/path\" >> \"test/output/location1\" && git blame -p \"local2/path1\" >> \"output/location2\" && git blame -p \"p\" >> \"test3\"");
 	ExecuteCommandObjMock::resetExecuteCommand(execMock);
 }
 
-TEST(CloneProject, ThrowError)
-{
-	Git git;
-	ExecuteCommandObjMock* execMock = setExecuteCommand();
-	EXPECT_THROW(git.clone("invalidURL", "invalidFilePath", "invalidBranch"), int);
-	resetExecuteCommand(execMock);
-}
 
 class LinkValidationParameterizedTestFixture : public ::testing::TestWithParam<std::tuple<std::string, bool>>
 {

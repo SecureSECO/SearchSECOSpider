@@ -17,7 +17,7 @@ std::mutex cmdLock;
 
 int GitSpider::downloadSource(std::string const &url, std::string const &filePath, std::string const &branch)
 {
-	return git->clone(url, filePath, branch);
+	return git->clone(url, filePath, branch, parsableExts);
 }
 
 AuthorData GitSpider::downloadAuthor(std::string const &repoPath)
@@ -135,4 +135,17 @@ AuthorData GitSpider::parseBlameData(std::string const &repoPath)
 
 	std::cout << ", done." << std::endl;
 	return authorData;
+}
+
+void GitSpider::setParsableExts(std::string const &exts)
+{
+	int start = 0;
+	int end = 0;
+	while (end != std::string::npos)
+	{
+		end = exts.find(" ", start);
+		parsableExts += "*" + exts.substr(start, end - start) + " ";
+		start = end + 1;
+	}
+	parsableExts.erase(parsableExts.length() - 1, 1);
 }

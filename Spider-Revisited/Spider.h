@@ -35,9 +35,18 @@ public:
 	/// <returns> Amount of threads. </returns>
 	virtual int getThreads();
 
+	/// <summary>
+	/// Sets the extensions the spider should download.
+	/// Format: .c .cpp .h .cs
+	/// </summary>
+	virtual void setParsableExts(std::string const &exts);
+
 protected:
 	// Amount of threads the spider can use.
 	int threadsCount;
+
+	// Sets the extensions the spider should download.
+	std::string parsableExts;
 
 private:
 	/// <summary>

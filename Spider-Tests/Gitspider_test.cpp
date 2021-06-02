@@ -26,7 +26,7 @@ TEST(SpiderDownload, BlameDataCalls)
 	// Give execMock an OK reponse to pass repo download call.
 	execMock->responses.push("ok");
 	// Create fake file system with downloaded repository.
-	fsMock->mainNode->children["extensions"] = Node("extensions", ".c\n.cpp\n.h\n.cs\n");
+	fsMock->mainNode->children["outofrepo.c"] = Node("outofrepo.c", "content");
 	fsMock->mainNode->children["repo"] = Node("repo");
 	fsMock->mainNode->children["repo"].children[".git"] = Node(".git");
 	fsMock->mainNode->children["repo"].children[".git"].children["gitfile.c"] = Node("gitfile.c","content");
@@ -41,6 +41,7 @@ TEST(SpiderDownload, BlameDataCalls)
 	// Run function to test.
 	GitSpider gitspider;
 	gitspider.setThreads(1);
+	gitspider.setParsableExts(".c");
 	gitspider.download("test.url", "repo", "master");
 
 	// Ensure that a gitblame has been called to all the files.
@@ -52,7 +53,7 @@ TEST(SpiderDownload, BlameDataCalls)
 	EXPECT_NE(cmd.find("file4.c.meta"), std::string::npos);
 
 	// Make sure that files outside of repository are ignored and that gitfiles are ignored.
-	EXPECT_EQ(cmd.find("extensions.meta"), std::string::npos);
+	EXPECT_EQ(cmd.find("outofrepo.c.meta"),  std::string::npos);
 	EXPECT_EQ(cmd.find("gitfile.c.meta"),  std::string::npos);
 
 	// Clean up.
