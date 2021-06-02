@@ -12,7 +12,7 @@ if(NOT DEFINED LOGURU_INCLUDED)
    loguru/loguru.hpp
    loguru/loguru.cpp
    )
-   set(LOGURU_INCLUDED true)
+   set(LOGURU_INCLUDED true PARENT_SCOPE)
    message("Including loguru files...")
 endif()
 
