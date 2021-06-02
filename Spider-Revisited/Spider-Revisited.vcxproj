@@ -28,6 +28,7 @@
     <ClInclude Include="Logger.h" />
     <ClInclude Include="RunSpider.h" />
     <ClInclude Include="Spider.h" />
+    <ClInclude Include="loguru/loguru.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ErrorSpider.cpp" />
@@ -38,6 +39,7 @@
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="RunSpider.cpp" />
     <ClCompile Include="Spider.cpp" />
+    <ClCompile Include="loguru/loguru.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
