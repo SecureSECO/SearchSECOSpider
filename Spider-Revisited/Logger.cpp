@@ -4,7 +4,7 @@ Utrecht University within the Software Project course.
 © Copyright Utrecht University (Department of Information and Computing Sciences)
 */
 
-//#include "loguru/loguru.hpp"
+#include "loguru/loguru.hpp"
 #include "Logger.h"
 #include <stdlib.h>
 
