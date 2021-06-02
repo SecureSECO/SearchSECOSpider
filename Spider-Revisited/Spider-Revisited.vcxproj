@@ -28,6 +28,7 @@
     <ClInclude Include="Logger.h" />
     <ClInclude Include="RunSpider.h" />
     <ClInclude Include="Spider.h" />
+    <ClInclude Include="loguru/loguru.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ErrorSpider.cpp" />
@@ -36,9 +37,9 @@
     <ClCompile Include="Git.cpp" />
     <ClCompile Include="GitSpider.cpp" />
     <ClCompile Include="Logger.cpp" />
-    <ClCompile Include="loguru\loguru.cpp" />
     <ClCompile Include="RunSpider.cpp" />
     <ClCompile Include="Spider.cpp" />
+    <ClCompile Include="loguru/loguru.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -141,7 +142,6 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>../loguru-master</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -157,7 +157,6 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>../loguru-master</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

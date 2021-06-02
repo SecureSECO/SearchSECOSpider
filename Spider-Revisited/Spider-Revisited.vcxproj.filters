@@ -48,6 +48,9 @@
     <ClInclude Include="Logger.h">
       <Filter>Header Files\ErrorHandling</Filter>
     </ClInclude>
+    <ClInclude Include="loguru/loguru.hpp">
+      <Filter>Header Files\ErrorHandling</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RunSpider.cpp">
@@ -74,7 +77,7 @@
     <ClCompile Include="ErrorSpider.cpp">
       <Filter>Source Files\ErrorHandling</Filter>
     </ClCompile>
-    <ClCompile Include="loguru\loguru.cpp">
+    <ClCompile Include="loguru/loguru.cpp">
       <Filter>Source Files\ErrorHandling</Filter>
     </ClCompile>
   </ItemGroup>
