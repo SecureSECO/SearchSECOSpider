@@ -9,6 +9,8 @@ Utrecht University within the Software Project course.
 #include "CodeBlock.h"
 #include "Spider.h"
 
+#define EXTS ".c .cpp .h .cs .cc .hpp .java .py"
+
 class RunSpider
 {
 public:
