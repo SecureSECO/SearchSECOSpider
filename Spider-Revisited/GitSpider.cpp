@@ -28,7 +28,7 @@ AuthorData GitSpider::downloadAuthor(std::string const &repoPath)
 	auto pred = [repoPath](std::filesystem::directory_entry path)
 	{
 		std::string str = path.path().string();
-		return !(str.rfind(repoPath + "\\.git", 0) == 0) && Filesystem::isRegularFile(str);
+		return !(str.rfind(repoPath + "\\.git", 0) == 0 || str.rfind(repoPath + "/.git", 0) == 0) && Filesystem::isRegularFile(str);
 	};
 	std::queue<std::string> files = Filesystem::getFilepaths(repoPath, pred);
 	std::mutex queueLock;
@@ -107,7 +107,7 @@ AuthorData GitSpider::parseBlameData(std::string const &repoPath)
 	auto pred = [repoPath](std::filesystem::directory_entry path)
 	{
 		std::string str = path.path().string();
-		return !(str.rfind(repoPath + "\\.git", 0) == 0) && Filesystem::isRegularFile(str) &&
+		return !(str.rfind(repoPath + "\\.git", 0) == 0 || str.rfind(repoPath + "/.git", 0) == 0) && Filesystem::isRegularFile(str) &&
 				path.path().extension() == ".meta";
 	};
 	auto paths = Filesystem::getFilepaths(repoPath, pred);

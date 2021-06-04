@@ -98,6 +98,13 @@ TEST(BlameToFile, MultipleBlameToFile)
 	ExecuteCommandObjMock::resetExecuteCommand(execMock);
 }
 
+TEST(CloneTest, NoResponse)
+{
+    Git git;
+    ExecuteCommandObjMock *execMock = ExecuteCommandObjMock::setExecuteCommand();
+    EXPECT_ANY_THROW(git.clone("url", "path", "branch", "*.c"));
+    ExecuteCommandObjMock::resetExecuteCommand(execMock);
+}
 
 class LinkValidationParameterizedTestFixture : public ::testing::TestWithParam<std::tuple<std::string, bool>>
 {

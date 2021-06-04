@@ -40,16 +40,38 @@ std::string Git::getCloneCommand(std::string const &url, std::string const &file
 	return command;
 }
 
+std::string Git::tryClone(std::string const &url, std::string const &filePath, std::string const &branch,
+					 std::string const &exts)
+{
+	std::string downloadCommand = getCloneCommand(url, filePath, branch, exts);
+	// Get .git folder.
+	ExecuteCommand::exec(downloadCommand.c_str());
+
+	// Get default branch.
+	std::string brch = branch;
+	std::string command;
+	if (branch.empty())
+	{
+		command = "cd \"" + filePath + "\" && git branch --show-current";
+		brch = ExecuteCommand::execOut(command.c_str());
+	}
+
+	// Get files.
+	command = "cd \"" + filePath + "\" && git checkout " + brch;
+	std::string resp = ExecuteCommand::execOut(command.c_str());
+
+	return resp;
+}
+
 int Git::clone(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts)
 {
-	std::string command = getCloneCommand(url, filePath, branch, exts);
 	int tries = RECONNECT_TRIES;
-	int delay = RECONNECT_DELAY;
-
-	std::string str = ExecuteCommand::execOut(command.c_str());
+	int delay = RECONNECT_DELAY;	
 	
+	std::string resp = tryClone(url, filePath, branch, exts);
+
 	// Retry loop incase cloning fails to respond.
-	while (str == "")
+	while (resp == "")
 	{
 		// Exit with error code if no more tries left.
 		if (tries < 0)
@@ -64,7 +86,7 @@ int Git::clone(std::string const &url, std::string const &filePath, std::string 
 		delay *= 2;
 		tries--;
 		
-		str = ExecuteCommand::execOut(command.c_str());
+		resp = tryClone(url, filePath, branch, exts);
 	}
 
 	return 0;

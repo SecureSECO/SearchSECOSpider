@@ -25,7 +25,7 @@ endif()
 
 set(CMAKE_CXX_STANDARD 20)
 set(TEST_NAME spider_tests)
-add_executable(${TEST_NAME} Git_test.cpp Gitspider_test.cpp Mock_test.cpp ExecuteCommand_test.cpp testMocks.cpp)
+add_executable(${TEST_NAME} Git_test.cpp Gitspider_test.cpp Mock_test.cpp ExecuteCommand_test.cpp Integration_test.cpp testMocks.cpp)
 target_link_libraries(${TEST_NAME} gtest_main spider )
 
 
