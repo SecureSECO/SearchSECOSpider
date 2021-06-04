@@ -12,8 +12,6 @@ Utrecht University within the Software Project course.
 #include "Spider.h"
 #include "Logger.h"
 
-#define EXTS ".c .cpp .h .cs .cc .hpp .java"
-
 AuthorData RunSpider::runSpider(std::string const &url, std::string const &filePath, int threads,
 								std::string const &branch)
 {
