@@ -5,6 +5,8 @@ Utrecht University within the Software Project course.
 */
 
 #pragma once
+
+#include "loguru/loguru.hpp"
 #include <string>
 
 class Logger

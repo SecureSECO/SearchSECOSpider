@@ -15,6 +15,9 @@ Utrecht University within the Software Project course.
 AuthorData RunSpider::runSpider(std::string const &url, std::string const &filePath, int threads,
 								std::string const &branch)
 {
+	// Set the loguru thread name to "spider" 
+	loguru::set_thread_name("spider");
+
 	// Delete the folder at filepath, so that git does not throw an error.
 	std::cout << "Deleting old files..." << std::endl;
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
