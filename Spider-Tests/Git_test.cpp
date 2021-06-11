@@ -76,8 +76,8 @@ TEST(BlameParse, CheckCommitData)
 TEST(BlameParse, InvalidData)
 {
 	Git git;
-	EXPECT_ANY_THROW(git.parseBlame(parseBlameInvalidCommit));
-	EXPECT_ANY_THROW(git.parseBlame(parseBlameInvalidData));
+	EXPECT_NO_THROW(git.parseBlame(parseBlameInvalidCommit));
+	EXPECT_NO_THROW(git.parseBlame(parseBlameInvalidData));
 }
 
 TEST(BlameToFile, BasicBlameToFile)

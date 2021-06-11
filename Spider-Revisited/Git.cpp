@@ -193,8 +193,8 @@ std::vector<CodeBlock> Git::parseBlame(std::string const &blameData)
 		// Verify that data is in a valid format.
 		if (arrLine.size() < 3)
 		{
-			Logger::logFatal(Error::getErrorMessage(ErrorType::BlameIncorrectFormat), __FILE__, __LINE__, (int)ErrorType::BlameIncorrectFormat);
-			throw 1;
+			Logger::logWarn("Blame data has incorrect format.", __FILE__, __LINE__);
+			return {};
 		}
 
 		// Store new commit.
@@ -241,8 +241,8 @@ void Git::parseCommitLine(std::string const &commit, std::map<std::string, std::
 		{
 			return;
 		}
-		Logger::logFatal(Error::getErrorMessage(ErrorType::BlameIncorrectFormat), __FILE__, __LINE__, (int)ErrorType::BlameIncorrectFormat);
-		throw 1;
+		Logger::logWarn("Blame data has incorrect format.", __FILE__, __LINE__);
+		return;
 	}
 
 	// Check what type of data is found and store it.
