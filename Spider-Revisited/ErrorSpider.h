@@ -11,7 +11,6 @@ enum class ErrorType
 {
 	GitCloneError,
 	PipeOpenFailed,
-	BlameIncorrectFormat,
 	FileExtensionsNotFound,
 };
 
@@ -22,7 +21,6 @@ private:
 	{
 			{ErrorType::GitCloneError, "Git cloning failed"},
 			{ErrorType::PipeOpenFailed, "popen() failed."},
-			{ErrorType::BlameIncorrectFormat, "Blame data has incorrect format."},
 		{ErrorType::FileExtensionsNotFound, "File extensions file not found. Please re-add this file to your project. No files will be cloned."},
 	};
 public:
