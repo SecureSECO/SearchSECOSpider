@@ -27,7 +27,7 @@ class FilesystemImp
 	/// </summary>
 	/// <param name="repoPath"> From which folder to get the files. </param>
 	/// <returns> Queue containing the filepaths. </returns>
-	virtual std::queue<std::string>getFilepaths(std::string const &repoPath, 
+	virtual std::queue<std::filesystem::path>getFilepaths(std::string const &repoPath, 
 		std::function<bool(std::filesystem::directory_entry)> predicate);
 
 	/// <summary>
@@ -36,6 +36,12 @@ class FilesystemImp
 	/// <param name="path"> Path to check. </param>
 	/// <returns> True if file is a regular file, false otherwise. </returns>
 	virtual bool isRegularFile(std::string const &path);
+
+	/// <summary>
+	/// Deletes a files.
+	/// </summary>
+	/// <param name="path"> Path to delete. </param>
+	virtual void remove(std::string const &path);
 	
 	virtual ~FilesystemImp();
 };
@@ -61,7 +67,7 @@ public:
 	/// </summary>
 	/// <param name="repoPath"> From which folder to get the files. </param>
 	/// <returns> Queue containing the filepaths. </returns>
-	static std::queue<std::string> getFilepaths(std::string const &repoPath, 
+	static std::queue<std::filesystem::path> getFilepaths(std::string const &repoPath, 
 		std::function<bool(std::filesystem::directory_entry)> predicate)
 	{
 		return fs->getFilepaths(repoPath, predicate);    
@@ -75,5 +81,14 @@ public:
 	static bool isRegularFile(std::string const &path)
 	{
 		return fs->isRegularFile(path);
+	}
+
+	/// <summary>
+	/// Deletes a files.
+	/// </summary>
+	/// <param name="path"> Path to delete. </param>
+	static void remove(std::string const& path)
+	{
+		return fs->remove(path);
 	}
 };

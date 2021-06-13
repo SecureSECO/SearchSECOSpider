@@ -20,8 +20,11 @@ public:
 	/// <param name="url"> Source to download. </param>
 	/// <param name="filePath"> Where to store the source locally. </param>
 	/// <param name="branch"> Which branch of the source to download. </param>
+	/// <param name="tag"> Tag to download. </param>
+	/// <param name="nextTag"> Newest tag after 'tag'. Used to calculate differences. </param>
 	/// <returns></returns>
-	virtual AuthorData download(std::string const &url, std::string const &filePath, std::string const &branch);
+	virtual AuthorData download(std::string const &url, std::string const &filePath, std::string const &branch,
+							  std::string const &tag, std::string const &nextTag);
 
 	/// <summary>
 	/// Sets the amount of threads the Spider can use.
@@ -56,8 +59,11 @@ private:
 	/// <param name="url"> Url to source to download. </param>
 	/// <param name="filePath"> Local path where to store the source.</param>
 	/// <param name="branch"> Branch of the source to download. </param>
+	/// <param name="tag"> Tag to download. </param>
+	/// <param name="nextTag"> Newest tag after 'tag'. Used to calculate differences. </param>
 	/// <returns> Error code. </returns>
-	virtual int downloadSource(std::string const &url, std::string const &filePath, std::string const &branch) = 0;
+	virtual int downloadSource(std::string const &url, std::string const &filePath, std::string const &branch,
+							 std::string const &tag, std::string const &nextTag) = 0;
 
 	/// <summary>
 	/// downloadAuthor gets the author data for each file using git blame.

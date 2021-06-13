@@ -7,6 +7,7 @@ Utrecht University within the Software Project course.
 #pragma once
 #include "Spider.h"
 #include "Git.h"
+#include <filesystem>
 #include <mutex>
 #include <queue>
 #include <map>
@@ -22,8 +23,11 @@ private:
 	/// <param name="url"> Url to repository to download. </param>
 	/// <param name="filePath"> Local path where to store the repository. </param>
 	/// <param name="branch"> Branch of the source to download. </param>
+	/// <param name="tag"> Tag to download. </param>
+	/// <param name="nextTag"> Newest tag after 'tag'. Used to calculate differences. </param>
 	/// <returns></returns>
-	int downloadSource(std::string const &url, std::string const &filePath, std::string const &branch) override;
+	int downloadSource(std::string const &url, std::string const &filePath, std::string const &branch,
+						std::string const &tag, std::string const &nextTag) override;
 
 	/// <summary>
 	/// Implements the abstract downloadAuthor method from the Spider class.
@@ -47,7 +51,8 @@ private:
 	/// <param name="totalPaths"> Total paths that need to be blamed. </param>
 	/// <param name="files"> Queue containing all files to be blamed. </param>
 	/// <param name="queueLock"> Lock to prevent racing conditions. </param>
-	void singleThread(std::string const &repoPath, int &blamedPaths, const int &totalPaths, std::queue<std::string> &files, std::mutex &queueLock);
+	void singleThread(std::string const &repoPath, int &blamedPaths, const int &totalPaths,
+			std::queue<std::filesystem::path> &files, std::mutex &queueLock);
 
 	/// <summary>
 	/// Parses blame data from all .meta files in a directory.

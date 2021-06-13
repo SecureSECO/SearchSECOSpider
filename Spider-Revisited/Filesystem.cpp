@@ -21,16 +21,15 @@ std::string FilesystemImp::readFile(std::string const &filePath)
 	return res;
 }
 
-std::queue<std::string> FilesystemImp::getFilepaths(std::string const &repoPath,
+std::queue<std::filesystem::path> FilesystemImp::getFilepaths(std::string const &repoPath,
 													std::function<bool(std::filesystem::directory_entry)> predicate)
 {
-	std::queue<std::string> files;
+	std::queue<std::filesystem::path> files;
 	for (const auto &path : std::filesystem::recursive_directory_iterator(repoPath))
 	{
 		if (predicate(path))
 		{
-			std::string s = (path.path()).string();
-			files.push(s);
+			files.push(path);
 		}
 	}
 	return files;
@@ -39,6 +38,11 @@ std::queue<std::string> FilesystemImp::getFilepaths(std::string const &repoPath,
 bool FilesystemImp::isRegularFile(std::string const &path)
 {
 	return std::filesystem::is_regular_file(path);
+}
+
+void FilesystemImp::remove(std::string const &path)
+{
+	std::filesystem::remove(path);
 }
 
 FilesystemImp::~FilesystemImp()

@@ -19,25 +19,72 @@ Utrecht University within the Software Project course.
 #include "Logger.h"
 #include "ErrorSpider.h"
 
-std::string Git::getCloneCommand(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts)
+std::vector<std::string> splitString(std::string const &sentence)
 {
-	std::string command = "git clone " + url + " \"" + filePath + "\" --no-checkout";
-	command.append(" && cd \"" + filePath + "\" && git sparse-checkout set ");
-	command.append(exts);
+	std::stringstream ss(sentence);
+	std::string to;
+	std::vector<std::string> result;
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-	// Sadly does not work, although it should.
-	// command.append(" ![Cc][Oo][Nn].* ![Pp][Rr][Nn].* ![Aa][Uu][Xx].* ![Nn][Uu][Ll].* ![Cc][Oo][Mm][123456789].*
-	// ![Ll][Pp][Tt][123456789].*");
-#endif
-
-	// Switch branch if specified.
-	if (!branch.empty())
+	while (std::getline(ss, to, '\n'))
 	{
-		command.append(" && git checkout " + branch);
+		result.push_back(to);
 	}
-		
-	return command;
+
+	return result;
+}
+
+std::vector<std::filesystem::path> getFilepaths(std::string const &changes, std::string const& filePath)
+{
+	auto lines = splitString(changes);
+	std::vector<std::filesystem::path> result;
+	for (int i = 0; i < lines.size(); i++)
+	{
+		// Check for added file or modification.
+		if (lines[i][0] == 'A' || lines[i][0] == 'M')
+		{
+			std::filesystem::path path = filePath + "/" + lines[i].substr(2);
+			result.push_back(path.make_preferred());
+		}
+	}
+	return result;
+}
+
+int Git::clone(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts,
+			   std::string const &tag, std::string const &nextTag)
+{
+	int tries = RECONNECT_TRIES;
+	int delay = RECONNECT_DELAY;
+
+	std::string resp = tryClone(url, filePath, branch, exts);
+
+	// Retry loop incase cloning fails to respond.
+	while (resp == "")
+	{
+		// Exit with error code if no more tries left.
+		if (tries < 0)
+		{
+			Logger::logFatal(Error::getErrorMessage(ErrorType::GitCloneError), __FILE__, __LINE__,
+							 (int)ErrorType::GitCloneError);
+			throw 1;
+		}
+
+		// Try again after delay.
+		std::cout << "Download failed, trying again in " << delay << " seconds... " << tries << " tries left."
+				  << std::endl;
+		std::this_thread::sleep_for(std::chrono::seconds(delay));
+		delay *= 2;
+		tries--;
+
+		resp = tryClone(url, filePath, branch, exts);
+	}
+
+	// Get differences.
+	if (tag != "HEAD")
+	{
+		GetDifference(tag, nextTag, filePath);
+	}
+
+	return 0;
 }
 
 std::string Git::tryClone(std::string const &url, std::string const &filePath, std::string const &branch,
@@ -63,34 +110,48 @@ std::string Git::tryClone(std::string const &url, std::string const &filePath, s
 	return resp;
 }
 
-int Git::clone(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts)
+void Git::GetDifference(std::string const &tag, std::string const &nextTag, std::string const &filePath)
 {
-	int tries = RECONNECT_TRIES;
-	int delay = RECONNECT_DELAY;	
-	
-	std::string resp = tryClone(url, filePath, branch, exts);
+	std::string command = "cd \"" + filePath + "\" && git diff --name-status " + nextTag + " " + tag;
+	std::string changed = ExecuteCommand::execOut(command.c_str());
+	auto changedFiles = getFilepaths(changed, filePath);
+	command = "cd \"" + filePath + "\" && git checkout tags/" + tag;
+	ExecuteCommand::exec(command.c_str());
 
-	// Retry loop incase cloning fails to respond.
-	while (resp == "")
+	auto pred = [filePath](std::filesystem::directory_entry path) {
+		std::string str = path.path().string();
+		return !(str.rfind(filePath + "\\.git", 0) == 0 || str.rfind(filePath + "/.git", 0) == 0) &&
+			   Filesystem::isRegularFile(str);
+	};
+	auto files = Filesystem::getFilepaths(filePath, pred);
+
+	while (!files.empty())
 	{
-		// Exit with error code if no more tries left.
-		if (tries < 0)
+		std::filesystem::path file = files.front();
+		files.pop();
+		if (std::find(changedFiles.begin(), changedFiles.end(), file) == changedFiles.end())
 		{
-			Logger::logFatal(Error::getErrorMessage(ErrorType::GitCloneError), __FILE__, __LINE__, (int)ErrorType::GitCloneError);
-			throw 1;
+			Filesystem::remove(file.string());
 		}
+	}
+}
 
-		// Try again after delay.
-		std::cout << "Download failed, trying again in " << delay << " seconds... " << tries << " tries left." << std::endl;
-		std::this_thread::sleep_for(std::chrono::seconds(delay));
-		delay *= 2;
-		tries--;
-		
-		resp = tryClone(url, filePath, branch, exts);
+std::string Git::getCloneCommand(std::string const &url, std::string const &filePath, std::string const &branch,
+								 std::string const &exts)
+{
+	std::string command = "git clone " + url + " \"" + filePath + "\" --no-checkout";
+	command.append(" && cd \"" + filePath + "\" && git sparse-checkout set ");
+	command.append(exts);
+
+	// Switch branch if specified.
+	if (!branch.empty())
+	{
+		command.append(" && git checkout " + branch);
 	}
 
-	return 0;
+	return command;
 }
+
 
 std::string Git::getBlameToFileCommand(std::string const &repoPath, std::vector<std::string> const &filePath,
 									   std::vector<std::string> const &outputFile)

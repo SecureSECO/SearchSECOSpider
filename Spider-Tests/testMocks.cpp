@@ -79,7 +79,7 @@ bool FilesystemMock::isRegularFile(std::string const &path)
 }
 
 // Recursively add all files in a node to a queue.
-void recurseFolder(Node &node, std::queue<std::string> &queue, std::string const &path,
+void recurseFolder(Node &node, std::queue<std::filesystem::path> &queue, std::string const &path,
 				   std::function<bool(std::filesystem::directory_entry)> predicate)
 {
 	for (auto child : node.children)
@@ -104,10 +104,10 @@ void recurseFolder(Node &node, std::queue<std::string> &queue, std::string const
 	}
 }
 
-std::queue<std::string> FilesystemMock::getFilepaths(std::string const &repoPath,
-													 std::function<bool(std::filesystem::directory_entry)> predicate)
+std::queue<std::filesystem::path> FilesystemMock::getFilepaths(std::string const &repoPath,
+									std::function<bool(std::filesystem::directory_entry)> predicate)
 {
-	std::queue<std::string> files;
+	std::queue<std::filesystem::path> files;
 	Node *node = findNode(mainNode, splitFilepath(repoPath));
 	recurseFolder(*node, files, repoPath, predicate);
 	return files;
