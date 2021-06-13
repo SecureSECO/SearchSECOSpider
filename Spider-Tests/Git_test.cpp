@@ -102,7 +102,7 @@ TEST(CloneTest, NoResponse)
 {
     Git git;
     ExecuteCommandObjMock *execMock = ExecuteCommandObjMock::setExecuteCommand();
-    EXPECT_ANY_THROW(git.clone("url", "path", "branch", "*.c"));
+    EXPECT_ANY_THROW(git.clone("url", "path", "branch", "*.c", "HEAD", ""));
     ExecuteCommandObjMock::resetExecuteCommand(execMock);
 }
 

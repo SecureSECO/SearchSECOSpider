@@ -22,10 +22,19 @@ public:
 	/// <param name="url"> Link to repository to download. </param>
 	/// <param name="filePath"> Local path where to store the repository. </param>
 	/// <param name="threads"> Amount of threads the spider can use. </param>
+	/// <param name="tag"> Tag to download. Pass HEAD to download most recent version. </param>
+	/// <param name="nextTag"> Newest tag after 'tag'. Used to calculate differences. </param>
 	/// <param name="branch"> Which branchs of the repository to download. </param>
 	/// <returns> Authordata which contains which lines were written by which author. </returns>
 	static AuthorData runSpider(std::string const &url, std::string const &filePath, int threads,
-							  std::string const &branch = "");
+							std::string const &tag, std::string const &nextTag, std::string const &branch = "");
+
+	/// <summary>
+	/// Gets tags from downloaded repository.
+	/// </summary>
+	/// <param name="filePath"> Location of repository. </param>
+	/// <returns> List of tags and their UNIX timestamp. Sorted from newest to oldest. </returns>
+	static std::vector<std::pair<std::string, long long>> getTags(std::string const &filePath);
 
 	/// <summary>
 	/// Checks if an URL is valid and returns the appropriate spider subclass to download the url.

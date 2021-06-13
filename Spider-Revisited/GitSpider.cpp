@@ -15,9 +15,10 @@ Utrecht University within the Software Project course.
 // Global locks.
 std::mutex cmdLock;
 
-int GitSpider::downloadSource(std::string const &url, std::string const &filePath, std::string const &branch)
+int GitSpider::downloadSource(std::string const &url, std::string const &filePath, std::string const &branch,
+							  std::string const &tag, std::string const &nextTag)
 {
-	return git->clone(url, filePath, branch, parsableExts);
+	return git->clone(url, filePath, branch, parsableExts, tag, nextTag);
 }
 
 AuthorData GitSpider::downloadAuthor(std::string const &repoPath)
@@ -30,7 +31,7 @@ AuthorData GitSpider::downloadAuthor(std::string const &repoPath)
 		std::string str = path.path().string();
 		return !(str.rfind(repoPath + "\\.git", 0) == 0 || str.rfind(repoPath + "/.git", 0) == 0) && Filesystem::isRegularFile(str);
 	};
-	std::queue<std::string> files = Filesystem::getFilepaths(repoPath, pred);
+	std::queue<std::filesystem::path> files = Filesystem::getFilepaths(repoPath, pred);
 	std::mutex queueLock;
 
 	// Variables for displaying progress.
@@ -65,7 +66,7 @@ void GitSpider::blameFiles(std::string const &repoPath, std::vector<std::string>
 }
 
 void GitSpider::singleThread(std::string const &repoPath, int &blamedPaths, const int &totalPaths,
-							 std::queue<std::string> &files, std::mutex &queueLock)
+							 std::queue<std::filesystem::path> &files, std::mutex &queueLock)
 {
 	while (true) 
 	{
@@ -80,7 +81,7 @@ void GitSpider::singleThread(std::string const &repoPath, int &blamedPaths, cons
 		// Add FILES_PER_CALL files or the amount that is remaining in the queue.
 		for (int i = 0; i < FILES_PER_CALL && files.size() > 0; i++)
 		{
-			blame.push_back(files.front());
+			blame.push_back(files.front().make_preferred().string());
 			files.pop();
 		}
 		int filesCount = blame.size();
@@ -121,11 +122,12 @@ AuthorData GitSpider::parseBlameData(std::string const &repoPath)
 		paths.pop();
 
 		// Trim string.
-		std::string str = path.substr(repoPath.length() + 1);
+		path = path.make_preferred();
+		std::string str = path.string().substr(repoPath.length() + 1);
 		str.erase(str.length() - 5, 5);
 
 		// Add blame data.
-		authorData.insert(std::pair<std::string, std::vector<CodeBlock>>(str, git->getBlameData(path)));
+		authorData.insert(std::pair<std::string, std::vector<CodeBlock>>(str, git->getBlameData(path.string())));
 
 		// Report progress.
 		processedPaths++;

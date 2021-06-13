@@ -61,7 +61,7 @@ public:
 	/// <param name="repoPath"> Folder from which to get the filepaths from. </param>
 	/// <param name="predicate"> Predicate to filter files. </param>
 	/// <returns> Queue that has paths to the files in no particular order. </returns>
-	std::queue<std::string> getFilepaths(std::string const &repoPath, 
+	std::queue<std::filesystem::path> getFilepaths(std::string const &repoPath, 
 									std::function<bool(std::filesystem::directory_entry)> predicate) override;
 
 	/// <summary>

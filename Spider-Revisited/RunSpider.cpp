@@ -13,7 +13,7 @@ Utrecht University within the Software Project course.
 #include "Logger.h"
 
 AuthorData RunSpider::runSpider(std::string const &url, std::string const &filePath, int threads,
-								std::string const &branch)
+								std::string const &tag, std::string const &nextTag, std::string const &branch)
 {
 	loguru::set_thread_name("spider");
 
@@ -38,7 +38,7 @@ AuthorData RunSpider::runSpider(std::string const &url, std::string const &fileP
 	AuthorData output;
 	try
 	{
-		output = spider->download(url, filePath, branch);
+		output = spider->download(url, filePath, branch, tag, nextTag);
 	}
 	catch (int e)
 	{
@@ -49,6 +49,39 @@ AuthorData RunSpider::runSpider(std::string const &url, std::string const &fileP
 
 	errno = 0;
 	return output;
+}
+
+bool sortByTimestamp(std::pair<std::string, long long> const &a, std::pair<std::string, long long> const &b)
+{
+	return a.second < b.second;
+}
+
+std::vector<std::pair<std::string, long long>> RunSpider::getTags(std::string const &filePath)
+{
+	// Get all the tags in the repository.
+	std::string command = "cd \"" + filePath + "\" && git tag";
+	std::string tagsStr = ExecuteCommand::execOut(command.c_str());
+
+	std::vector<std::pair<std::string, long long>> tags;
+	
+	std::stringstream ss(tagsStr);
+	std::string to;
+
+	// Get UNIX timestamp for each tag.
+	while (std::getline(ss, to, '\n'))
+	{
+		command = "cd \"" + filePath + "\" && git show -1 -s --format=%ct " + to;
+		std::string timeStampStr = ExecuteCommand::execOut(command.c_str());
+
+		// Add to pair
+		long long timeStamp = stoll(timeStampStr.substr(0, timeStampStr.length() - 1));
+		tags.push_back(std::make_pair(to, timeStamp));
+	}
+
+	// Sort the tags by timestamp.
+	std::sort(tags.rbegin(), tags.rend(), sortByTimestamp);
+
+	return tags;
 }
 
 Spider *RunSpider::getSpider(std::string const &url)

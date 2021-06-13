@@ -35,7 +35,7 @@ TEST(Filesystemmock, retrieveFiles)
 	auto files = Filesystem::getFilepaths(repoPath, pred);
 
 	// Check output.
-	std::vector<std::string> paths;
+	std::vector<std::filesystem::path> paths;
 	while (!files.empty())
 	{
 		paths.push_back(files.front());
@@ -80,7 +80,7 @@ TEST(Filesystemmock, predicateTest)
 	auto files = Filesystem::getFilepaths(repoPath, pred);
 
 	// Check output.
-	std::vector<std::string> paths;
+	std::vector<std::filesystem::path> paths;
 	while (!files.empty())
 	{
 		paths.push_back(files.front());
