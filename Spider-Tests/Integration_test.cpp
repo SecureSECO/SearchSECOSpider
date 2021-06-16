@@ -75,7 +75,8 @@ TEST(IntegrationTest, LineBreaksConversion)
 		}
 		if (content.find(incorrectLineBreak) == std::string::npos)
 		{
-			EXPECT_TRUE(true);
+			ASSERT_TRUE(true);
+			return;
 		}
 	}
 	EXPECT_TRUE(false);
