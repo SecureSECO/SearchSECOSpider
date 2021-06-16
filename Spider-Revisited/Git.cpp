@@ -142,6 +142,7 @@ std::string Git::getCloneCommand(std::string const &url, std::string const &file
 	std::string command = "git clone " + url + " \"" + filePath + "\" --no-checkout";
 	command.append(" && cd \"" + filePath + "\" && git sparse-checkout set ");
 	command.append(exts);
+	command.append("&& git config --global core.autocrlf true");
 
 	// Switch branch if specified.
 	if (!branch.empty())
