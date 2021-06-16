@@ -15,7 +15,7 @@ Utrecht University within the Software Project course.
 class GitSpider : public Spider
 {
 private:
-	Git *git;
+	Git git;
 
 	/// <summary>
 	/// Implements the abstract downloadSource method from the Spider class.
@@ -63,5 +63,7 @@ private:
 
 public:
 	void setParsableExts(std::string const &exts) override;
+
+	std::vector<std::string> getUnchangedFiles() override;
 };
 
