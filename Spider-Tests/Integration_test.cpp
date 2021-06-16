@@ -18,8 +18,10 @@ TEST(IntegrationTest, BasicParse)
 	auto ret = RunSpider::runSpider("https://github.com/SoftwareProj2021/TestRepo", "Downloads", 1, "HEAD", "");
 
 	// File names of files in project.
-	std::string files[] = {"File0.cpp", "File1.c", "LF line breaks.c", "Headers/File0.h", "Headers/File1.h", "Headers/Folder0/Folder1/file3.cpp"};
-	std::string filesB[] = {"File0.cpp", "File1.c", "LF line breaks.c", "Headers\\File0.h", "Headers\\File1.h", "Headers\\Folder0\\Folder1\\file3.cpp"};
+	std::string files[] = {"File0.cpp", "File1.c", "LF line breaks.c", "Headers/File0.h", "Headers/File1.h",
+		"Headers/Folder0/Folder1/file3.cpp"};
+	std::string filesB[] = {"File0.cpp", "File1.c", "LF line breaks.c", "Headers\\File0.h", "Headers\\File1.h",
+		"Headers\\Folder0\\Folder1\\file3.cpp"};
 
 	// Check if all files are found.
 	ASSERT_EQ(ret.size(), 6);
@@ -69,7 +71,8 @@ TEST(IntegrationTest, LineBreaksConversion)
 	if (content.find(correctLineBreak) != std::string::npos)
 	{
 		std::string::size_type i = content.find(correctLineBreak);
-		while (i != std::string::npos) //From https://stackoverflow.com/questions/32435003/how-to-remove-all-substrings-from-a-string/32435148.
+		//From https://stackoverflow.com/questions/32435003/how-to-remove-all-substrings-from-a-string/32435148.
+		while (i != std::string::npos) 
 		{
 			content.erase(i, correctLineBreak.length());
 			i = content.find(correctLineBreak, i);
