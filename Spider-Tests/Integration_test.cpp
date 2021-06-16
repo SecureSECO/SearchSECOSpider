@@ -73,11 +73,7 @@ TEST(IntegrationTest, LineBreaksConversion)
 			content.erase(i, correctLineBreak.length());
 			i = content.find(correctLineBreak, i);
 		}
-		if (content.find(incorrectLineBreak) == std::string::npos)
-		{
-			ASSERT_TRUE(true);
-		}
-		else
+		if (content.find(incorrectLineBreak) != std::string::npos)
 		{
 			EXPECT_TRUE(false);
 		}
@@ -86,6 +82,8 @@ TEST(IntegrationTest, LineBreaksConversion)
 	{
 		EXPECT_TRUE(false);
 	}
+
+	EXPECT_TRUE(true);
 
 	
 
