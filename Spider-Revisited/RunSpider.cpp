@@ -7,6 +7,7 @@ Utrecht University within the Software Project course.
 #include <iostream>
 #include <regex>
 #include "ExecuteCommand.h"
+#include <sstream>
 #include "GitSpider.h"
 #include "RunSpider.h"
 #include "Spider.h"
