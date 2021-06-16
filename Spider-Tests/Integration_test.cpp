@@ -76,13 +76,11 @@ TEST(IntegrationTest, LineBreaksConversion)
 		}
 		if (content.find(incorrectLineBreak) != std::string::npos)
 		{
-			std::cout << "Failed because of wrong content" << std::endl;
 			EXPECT_TRUE(false);
 		}
 	}
 	else
 	{
-		std::cout << "Failed because of no content" << std::endl;
 		EXPECT_TRUE(false);
 	}
 
