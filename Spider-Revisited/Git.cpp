@@ -78,10 +78,16 @@ int Git::clone(std::string const &url, std::string const &filePath, std::string 
 		resp = tryClone(url, filePath, branch, exts);
 	}
 
-	// Get differences.
-	if (tag != "HEAD")
+	// Jump to tag.
+	if (tag == nextTag)
 	{
-		GetDifference(tag, nextTag, filePath);
+		std::string command = "cd \"" + filePath + "\" && git checkout tags/" + tag;
+		ExecuteCommand::exec(command.c_str());
+	}
+	// Get differences.
+	else if (tag != "HEAD")
+	{
+		unchangedFiles = getDifference(tag, nextTag, filePath);
 	}
 
 	return 0;
@@ -110,14 +116,16 @@ std::string Git::tryClone(std::string const &url, std::string const &filePath, s
 	return resp;
 }
 
-void Git::GetDifference(std::string const &tag, std::string const &nextTag, std::string const &filePath)
+std::vector<std::string> Git::getDifference(std::string const &tag, std::string const &nextTag, std::string const &filePath)
 {
+	// Get list of changed files.
 	std::string command = "cd \"" + filePath + "\" && git diff --name-status " + nextTag + " " + tag;
 	std::string changed = ExecuteCommand::execOut(command.c_str());
 	auto changedFiles = getFilepaths(changed, filePath);
 	command = "cd \"" + filePath + "\" && git checkout tags/" + tag;
 	ExecuteCommand::exec(command.c_str());
 
+	// Get all files in repository.
 	auto pred = [filePath](std::filesystem::directory_entry path) {
 		std::string str = path.path().string();
 		return !(str.rfind(filePath + "\\.git", 0) == 0 || str.rfind(filePath + "/.git", 0) == 0) &&
@@ -125,15 +133,23 @@ void Git::GetDifference(std::string const &tag, std::string const &nextTag, std:
 	};
 	auto files = Filesystem::getFilepaths(filePath, pred);
 
+	// Delete all unchanged files.
+	std::vector<std::string> removedFiles;
 	while (!files.empty())
 	{
 		std::filesystem::path file = files.front();
 		files.pop();
 		if (std::find(changedFiles.begin(), changedFiles.end(), file) == changedFiles.end())
 		{
+			// Remove local path from filepath.
+			removedFiles.push_back(file.string().substr(filePath.length()+1));
+			
+			// Delete file locally.
 			Filesystem::remove(file.string());
 		}
 	}
+
+	return removedFiles;
 }
 
 std::string Git::getCloneCommand(std::string const &url, std::string const &filePath, std::string const &branch,

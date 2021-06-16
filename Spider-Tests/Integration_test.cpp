@@ -15,35 +15,36 @@ TEST(IntegrationTest, BasicParse)
 	auto ret = RunSpider::runSpider("https://github.com/SoftwareProj2021/TestRepo", "Downloads", 1, "HEAD", "");
 
 	// File names of files in project.
-	std::string files[] = {"File0.cpp", "File1.c", "Headers/File0.h", "Headers/File1.h", "Headers/Folder0/Folder1/file3.cpp"};
-	std::string filesB[] = {"File0.cpp", "File1.c", "Headers\\File0.h", "Headers\\File1.h", "Headers\\Folder0\\Folder1\\file3.cpp"};
+	std::string files[] = {"File0.cpp", "File1.c", "LF line breaks.c", "Headers/File0.h", "Headers/File1.h", "Headers/Folder0/Folder1/file3.cpp"};
+	std::string filesB[] = {"File0.cpp", "File1.c", "LF line breaks.c", "Headers\\File0.h", "Headers\\File1.h", "Headers\\Folder0\\Folder1\\file3.cpp"};
 
+	AuthorData authordata = std::get<0>(ret);
 	// Check if all files are found.
-	ASSERT_EQ(ret.size(), 5);
+	ASSERT_EQ(authordata.size(), 6);
 
 	// Check existance and some author data of each file.
 	for (int i = 0; i < 5; i++)
 	{
-		auto file = ret.find(files[i]);
+		auto file = authordata.find(files[i]);
 		std::vector<CodeBlock> commitData;
 		
 		// Check if file exists with frontslashes.
-		if (file == ret.end())
+		if (file == authordata.end())
 		{
 			// Check if file exists with backslashes.
-			file = ret.find(filesB[i]);
+			file = authordata.find(filesB[i]);
 
-			if (file == ret.end())
+			if (file == authordata.end())
 			{
 				// Force error if file not found with either front or back slashes.
 				ASSERT_TRUE(false);
 			}
 
-			commitData = ret[filesB[i]];
+			commitData = authordata[filesB[i]];
 		}
 		else
 		{
-			commitData = ret[files[i]];
+			commitData = authordata[files[i]];
 		}
 
 

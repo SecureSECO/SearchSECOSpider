@@ -5,6 +5,7 @@ Utrecht University within the Software Project course.
 */
 
 #include <iostream>
+#include <sstream>
 #include <regex>
 #include "ExecuteCommand.h"
 #include <sstream>
@@ -13,8 +14,8 @@ Utrecht University within the Software Project course.
 #include "Spider.h"
 #include "Logger.h"
 
-AuthorData RunSpider::runSpider(std::string const &url, std::string const &filePath, int threads,
-								std::string const &tag, std::string const &nextTag, std::string const &branch)
+std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpider(std::string const &url,
+	std::string const &filePath, int threads, std::string const &tag, std::string const &nextTag, std::string const &branch)
 {
 	loguru::set_thread_name("spider");
 
@@ -31,23 +32,29 @@ AuthorData RunSpider::runSpider(std::string const &url, std::string const &fileP
 	if (spider == nullptr)
 	{
 		errno = 1;
-		return AuthorData();
+		return std::make_tuple(AuthorData(), "", std::vector<std::string>());
 	}
 	spider->setThreads(threads);
 	spider->setParsableExts(EXTS);
 
-	AuthorData output;
+	AuthorData authordata;
 	try
 	{
-		output = spider->download(url, filePath, branch, tag, nextTag);
+		authordata = spider->download(url, filePath, branch, tag, nextTag);
 	}
 	catch (int e)
 	{
 		errno = e;
-		return AuthorData();
+		return std::make_tuple(AuthorData(), "", std::vector<std::string>());
 	}
+
+	std::string commitHash = getCommitHash(tag, filePath);
+	std::vector<std::string> unchangedFiles = spider->getUnchangedFiles();
+
 	delete spider;
 
+
+	auto output = std::make_tuple(authordata, commitHash, unchangedFiles);
 	errno = 0;
 	return output;
 }
@@ -83,6 +90,14 @@ std::vector<std::pair<std::string, long long>> RunSpider::getTags(std::string co
 	std::sort(tags.rbegin(), tags.rend(), sortByTimestamp);
 
 	return tags;
+}
+
+std::string RunSpider::getCommitHash(std::string const &tag, std::string const &filePath)
+{
+	std::string command = "cd \"" + filePath + "\" && git rev-list -n 1 " + tag;
+	std::string hash = ExecuteCommand::execOut(command.c_str());
+	// Last character is newline, so remove that before returning.
+	return hash.substr(0, hash.length() - 1);
 }
 
 Spider *RunSpider::getSpider(std::string const &url)
