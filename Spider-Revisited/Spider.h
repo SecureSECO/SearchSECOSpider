@@ -6,6 +6,7 @@ Utrecht University within the Software Project course.
 
 #pragma once
 #include <string>
+#include <vector>
 #include "CodeBlock.h"
 
 class Spider
@@ -43,6 +44,13 @@ public:
 	/// Format: .c .cpp .h .cs
 	/// </summary>
 	virtual void setParsableExts(std::string const &exts);
+
+	/// <summary>
+	/// Get the unchanged files that were delete by last
+	/// difference check between tags.
+	/// </summary>
+	/// <returns>Vector of filepaths.</returns>
+	virtual std::vector<std::string> getUnchangedFiles() = 0;
 
 protected:
 	// Amount of threads the spider can use.

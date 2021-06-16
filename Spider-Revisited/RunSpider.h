@@ -9,7 +9,7 @@ Utrecht University within the Software Project course.
 #include "CodeBlock.h"
 #include "Spider.h"
 
-#define EXTS ".c .cpp .h .cs .cc .hpp .java .py"
+#define EXTS ".c .cpp .h .cs .cc .hpp .java .py .js"
 
 class RunSpider
 {
@@ -26,8 +26,8 @@ public:
 	/// <param name="nextTag"> Newest tag after 'tag'. Used to calculate differences. </param>
 	/// <param name="branch"> Which branchs of the repository to download. </param>
 	/// <returns> Authordata which contains which lines were written by which author. </returns>
-	static AuthorData runSpider(std::string const &url, std::string const &filePath, int threads,
-							std::string const &tag, std::string const &nextTag, std::string const &branch = "");
+	static std::tuple<AuthorData, std::string, std::vector<std::string>> runSpider(std::string const &url,
+		std::string const &filePath, int threads, std::string const &tag, std::string const &nextTag, std::string const &branch = "");
 
 	/// <summary>
 	/// Gets tags from downloaded repository.
@@ -35,6 +35,13 @@ public:
 	/// <param name="filePath"> Location of repository. </param>
 	/// <returns> List of tags and their UNIX timestamp. Sorted from newest to oldest. </returns>
 	static std::vector<std::pair<std::string, long long>> getTags(std::string const &filePath);
+
+	/// <summary>
+	/// Returns commit hash of a tag or HEAD
+	/// </summary>
+	/// <param name="tag">Tag or HEAD.</param>
+	/// <returns>Commit hash</returns>
+	static std::string getCommitHash(std::string const& tag, std::string const& filePath);
 
 	/// <summary>
 	/// Checks if an URL is valid and returns the appropriate spider subclass to download the url.

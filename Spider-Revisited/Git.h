@@ -64,9 +64,13 @@ private:
 	/// <param name="nextTag"> Tag that is newer than the 'tag' argument, for comparison.
 	/// HEAD can be given as argument to compare with newest version. </param>
 	/// <param name="filePath"> Location where the local repository is. </param>
-	void GetDifference(std::string const &tag, std::string const &nextTag, std::string const &filePath);
+	/// <returns> Vector of removed/unchanged files. </returns>
+	std::vector<std::string> getDifference(std::string const &tag, std::string const &nextTag, std::string const &filePath);
 
 public:
+	// Stores which files were unchanged during difference check.
+	std::vector<std::string> unchangedFiles;
+
 	/// <summary>
 	/// Mirrors the full Clone functionality of the Git system; it requires
 	/// a HTTPS link to the Git repository to be cloned, together with the location
@@ -76,6 +80,8 @@ public:
 	/// <param name="url"> Url to repository. </param>
 	/// <param name="filePath"> Location to store repository locally. </param>
 	/// <param name="branch"> Branch of repository to download. </param>
+	/// <param name="tag"> Tag to download. </param>
+	/// <param name="tag"> Newer tag to compare differences to. </param>
 	/// <returns> Error code. </returns>
 	int clone(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts,
 				std::string const &tag, std::string const &nextTag);
