@@ -58,7 +58,7 @@ TEST(IntegrationTest, BasicParse)
 TEST(IntegrationTest, LineBreaksConversion)
 {
 	auto ret = RunSpider::runSpider("https://github.com/SoftwareProj2021/TestRepo", "Downloads", 1, "HEAD", "");
-	std::string path = "Downloads\\\\LF line breaks.c";
+	std::string path = "Downloads\\LF line breaks.c";
 	std::ifstream fin(path, std::ios::binary);
 	std::string content((std::istreambuf_iterator<char>(fin)),
 		(std::istreambuf_iterator<char>()));
