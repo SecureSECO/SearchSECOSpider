@@ -75,6 +75,10 @@ int Git::clone(std::string const &url, std::string const &filePath, std::string 
 		delay *= 2;
 		tries--;
 
+		// Delete target folder before trying again on linux to prevent error.
+#if !(defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__))
+        ExecuteCommand::exec(("rm -rf " + filePath).c_str());
+#endif
 		resp = tryClone(url, filePath, branch, exts);
 	}
 
