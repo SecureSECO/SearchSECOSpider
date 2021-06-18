@@ -271,8 +271,20 @@ std::vector<CodeBlock> Git::parseBlame(std::string const &blameData)
 		// Verify that data is in a valid format.
 		if (arrLine.size() < 3)
 		{
+			// Ignore filename information.
+			if (arrLine[0] == "filename")
+			{
+				continue;
+			}
+
 			Logger::logWarn("Blame data has incorrect format.", __FILE__, __LINE__);
 			return {};
+		}
+
+		// Ignore previous commit information.
+		if (arrLine[0] == "previous")
+		{
+			continue;
 		}
 
 		// Store new commit.
@@ -317,6 +329,18 @@ void Git::parseCommitLine(std::string const &commit, std::map<std::string, std::
 	{
 		if (line[0] == "boundary")
 		{
+			return;
+		}
+		// Set author to unknown if author's name isn't given.
+		if (line[0] == "author")
+		{
+			commitData[commit]->author = "Unknown author";
+			return;
+		}
+		// Set committer to unknown if committer's's name isn't given.
+		if (line[0] == "committer")
+		{
+			commitData[commit]->committer = "Unknown committer";
 			return;
 		}
 		Logger::logWarn("Blame data has incorrect format.", __FILE__, __LINE__);
