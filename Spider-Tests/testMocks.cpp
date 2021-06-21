@@ -113,6 +113,23 @@ std::queue<std::filesystem::path> FilesystemMock::getFilepaths(std::string const
 	return files;
 }
 
+void FilesystemMock::remove(std::string const &path)
+{
+	auto pathSplit = splitFilepath(path);
+	Node *node = mainNode;
+	for (int i = 0; i < pathSplit.size()-1; i++)
+	{
+		auto it = node->children.find(pathSplit[i]);
+		if (it == node->children.end())
+		{
+			throw "File to delete doesn't exist.";
+		}
+
+		node = &(*it).second;
+	}
+	node->children.erase(pathSplit[pathSplit.size() - 1]);
+}
+
 FilesystemMock *FilesystemMock::setFilesystemMock()
 {
 	FilesystemMock *fsMock = new FilesystemMock();

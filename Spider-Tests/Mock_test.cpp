@@ -9,6 +9,7 @@ Utrecht University within the Software Project course.
 #include "Filesystem.h"
 #include "testMocks.h"
 #include <functional>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -90,6 +91,27 @@ TEST(Filesystemmock, predicateTest)
 	EXPECT_EQ(paths.size(), 2);
 	EXPECT_NE(std::find(paths.begin(), paths.end(), "repo\\file4"), paths.end());
 	EXPECT_NE(std::find(paths.begin(), paths.end(), "repo\\fold2\\file5"), paths.end());
+
+	FilesystemMock::resetFileSystem(fs);
+}
+
+TEST(Filesystemmock, removeTest)
+{
+	FilesystemMock *fs = FilesystemMock::setFilesystemMock();
+
+	// Set up folders/files.
+	fs->mainNode->children["repo"] = Node("repo");
+	fs->mainNode->children["repo"].children["file0"] = Node("file0", "data");
+	fs->mainNode->children["repo"].children["file1"] = Node("file1", "data");
+
+	// Delete a file.
+	Filesystem::remove("repo/file0");
+
+	// Check if file is deleted.
+	auto repoChilds = fs->mainNode->children["repo"].children;
+	EXPECT_EQ(repoChilds.size(), 1);
+	EXPECT_EQ(repoChilds.find("file0"), repoChilds.end());
+	EXPECT_NE(repoChilds.find("file1"), repoChilds.end());
 
 	FilesystemMock::resetFileSystem(fs);
 }
