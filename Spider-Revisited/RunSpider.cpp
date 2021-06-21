@@ -14,10 +14,17 @@ Utrecht University within the Software Project course.
 #include "Spider.h"
 #include "Logger.h"
 
-std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpider(std::string const &url,
-	std::string const &filePath, int threads, std::string const &tag, std::string const &nextTag, std::string const &branch)
+std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpider(
+	std::string const &url,
+	std::string const &filePath, 
+	int threads, 
+	std::string const &tag, 
+	std::string const &nextTag, 
+	std::string const &branch)
 {
 	loguru::set_thread_name("spider");
+	Logger::logInfo("Received control from the Controller, start spidering " + url + " @ " + branch, 
+		__FILE__, __LINE__);
 
 	// Delete the folder at filepath, so that git does not throw an error.
 	std::cout << "Deleting old files..." << std::endl;
@@ -53,8 +60,11 @@ std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpid
 
 	delete spider;
 
-
 	auto output = std::make_tuple(authordata, commitHash, unchangedFiles);
+
+	Logger::logInfo("Spidering successful, returning control to the Controller",
+		__FILE__, __LINE__);
+
 	errno = 0;
 	return output;
 }
