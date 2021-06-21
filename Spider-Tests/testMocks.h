@@ -72,6 +72,12 @@ public:
 	bool isRegularFile(std::string const &path) override;
 
 	/// <summary>
+	/// Deletes file at location.
+	/// </summary>
+	/// <param name="path"> Path to delete file at. </param>
+	void remove(std::string const &path) override;
+
+	/// <summary>
 	/// Creates a FilesystemMock object and returns it.
 	/// </summary>
 	/// <returns> New FilesystemMock object. </returns>
