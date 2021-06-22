@@ -37,13 +37,6 @@ private:
 	AuthorData downloadAuthor(std::string const &repoPath) override;
 
 	/// <summary>
-	/// Downloads author data for every file in vector file. Thread-safe.
-	/// </summary>
-	/// <param name="repoPath"> Path to local repository. </param>
-	/// <param name="filePaths"> Files to get blamedata from. </param>
-	void blameFiles(std::string const &repoPath, std::vector<std::string> &filePaths);
-
-	/// <summary>
 	/// Run on a single thread, takes files from the queue and blames these sequentially.
 	/// </summary>
 	/// <param name="repoPath"> Path to local repository. </param>

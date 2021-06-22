@@ -33,6 +33,7 @@ std::vector<std::string> splitString(std::string const &sentence)
 	return result;
 }
 
+// Gets filepaths of all files that changed from 'git diff' command.
 std::vector<std::filesystem::path> getFilepaths(std::string const &changes, std::string const& filePath)
 {
 	auto lines = splitString(changes);
@@ -77,7 +78,7 @@ int Git::clone(std::string const &url, std::string const &filePath, std::string 
 
 		// Delete target folder before trying again on linux to prevent error.
 #if !(defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__))
-        ExecuteCommand::exec(("rm -rf " + filePath).c_str());
+		ExecuteCommand::exec(("rm -rf " + filePath).c_str());
 #endif
 		resp = tryClone(url, filePath, branch, exts);
 	}
@@ -85,8 +86,9 @@ int Git::clone(std::string const &url, std::string const &filePath, std::string 
 	// Jump to tag.
 	if (tag == nextTag)
 	{
-		std::string command = "cd \"" + filePath + "\" && git checkout tags/" + tag;
+		std::string command = "cd \"" + filePath + "\" && git checkout tags/" + tag + " --quiet";
 		ExecuteCommand::exec(command.c_str());
+		Logger::logDebug("Switched to tag: " + tag, __FILE__, __LINE__);
 	}
 	// Get differences.
 	else if (tag != "HEAD")
@@ -126,8 +128,9 @@ std::vector<std::string> Git::getDifference(std::string const &tag, std::string 
 	std::string command = "cd \"" + filePath + "\" && git diff --name-status " + nextTag + " " + tag;
 	std::string changed = ExecuteCommand::execOut(command.c_str());
 	auto changedFiles = getFilepaths(changed, filePath);
-	command = "cd \"" + filePath + "\" && git checkout tags/" + tag;
+	command = "cd \"" + filePath + "\" && git checkout tags/" + tag + " --quiet";
 	ExecuteCommand::exec(command.c_str());
+	Logger::logDebug("Switched to tag: " + tag, __FILE__, __LINE__);
 
 	// Get all files in repository.
 	auto pred = [filePath](std::filesystem::directory_entry path) {
@@ -173,23 +176,16 @@ std::string Git::getCloneCommand(std::string const &url, std::string const &file
 	return command;
 }
 
-
-std::string Git::getBlameToFileCommand(std::string const &repoPath, std::vector<std::string> const &filePath,
-									   std::vector<std::string> const &outputFile)
+void Git::blameFiles(std::string const &repoPath, std::vector<std::string> const &filePath)
 {
-	// Git blame can only be used from the Git folder itself, so go there...
+	// Move into repo.
 	std::string command = "cd \"" + repoPath + "\"";
-	// ...before blaming.
+	// Blame files.
 	for (int i = 0; i < filePath.size(); i++)
 	{
-		command.append(" && git blame -p \"" + filePath[i] + "\" >> \"" + outputFile[i] + "\"");
+		std::string fp = filePath[i].substr(repoPath.length() + 1);
+		command.append(" && git blame -p \"" + fp + "\" >> \"" + fp + ".meta\"");
 	}
-	return command;
-}
-
-void Git::blameToFile(std::string const &repoPath, std::vector<std::string> const &filePath, std::vector<std::string> const &outputFile)
-{
-	std::string command = getBlameToFileCommand(repoPath, filePath, outputFile);
 	ExecuteCommand::exec(command.c_str());
 }
 

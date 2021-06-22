@@ -26,16 +26,6 @@ private:
 								std::vector<std::string> const &line);
 
 	/// <summary>
-	/// Gets the command to blame a file to a file.
-	/// </summary>
-	/// <param name="repoPath">The path to the local repository.</param>
-	/// <param name="filePath">A list of paths to the files.</param>
-	/// <param name="outputFile">A list of paths to the in which the output needs to be written.</param>
-	/// <returns>A string representing the command.</returns>
-	std::string getBlameToFileCommand(std::string const &repoPath, std::vector<std::string> const &filePath,
-							std::vector<std::string> const &outputFile);
-
-	/// <summary>
 	/// Gets the command to clone a project.
 	/// </summary>
 	/// <param name="url">The url from which the project needs to be cloned.</param>
@@ -88,13 +78,11 @@ public:
 
 	/// <summary>
 	/// Mirrors the Blame functionality of the Git system; it requires the
-	/// path to a cloned Git Repo and the paths to the files to blame, together with the paths
-	/// to write the blame data to.
+	/// path to a cloned Git Repo and the paths to the files to blame.
 	/// </summary>
 	/// <param name="repoPath"> Path to local repository. </param>
 	/// <param name="filePath"> Files to blame inside local repository. </param>
-	/// <param name="outputFile"> Files to write output to. </param>
-	void blameToFile(std::string const &repoPath, std::vector<std::string> const &filePath, std::vector<std::string> const &outputFile);
+	void blameFiles(std::string const &repoPath, std::vector<std::string> const &filePath);
 
 	/// <summary>
 	/// Parses the blame data in a file and returns the corrosponding datastructure.

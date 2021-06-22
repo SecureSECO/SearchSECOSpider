@@ -8,7 +8,6 @@ Utrecht University within the Software Project course.
 
 #include <string>
 
-
 std::string parseBlameInvalidData = R"(hash0hash0hash0 1 1 1
 author author A
 author-mail author-email
