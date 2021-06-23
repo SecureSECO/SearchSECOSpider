@@ -15,8 +15,6 @@ Utrecht University within the Software Project course.
 #include <iostream>
 #include <string>
 
-
-
 TEST(SpiderDownload, BlameDataCalls)
 {
 	// Create mocks.

@@ -15,7 +15,6 @@ AuthorData Spider::download(std::string const &url, std::string const &filePath,
 
 	AuthorData output = downloadAuthor(filePath);
 
-
 	return output;
 }
 

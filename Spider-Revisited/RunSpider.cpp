@@ -92,7 +92,7 @@ std::vector<std::pair<std::string, long long>> RunSpider::getTags(std::string co
 		std::string timeStampStr = ExecuteCommand::execOut(command.c_str());
 
 		// Add to pair
-		long long timeStamp = stoll(timeStampStr.substr(0, timeStampStr.length() - 1));
+		long long timeStamp = stoll(timeStampStr);
 		tags.push_back(std::make_pair(to, timeStamp));
 	}
 

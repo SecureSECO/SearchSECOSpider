@@ -19,34 +19,19 @@ Utrecht University within the Software Project course.
 #include "Logger.h"
 #include "ErrorSpider.h"
 
-std::vector<std::string> splitString(std::string const &sentence)
+// Splits string on given character.
+std::vector<std::string> splitString(std::string const &str, char c)
 {
-	std::stringstream ss(sentence);
+	// Prepare input
+	std::stringstream ss(str);
 	std::string to;
-	std::vector<std::string> result;
+	std::vector<std::string> lines;
 
-	while (std::getline(ss, to, '\n'))
+	while (std::getline(ss, to, c))
 	{
-		result.push_back(to);
+		lines.push_back(to);
 	}
-
-	return result;
-}
-
-std::vector<std::filesystem::path> getFilepaths(std::string const &changes, std::string const& filePath)
-{
-	auto lines = splitString(changes);
-	std::vector<std::filesystem::path> result;
-	for (int i = 0; i < lines.size(); i++)
-	{
-		// Check for added file or modification.
-		if (lines[i][0] == 'A' || lines[i][0] == 'M')
-		{
-			std::filesystem::path path = filePath + "/" + lines[i].substr(2);
-			result.push_back(path.make_preferred());
-		}
-	}
-	return result;
+	return lines;
 }
 
 int Git::clone(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts,
@@ -77,7 +62,7 @@ int Git::clone(std::string const &url, std::string const &filePath, std::string 
 
 		// Delete target folder before trying again on linux to prevent error.
 #if !(defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__))
-        ExecuteCommand::exec(("rm -rf " + filePath).c_str());
+		ExecuteCommand::exec(("rm -rf " + filePath).c_str());
 #endif
 		resp = tryClone(url, filePath, branch, exts);
 	}
@@ -85,8 +70,9 @@ int Git::clone(std::string const &url, std::string const &filePath, std::string 
 	// Jump to tag.
 	if (tag == nextTag)
 	{
-		std::string command = "cd \"" + filePath + "\" && git checkout tags/" + tag;
+		std::string command = "cd \"" + filePath + "\" && git checkout tags/" + tag + " --quiet";
 		ExecuteCommand::exec(command.c_str());
+		Logger::logDebug("Switched to tag: " + tag, __FILE__, __LINE__);
 	}
 	// Get differences.
 	else if (tag != "HEAD")
@@ -120,14 +106,32 @@ std::string Git::tryClone(std::string const &url, std::string const &filePath, s
 	return resp;
 }
 
+// Gets filepaths of all files that changed from 'git diff' command.
+std::vector<std::filesystem::path> getFilepaths(std::string const &changes, std::string const &filePath)
+{
+    auto lines = splitString(changes, '\n');
+    std::vector<std::filesystem::path> result;
+    for (int i = 0; i < lines.size(); i++)
+    {
+        // Check for added file or modification.
+        if (lines[i][0] == 'A' || lines[i][0] == 'M')
+        {
+            std::filesystem::path path = filePath + "/" + lines[i].substr(2);
+            result.push_back(path.make_preferred());
+        }
+    }
+    return result;
+}
+
 std::vector<std::string> Git::getDifference(std::string const &tag, std::string const &nextTag, std::string const &filePath)
 {
 	// Get list of changed files.
 	std::string command = "cd \"" + filePath + "\" && git diff --name-status " + nextTag + " " + tag;
 	std::string changed = ExecuteCommand::execOut(command.c_str());
 	auto changedFiles = getFilepaths(changed, filePath);
-	command = "cd \"" + filePath + "\" && git checkout tags/" + tag;
+	command = "cd \"" + filePath + "\" && git checkout tags/" + tag + " --quiet";
 	ExecuteCommand::exec(command.c_str());
+	Logger::logDebug("Switched to tag: " + tag, __FILE__, __LINE__);
 
 	// Get all files in repository.
 	auto pred = [filePath](std::filesystem::directory_entry path) {
@@ -173,23 +177,16 @@ std::string Git::getCloneCommand(std::string const &url, std::string const &file
 	return command;
 }
 
-
-std::string Git::getBlameToFileCommand(std::string const &repoPath, std::vector<std::string> const &filePath,
-									   std::vector<std::string> const &outputFile)
+void Git::blameFiles(std::string const &repoPath, std::vector<std::string> const &filePath)
 {
-	// Git blame can only be used from the Git folder itself, so go there...
+	// Move into repo.
 	std::string command = "cd \"" + repoPath + "\"";
-	// ...before blaming.
+	// Blame files.
 	for (int i = 0; i < filePath.size(); i++)
 	{
-		command.append(" && git blame -p \"" + filePath[i] + "\" >> \"" + outputFile[i] + "\"");
+		std::string fp = filePath[i].substr(repoPath.length() + 1);
+		command.append(" && git blame -p \"" + fp + "\" >> \"" + fp + ".meta\"");
 	}
-	return command;
-}
-
-void Git::blameToFile(std::string const &repoPath, std::vector<std::string> const &filePath, std::vector<std::string> const &outputFile)
-{
-	std::string command = getBlameToFileCommand(repoPath, filePath, outputFile);
 	ExecuteCommand::exec(command.c_str());
 }
 
@@ -202,22 +199,6 @@ std::vector<CodeBlock> Git::getBlameData(std::string const &filePath)
 	}
 	return std::vector<CodeBlock>();
 }
-
-// Separates a string on given character.
-std::vector<std::string> split(std::string const &str, char c)
-{
-	// Prepare input
-	std::stringstream ss(str);
-	std::string to;
-	std::vector<std::string> lines;
-
-	while (std::getline(ss, to, c))
-	{
-		lines.push_back(to);
-	}
-	return lines;
-}
-
 // Combines all string in a vector separated by a space, first element is ignored.
 std::string combine(std::vector<std::string> const &string)
 {
@@ -240,7 +221,7 @@ std::string combine(std::vector<std::string> const &string)
 std::vector<CodeBlock> Git::parseBlame(std::string const &blameData)
 {
 	// Split file into lines.
-	std::vector<std::string> lines = split(blameData, '\n');
+	std::vector<std::string> lines = splitString(blameData, '\n');
 
 	// Set up data.
 	std::map<std::string, std::shared_ptr<CommitData>> commitdata;
@@ -263,7 +244,7 @@ std::vector<CodeBlock> Git::parseBlame(std::string const &blameData)
 		}
 
 		// Split in line into parts.
-		auto arrLine = split(lines[i], ' ');
+		auto arrLine = splitString(lines[i], ' ');
 
 		// Store data into commit data.
 		if (settingCommitData)

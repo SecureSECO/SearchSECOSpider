@@ -84,8 +84,8 @@ TEST(BlameToFile, BasicBlameToFile)
 {
 	Git git;
 	ExecuteCommandObjMock* execMock = ExecuteCommandObjMock::setExecuteCommand();
-	git.blameToFile("linux/torvalds", std::vector<std::string> {"local/path"}, std::vector<std::string> {"test/output/location"});
-	EXPECT_EQ(execMock->execString, "cd \"linux/torvalds\" && git blame -p \"local/path\" >> \"test/output/location\"");
+	git.blameFiles("linux/torvalds", std::vector<std::string> {"linux/torvalds/local/path"});
+	EXPECT_EQ(execMock->execString, "cd \"linux/torvalds\" && git blame -p \"local/path\" >> \"local/path.meta\"");
 	ExecuteCommandObjMock::resetExecuteCommand(execMock);
 }
 
@@ -93,8 +93,8 @@ TEST(BlameToFile, MultipleBlameToFile)
 {
 	Git git;
 	ExecuteCommandObjMock *execMock = ExecuteCommandObjMock::setExecuteCommand();
-	git.blameToFile("linux/torvalds2", std::vector<std::string> {"local/path", "local2/path1", "p"}, std::vector<std::string> {"test/output/location1", "output/location2", "test3"});
-	EXPECT_EQ(execMock->execString, "cd \"linux/torvalds2\" && git blame -p \"local/path\" >> \"test/output/location1\" && git blame -p \"local2/path1\" >> \"output/location2\" && git blame -p \"p\" >> \"test3\"");
+	git.blameFiles("repo", std::vector<std::string> {"repo/local/path", "repo/local2/path1", "repo/p"});
+	EXPECT_EQ(execMock->execString, "cd \"repo\" && git blame -p \"local/path\" >> \"local/path.meta\" && git blame -p \"local2/path1\" >> \"local2/path1.meta\" && git blame -p \"p\" >> \"p.meta\"");
 	ExecuteCommandObjMock::resetExecuteCommand(execMock);
 }
 

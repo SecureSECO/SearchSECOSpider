@@ -53,18 +53,6 @@ AuthorData GitSpider::downloadAuthor(std::string const &repoPath)
 	return output;
 }
 
-void GitSpider::blameFiles(std::string const &repoPath, std::vector<std::string> &filePaths)
-{
-	// Find path to file inside the Repo folder.
-	std::vector<std::string> outPaths;
-	for (int i = 0; i < filePaths.size(); i++)
-	{
-		filePaths[i] = filePaths[i].substr(repoPath.length() + 1);
-		outPaths.push_back(filePaths[i] + ".meta");
-	}
-	git.blameToFile(repoPath, filePaths, outPaths);
-}
-
 void GitSpider::singleThread(std::string const &repoPath, int &blamedPaths, const int &totalPaths,
 							 std::queue<std::filesystem::path> &files, std::mutex &queueLock)
 {
@@ -77,23 +65,24 @@ void GitSpider::singleThread(std::string const &repoPath, int &blamedPaths, cons
 			queueLock.unlock();
 			return;
 		}
-		std::vector<std::string> blame;
+		std::vector<std::string> blameFiles;
 		// Add FILES_PER_CALL files or the amount that is remaining in the queue.
 		for (int i = 0; i < FILES_PER_CALL && files.size() > 0; i++)
 		{
-			blame.push_back(files.front().make_preferred().string());
+			blameFiles.push_back(files.front().make_preferred().string());
 			files.pop();
 		}
-		int filesCount = blame.size();
+		int filesCount = blameFiles.size();
 		queueLock.unlock();
 		
-		blameFiles(repoPath, blame);
+		// Blame files with git.
+		git.blameFiles(repoPath, blameFiles);
 		
 		cmdLock.lock();
 		// Update progress.
 		blamedPaths += filesCount;
-		std::cout << '\r' << "Blaming files: " << (100 * blamedPaths) / totalPaths << "% ("
-			<< blamedPaths << '/' << totalPaths << ')';
+		std::cout << '\r' << "Blaming files: " << (100 * blamedPaths) / totalPaths <<
+			"% (" << blamedPaths << '/' << totalPaths << ')';
 		cmdLock.unlock();
 	}
 }
