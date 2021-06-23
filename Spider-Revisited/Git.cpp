@@ -131,7 +131,7 @@ std::vector<std::string> Git::getDifference(std::string const &tag, std::string 
 	auto changedFiles = getFilepaths(changed, filePath);
 	command = "cd \"" + filePath + "\" && git checkout tags/" + nextTag + " --quiet";
 	ExecuteCommand::exec(command.c_str());
-	Logger::logDebug("Switched to tag: " + tag, __FILE__, __LINE__);
+	Logger::logDebug("Switched to tag: " + nextTag, __FILE__, __LINE__);
 
 	// Get all files in repository.
 	auto pred = [filePath](std::filesystem::directory_entry path) {
