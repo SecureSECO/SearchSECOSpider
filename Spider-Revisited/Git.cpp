@@ -70,12 +70,12 @@ int Git::clone(std::string const &url, std::string const &filePath, std::string 
 	// Jump to tag.
 	if (tag == nextTag)
 	{
-		std::string command = "cd \"" + filePath + "\" && git checkout tags/" + tag + " --quiet";
+		std::string command = "cd \"" + filePath + "\" && git checkout tags/" + nextTag + " --quiet";
 		ExecuteCommand::exec(command.c_str());
-		Logger::logDebug("Switched to tag: " + tag, __FILE__, __LINE__);
+		Logger::logDebug("Switched to tag: " + nextTag, __FILE__, __LINE__);
 	}
 	// Get differences.
-	else if (tag != "HEAD")
+	else if (nextTag != "HEAD")
 	{
 		unchangedFiles = getDifference(tag, nextTag, filePath);
 	}
@@ -109,29 +109,29 @@ std::string Git::tryClone(std::string const &url, std::string const &filePath, s
 // Gets filepaths of all files that changed from 'git diff' command.
 std::vector<std::filesystem::path> getFilepaths(std::string const &changes, std::string const &filePath)
 {
-    auto lines = splitString(changes, '\n');
-    std::vector<std::filesystem::path> result;
-    for (int i = 0; i < lines.size(); i++)
-    {
-        // Check for added file or modification.
-        if (lines[i][0] == 'A' || lines[i][0] == 'M')
-        {
-            std::filesystem::path path = filePath + "/" + lines[i].substr(2);
-            result.push_back(path.make_preferred());
-        }
-    }
-    return result;
+	auto lines = splitString(changes, '\n');
+	std::vector<std::filesystem::path> result;
+	for (int i = 0; i < lines.size(); i++)
+	{
+		// Check for added file or modification.
+		if (lines[i][0] == 'A' || lines[i][0] == 'M')
+		{
+			std::filesystem::path path = filePath + "/" + lines[i].substr(2);
+			result.push_back(path.make_preferred());
+		}
+	}
+	return result;
 }
 
 std::vector<std::string> Git::getDifference(std::string const &tag, std::string const &nextTag, std::string const &filePath)
 {
 	// Get list of changed files.
-	std::string command = "cd \"" + filePath + "\" && git diff --name-status " + nextTag + " " + tag;
+	std::string command = "cd \"" + filePath + "\" && git diff --name-status " + tag + " " + nextTag;
 	std::string changed = ExecuteCommand::execOut(command.c_str());
 	auto changedFiles = getFilepaths(changed, filePath);
-	command = "cd \"" + filePath + "\" && git checkout tags/" + tag + " --quiet";
+	command = "cd \"" + filePath + "\" && git checkout tags/" + nextTag + " --quiet";
 	ExecuteCommand::exec(command.c_str());
-	Logger::logDebug("Switched to tag: " + tag, __FILE__, __LINE__);
+	Logger::logDebug("Switched to tag: " + nextTag, __FILE__, __LINE__);
 
 	// Get all files in repository.
 	auto pred = [filePath](std::filesystem::directory_entry path) {

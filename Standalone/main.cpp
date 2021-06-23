@@ -8,6 +8,6 @@ Utrecht University within the Software Project course.
 
 int main()
 {
-	RunSpider::runSpider("https://github.com/official-stockfish/stockfish", "Downloads", 2, "HEAD", "");
+	RunSpider::runSpider("https://github.com/official-stockfish/stockfish", "Downloads", 2, "", "HEAD");
 	return 0;
 }
