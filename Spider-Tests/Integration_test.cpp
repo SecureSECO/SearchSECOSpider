@@ -15,7 +15,7 @@ Utrecht University within the Software Project course.
 
 TEST(IntegrationTest, BasicParse)
 {
-	auto ret = RunSpider::runSpider("https://github.com/SoftwareProj2021/TestRepo", "Downloads", 1, "HEAD", "");
+	auto ret = RunSpider::runSpider("https://github.com/SoftwareProj2021/TestRepo", "Downloads", 1, "", "HEAD");
 
 	// File names of files in project.
 	std::string files[] = {"File0.cpp", "File1.c", "LF line breaks.c", "Headers/File0.h", "Headers/File1.h",
@@ -61,7 +61,7 @@ TEST(IntegrationTest, BasicParse)
 }
 TEST(IntegrationTest, LineBreaksConversion)
 {
-	auto ret = RunSpider::runSpider("https://github.com/SoftwareProj2021/TestRepo", "Downloads", 1, "HEAD", "");
+	auto ret = RunSpider::runSpider("https://github.com/SoftwareProj2021/TestRepo", "Downloads", 1, "", "HEAD");
 	std::string path = "Downloads/LF line breaks.c";
 	std::ifstream fin(path, std::ios::binary);
 	std::string content((std::istreambuf_iterator<char>(fin)),

@@ -50,8 +50,8 @@ private:
 	/// <summary>
 	/// Gets difference between two tags and deletes all files that haven't been changed.
 	/// </summary>
-	/// <param name="tag"> Tag to be downloaded. </param>
-	/// <param name="nextTag"> Tag that is newer than the 'tag' argument, for comparison.
+	/// <param name="tag"> Tag that came before nextTag, used to calculate differences. </param>
+	/// <param name="nextTag"> Tag to download.. </param>
 	/// HEAD can be given as argument to compare with newest version. </param>
 	/// <param name="filePath"> Location where the local repository is. </param>
 	/// <returns> Vector of removed/unchanged files. </returns>
@@ -70,8 +70,8 @@ public:
 	/// <param name="url"> Url to repository. </param>
 	/// <param name="filePath"> Location to store repository locally. </param>
 	/// <param name="branch"> Branch of repository to download. </param>
-	/// <param name="tag"> Tag to download. </param>
-	/// <param name="tag"> Newer tag to compare differences to. </param>
+	/// <param name="tag"> Tag that came before nextTag, used to calculate differences. </param>
+	/// <param name="nextTag"> Tag to download. Pass HEAD to download most recent version. </param>
 	/// <returns> Error code. </returns>
 	int clone(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts,
 				std::string const &tag, std::string const &nextTag);

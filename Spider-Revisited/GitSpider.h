@@ -23,8 +23,8 @@ private:
 	/// <param name="url"> Url to repository to download. </param>
 	/// <param name="filePath"> Local path where to store the repository. </param>
 	/// <param name="branch"> Branch of the source to download. </param>
-	/// <param name="tag"> Tag to download. </param>
-	/// <param name="nextTag"> Newest tag after 'tag'. Used to calculate differences. </param>
+	/// <param name="tag"> Tag that came before nextTag, used to calculate differences. </param>
+	/// <param name="nextTag"> Tag to download. Pass HEAD to download most recent version. </param>
 	/// <returns></returns>
 	int downloadSource(std::string const &url, std::string const &filePath, std::string const &branch,
 						std::string const &tag, std::string const &nextTag) override;

@@ -55,7 +55,7 @@ std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpid
 		return std::make_tuple(AuthorData(), "", std::vector<std::string>());
 	}
 
-	std::string commitHash = getCommitHash(tag, filePath);
+	std::string commitHash = getCommitHash(nextTag, filePath);
 	std::vector<std::string> unchangedFiles = spider->getUnchangedFiles();
 
 	delete spider;
@@ -97,7 +97,7 @@ std::vector<std::pair<std::string, long long>> RunSpider::getTags(std::string co
 	}
 
 	// Sort the tags by timestamp.
-	std::sort(tags.rbegin(), tags.rend(), sortByTimestamp);
+	std::sort(tags.begin(), tags.end(), sortByTimestamp);
 
 	return tags;
 }

@@ -21,8 +21,8 @@ public:
 	/// <param name="url"> Source to download. </param>
 	/// <param name="filePath"> Where to store the source locally. </param>
 	/// <param name="branch"> Which branch of the source to download. </param>
-	/// <param name="tag"> Tag to download. </param>
-	/// <param name="nextTag"> Newest tag after 'tag'. Used to calculate differences. </param>
+	/// <param name="tag"> Tag that came before nextTag, used to calculate differences. </param>
+	/// <param name="nextTag"> Tag to download. Pass HEAD to download most recent version. </param>
 	/// <returns></returns>
 	virtual AuthorData download(std::string const &url, std::string const &filePath, std::string const &branch,
 							  std::string const &tag, std::string const &nextTag);
