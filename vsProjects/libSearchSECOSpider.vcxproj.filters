@@ -21,63 +21,63 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RunSpider.h">
+    <ClInclude Include="..\libSearchSECOSpider\RunSpider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Spider.h">
+    <ClInclude Include="..\libSearchSECOSpider\Spider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Git.h">
+    <ClInclude Include="..\libSearchSECOSpider\Git.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Filesystem.h">
+    <ClInclude Include="..\libSearchSECOSpider\Filesystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GitSpider.h">
+    <ClInclude Include="..\libSearchSECOSpider\GitSpider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ExecuteCommand.h">
+    <ClInclude Include="..\libSearchSECOSpider\ExecuteCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CodeBlock.h">
+    <ClInclude Include="..\libSearchSECOSpider\CodeBlock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ErrorSpider.h">
+    <ClInclude Include="..\libSearchSECOSpider\ErrorSpider.h">
       <Filter>Header Files\ErrorHandling</Filter>
     </ClInclude>
-    <ClInclude Include="Logger.h">
+    <ClInclude Include="..\libSearchSECOSpider\Logger.h">
       <Filter>Header Files\ErrorHandling</Filter>
     </ClInclude>
-    <ClInclude Include="loguru/loguru.hpp">
+    <ClInclude Include="..\libSearchSECOSpider\loguru/loguru.hpp">
       <Filter>Header Files\ErrorHandling</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="RunSpider.cpp">
+    <ClCompile Include="..\libSearchSECOSpider\RunSpider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Spider.cpp">
+    <ClCompile Include="..\libSearchSECOSpider\Spider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Git.cpp">
+    <ClCompile Include="..\libSearchSECOSpider\Git.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Filesystem.cpp">
+    <ClCompile Include="..\libSearchSECOSpider\Filesystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GitSpider.cpp">
+    <ClCompile Include="..\libSearchSECOSpider\GitSpider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ExecuteCommand.cpp">
+    <ClCompile Include="..\libSearchSECOSpider\ExecuteCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Logger.cpp">
+    <ClCompile Include="..\libSearchSECOSpider\Logger.cpp">
       <Filter>Source Files\ErrorHandling</Filter>
     </ClCompile>
-    <ClCompile Include="ErrorSpider.cpp">
+    <ClCompile Include="..\libSearchSECOSpider\ErrorSpider.cpp">
       <Filter>Source Files\ErrorHandling</Filter>
     </ClCompile>
-    <ClCompile Include="loguru/loguru.cpp">
+    <ClCompile Include="..\libSearchSECOSpider\loguru/loguru.cpp">
       <Filter>Source Files\ErrorHandling</Filter>
     </ClCompile>
   </ItemGroup>

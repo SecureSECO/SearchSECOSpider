@@ -18,35 +18,59 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\libSearchSECOSpider\CodeBlock.h" />
+    <ClInclude Include="..\libSearchSECOSpider\ErrorSpider.h" />
+    <ClInclude Include="..\libSearchSECOSpider\ExecuteCommand.h" />
+    <ClInclude Include="..\libSearchSECOSpider\Filesystem.h" />
+    <ClInclude Include="..\libSearchSECOSpider\Git.h" />
+    <ClInclude Include="..\libSearchSECOSpider\GitSpider.h" />
+    <ClInclude Include="..\libSearchSECOSpider\Logger.h" />
+    <ClInclude Include="..\libSearchSECOSpider\RunSpider.h" />
+    <ClInclude Include="..\libSearchSECOSpider\Spider.h" />
+    <ClInclude Include="..\libSearchSECOSpider\loguru/loguru.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\libSearchSECOSpider\ErrorSpider.cpp" />
+    <ClCompile Include="..\libSearchSECOSpider\ExecuteCommand.cpp" />
+    <ClCompile Include="..\libSearchSECOSpider\Filesystem.cpp" />
+    <ClCompile Include="..\libSearchSECOSpider\Git.cpp" />
+    <ClCompile Include="..\libSearchSECOSpider\GitSpider.cpp" />
+    <ClCompile Include="..\libSearchSECOSpider\Logger.cpp" />
+    <ClCompile Include="..\libSearchSECOSpider\RunSpider.cpp" />
+    <ClCompile Include="..\libSearchSECOSpider\Spider.cpp" />
+    <ClCompile Include="..\libSearchSECOSpider\loguru/loguru.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{4aaa2b64-7fdc-4e91-9f9c-0f8790236e14}</ProjectGuid>
-    <RootNamespace>Standalone</RootNamespace>
+    <ProjectGuid>{1ca7580e-b483-4c24-ac1c-00327d39cdc9}</ProjectGuid>
+    <RootNamespace>SpiderRevisited</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>libSearchSECOSpider</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -88,7 +112,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Spider-Revisited;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -104,7 +127,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Spider-Revisited;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -120,7 +142,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Spider-Revisited;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -136,7 +157,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Spider-Revisited;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -146,14 +166,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Spider-Revisited\Spider-Revisited.vcxproj">
-      <Project>{1ca7580e-b483-4c24-ac1c-00327d39cdc9}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
