@@ -54,8 +54,14 @@ int Git::clone(std::string const &url, std::string const &filePath, std::string 
 		}
 
 		// Try again after delay.
-		std::cout << "Download failed, trying again in " << delay << " seconds... " << tries << " tries left."
-				  << std::endl;
+		Logger::logInfo(
+			"Download failed, trying again in " + 
+			std::to_string(delay) + 
+			" seconds... " + 
+			std::to_string(tries) + 
+			" tries left.",
+			__FILE__, __LINE__);
+
 		std::this_thread::sleep_for(std::chrono::seconds(delay));
 		delay *= 2;
 		tries--;
