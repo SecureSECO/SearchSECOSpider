@@ -5,8 +5,6 @@ Utrecht University within the Software Project course.
 */
 
 #pragma once
-#include <string>
-#include "CodeBlock.h"
 #include "Spider.h"
 
 #define EXTS ".c .cpp .h .cs .cc .hpp .java .py .js"

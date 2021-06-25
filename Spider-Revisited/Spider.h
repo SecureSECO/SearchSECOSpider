@@ -6,7 +6,6 @@ Utrecht University within the Software Project course.
 
 #pragma once
 #include <string>
-#include <vector>
 #include "CodeBlock.h"
 
 class Spider
