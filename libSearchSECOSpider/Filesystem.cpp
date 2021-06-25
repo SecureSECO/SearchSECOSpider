@@ -22,7 +22,7 @@ std::string FilesystemImp::readFile(std::string const &filePath)
 }
 
 std::queue<std::filesystem::path> FilesystemImp::getFilepaths(std::string const &repoPath,
-													std::function<bool(std::filesystem::directory_entry)> predicate)
+												std::function<bool(std::filesystem::directory_entry)> predicate)
 {
 	std::queue<std::filesystem::path> files;
 	for (const auto &path : std::filesystem::recursive_directory_iterator(repoPath))

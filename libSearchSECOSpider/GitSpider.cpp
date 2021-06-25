@@ -29,7 +29,8 @@ AuthorData GitSpider::downloadAuthor(std::string const &repoPath)
 	auto pred = [repoPath](std::filesystem::directory_entry path)
 	{
 		std::string str = path.path().string();
-		return !(str.rfind(repoPath + "\\.git", 0) == 0 || str.rfind(repoPath + "/.git", 0) == 0) && Filesystem::isRegularFile(str);
+		return !(str.rfind(repoPath + "\\.git", 0) == 0 || str.rfind(repoPath + "/.git", 0) == 0)
+				&& Filesystem::isRegularFile(str);
 	};
 	std::queue<std::filesystem::path> files = Filesystem::getFilepaths(repoPath, pred);
 	std::mutex queueLock;
@@ -41,7 +42,8 @@ AuthorData GitSpider::downloadAuthor(std::string const &repoPath)
 	// Construct threads to process the queue.
 	for (int i = 0; i < threadsCount; i++)
 	{
-		threads.push_back(std::thread(&GitSpider::singleThread, this, repoPath, std::ref(blamedPaths), std::ref(totalPaths), std::ref(files), std::ref(queueLock)));
+		threads.push_back(std::thread(&GitSpider::singleThread, this, repoPath, std::ref(blamedPaths),
+			std::ref(totalPaths), std::ref(files), std::ref(queueLock)));
 	}
 
 	// Wait on threads to finish.
@@ -97,8 +99,8 @@ AuthorData GitSpider::parseBlameData(std::string const &repoPath)
 	auto pred = [repoPath](std::filesystem::directory_entry path)
 	{
 		std::string str = path.path().string();
-		return !(str.rfind(repoPath + "\\.git", 0) == 0 || str.rfind(repoPath + "/.git", 0) == 0) && Filesystem::isRegularFile(str) &&
-				path.path().extension() == ".meta";
+		return !(str.rfind(repoPath + "\\.git", 0) == 0 || str.rfind(repoPath + "/.git", 0) == 0)
+			&& Filesystem::isRegularFile(str) && path.path().extension() == ".meta";
 	};
 	auto paths = Filesystem::getFilepaths(repoPath, pred);
 	int processedPaths = 0;

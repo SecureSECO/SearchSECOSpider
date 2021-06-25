@@ -93,7 +93,9 @@ void recurseFolder(Node &node, std::queue<std::filesystem::path> &queue, std::st
 		else
 		{
 			std::string pathName = path + "\\" + child.second.name;
-			std::filesystem::directory_entry dirEntry = std::filesystem::directory_entry(std::filesystem::path(pathName));
+
+			std::filesystem::directory_entry dirEntry = 
+				std::filesystem::directory_entry(std::filesystem::path(pathName));
 
 			// Check if path fulfills predicate.
 			if (predicate(dirEntry))

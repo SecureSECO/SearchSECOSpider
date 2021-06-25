@@ -123,7 +123,8 @@ std::vector<std::filesystem::path> getFilepaths(std::string const &changes, std:
 	return result;
 }
 
-std::vector<std::string> Git::getDifference(std::string const &tag, std::string const &nextTag, std::string const &filePath)
+std::vector<std::string> Git::getDifference(std::string const &tag, std::string const &nextTag,
+											std::string const &filePath)
 {
 	// Get list of changed files.
 	std::string command = "cd \"" + filePath + "\" && git diff --name-status " + tag + " " + nextTag;
@@ -181,6 +182,7 @@ void Git::blameFiles(std::string const &repoPath, std::vector<std::string> const
 {
 	// Move into repo.
 	std::string command = "cd \"" + repoPath + "\"";
+
 	// Blame files.
 	for (int i = 0; i < filePath.size(); i++)
 	{

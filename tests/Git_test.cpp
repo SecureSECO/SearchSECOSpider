@@ -94,16 +94,18 @@ TEST(BlameToFile, MultipleBlameToFile)
 	Git git;
 	ExecuteCommandObjMock *execMock = ExecuteCommandObjMock::setExecuteCommand();
 	git.blameFiles("repo", std::vector<std::string> {"repo/local/path", "repo/local2/path1", "repo/p"});
-	EXPECT_EQ(execMock->execString, "cd \"repo\" && git blame -p \"local/path\" >> \"local/path.meta\" && git blame -p \"local2/path1\" >> \"local2/path1.meta\" && git blame -p \"p\" >> \"p.meta\"");
+	EXPECT_EQ(execMock->execString, 
+		"cd \"repo\" && git blame -p \"local/path\" >> \"local/path.meta\" && "
+		" git blame -p \"local2/path1\" >> \"local2/path1.meta\" && git blame -p \"p\" >> \"p.meta\"");
 	ExecuteCommandObjMock::resetExecuteCommand(execMock);
 }
 
 TEST(CloneTest, NoResponse)
 {
-    Git git;
-    ExecuteCommandObjMock *execMock = ExecuteCommandObjMock::setExecuteCommand();
-    EXPECT_ANY_THROW(git.clone("url", "path", "branch", "*.c", "HEAD", ""));
-    ExecuteCommandObjMock::resetExecuteCommand(execMock);
+	Git git;
+	ExecuteCommandObjMock *execMock = ExecuteCommandObjMock::setExecuteCommand();
+	EXPECT_ANY_THROW(git.clone("url", "path", "branch", "*.c", "HEAD", ""));
+	ExecuteCommandObjMock::resetExecuteCommand(execMock);
 }
 
 class LinkValidationParameterizedTestFixture : public ::testing::TestWithParam<std::tuple<std::string, bool>>

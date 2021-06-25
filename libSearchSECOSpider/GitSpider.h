@@ -55,8 +55,17 @@ private:
 	AuthorData parseBlameData(std::string const &repoPath);
 
 public:
+	/// <summary>
+	/// Sets the extensions the spider should download.
+	/// Format: .c .cpp .h .cs
+	/// </summary>
 	void setParsableExts(std::string const &exts) override;
 
+	/// <summary>
+	/// Get the unchanged files that were delete by last
+	/// difference check between tags.
+	/// </summary>
+	/// <returns>Vector of filepaths.</returns>
 	std::vector<std::string> getUnchangedFiles() override;
 };
 
