@@ -3,21 +3,18 @@ This program has been developed by students from the bachelor Computer Science a
 Utrecht University within the Software Project course.
 © Copyright Utrecht University (Department of Information and Computing Sciences)
 */
-#include <chrono>
-#include <fstream>
-#include <iostream>
-#include <memory>
-#include <map>
-#include <memory>
-#include <sstream>
-#include <thread>
-#include <vector>
 
+// Spider includes.
+#include "ErrorSpider.h"
 #include "ExecuteCommand.h"
 #include "Filesystem.h"
 #include "Git.h"
 #include "Logger.h"
-#include "ErrorSpider.h"
+
+// External includes.
+#include <iostream>
+#include <thread>
+
 
 // Splits string on given character.
 std::vector<std::string> splitString(std::string const &str, char c)
