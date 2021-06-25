@@ -46,7 +46,7 @@ private:
 	/// branch.</param> 
 	/// <param name="exts">Extensions that should be downloaded.</param>
 	/// <returns> Response that the console gave. </returns>
-	std::string tryClone(std::string const &url, std::string const &filePath, std::string const &branch,
+	void tryClone(std::string const &url, std::string const &filePath, std::string const &branch,
 							 std::string const &exts);
 
 	/// <summary>

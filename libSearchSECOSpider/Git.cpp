@@ -40,38 +40,7 @@ int Git::clone(std::string const &url, std::string const &filePath, std::string 
 	int tries = RECONNECT_TRIES;
 	int delay = RECONNECT_DELAY;
 
-	std::string resp = tryClone(url, filePath, branch, exts);
-
-	// Retry loop incase cloning fails to respond.
-	while (resp == "")
-	{
-		// Exit with error code if no more tries left.
-		if (tries < 0)
-		{
-			Logger::logFatal(Error::getErrorMessage(ErrorType::GitCloneError), __FILE__, __LINE__,
-							 (int)ErrorType::GitCloneError);
-			throw 1;
-		}
-
-		// Try again after delay.
-		Logger::logInfo(
-			"Download failed, trying again in " + 
-			std::to_string(delay) + 
-			" seconds... " + 
-			std::to_string(tries) + 
-			" tries left.",
-			__FILE__, __LINE__);
-
-		std::this_thread::sleep_for(std::chrono::seconds(delay));
-		delay *= 2;
-		tries--;
-
-		// Delete target folder before trying again on linux to prevent error.
-#if !(defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__))
-		ExecuteCommand::exec(("rm -rf " + filePath).c_str());
-#endif
-		resp = tryClone(url, filePath, branch, exts);
-	}
+	tryClone(url, filePath, branch, exts);
 
 	// Jump to tag.
 	if (tag == nextTag)
@@ -89,7 +58,7 @@ int Git::clone(std::string const &url, std::string const &filePath, std::string 
 	return 0;
 }
 
-std::string Git::tryClone(std::string const &url, std::string const &filePath, std::string const &branch,
+void Git::tryClone(std::string const &url, std::string const &filePath, std::string const &branch,
 					 std::string const &exts)
 {
 	std::string downloadCommand = getCloneCommand(url, filePath, branch, exts);
@@ -103,13 +72,12 @@ std::string Git::tryClone(std::string const &url, std::string const &filePath, s
 	{
 		command = "cd \"" + filePath + "\" && git branch --show-current";
 		brch = ExecuteCommand::execOut(command.c_str());
+		brch = brch.substr(0, brch.size() - 1);
 	}
 
 	// Get files.
-	command = "cd \"" + filePath + "\" && git checkout " + brch;
-	std::string resp = ExecuteCommand::execOut(command.c_str());
-
-	return resp;
+	command = "cd \"" + filePath + "\" && git checkout " + brch + " --quiet";
+	ExecuteCommand::execOut(command.c_str());
 }
 
 // Gets filepaths of all files that changed from 'git diff' command.
@@ -170,7 +138,7 @@ std::vector<std::string> Git::getDifference(std::string const &tag, std::string 
 std::string Git::getCloneCommand(std::string const &url, std::string const &filePath, std::string const &branch,
 								 std::string const &exts)
 {
-	std::string command = "git clone " + url + " \"" + filePath + "\" --no-checkout";
+	std::string command = "git clone " + url + " \"" + filePath + "\" --no-checkout --quiet";
 	command.append(" && cd \"" + filePath + "\" && git sparse-checkout set ");
 	command.append(exts);
 	command.append("&& git config --global core.autocrlf true");
