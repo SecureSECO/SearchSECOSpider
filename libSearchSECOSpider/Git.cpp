@@ -22,7 +22,7 @@ Utrecht University within the Software Project course.
 // Splits string on given character.
 std::vector<std::string> splitString(std::string const &str, char c)
 {
-	// Prepare input
+	// Prepare input.
 	std::stringstream ss(str);
 	std::string to;
 	std::vector<std::string> lines;

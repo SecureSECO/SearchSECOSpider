@@ -38,7 +38,7 @@ public:
 	static std::vector<std::pair<std::string, long long>> getTags(std::string const &filePath);
 
 	/// <summary>
-	/// Returns commit hash of a tag or HEAD
+	/// Returns commit hash of a tag or HEAD.
 	/// </summary>
 	/// <param name="tag">Tag or HEAD.</param>
 	/// <returns>Commit hash</returns>

@@ -91,7 +91,7 @@ std::vector<std::pair<std::string, long long>> RunSpider::getTags(std::string co
 		command = "cd \"" + filePath + "\" && git show -1 -s --format=%ct " + to;
 		std::string timeStampStr = ExecuteCommand::execOut(command.c_str());
 
-		// Add to pair
+		// Add to pair.
 		long long timeStamp = stoll(timeStampStr);
 		tags.push_back(std::make_pair(to, timeStamp));
 	}

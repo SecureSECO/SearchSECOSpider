@@ -34,14 +34,14 @@ TEST(BlameParse, BasicParse)
 	EXPECT_TRUE(codedata[9].commit->author == "A");
 
 	// Check if commit data isn't duplicated.
-	// A
+	// A.
 	EXPECT_TRUE(codedata[0].commit == codedata[4].commit);
 	EXPECT_TRUE(codedata[4].commit == codedata[7].commit);
 	EXPECT_TRUE(codedata[7].commit == codedata[9].commit);
-	// B
+	// B.
 	EXPECT_TRUE(codedata[1].commit == codedata[3].commit);
 	EXPECT_TRUE(codedata[3].commit == codedata[6].commit);
-	// D D
+	// D D.
 	EXPECT_TRUE(codedata[5].commit == codedata[8].commit);
 
 	// Check if every line has been stored.
