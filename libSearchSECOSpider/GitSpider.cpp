@@ -6,6 +6,7 @@ Utrecht University within the Software Project course.
 
 #include "Filesystem.h"
 #include "GitSpider.h"
+#include "Logger.h"
 #include <iostream>
 #include <filesystem>
 #include <thread>
@@ -36,13 +37,13 @@ AuthorData GitSpider::downloadAuthor(std::string const &repoPath)
 	std::mutex queueLock;
 
 	// Variables for displaying progress.
-	int blamedPaths = 0;
 	const int totalPaths = files.size();
 
 	// Construct threads to process the queue.
+	Logger::logInfo("Blaming " + std::to_string(totalPaths) + " files...", __FILE__, __LINE__);
 	for (int i = 0; i < threadsCount; i++)
 	{
-		threads.push_back(std::thread(&GitSpider::singleThread, this, repoPath, std::ref(blamedPaths),
+		threads.push_back(std::thread(&GitSpider::singleThread, this, repoPath,
 			std::ref(totalPaths), std::ref(files), std::ref(queueLock)));
 	}
 
@@ -50,21 +51,31 @@ AuthorData GitSpider::downloadAuthor(std::string const &repoPath)
 	for (auto& th : threads) {
 		th.join();
 	}
-	std::cout << ", done." << std::endl;
+	Logger::logInfo("Done blaming files", __FILE__, __LINE__);
+
 	AuthorData output = parseBlameData(repoPath);
 	return output;
 }
 
-void GitSpider::singleThread(std::string const &repoPath, int &blamedPaths, const int &totalPaths,
+void GitSpider::singleThread(std::string const &repoPath, const int &totalPaths,
 							 std::queue<std::filesystem::path> &files, std::mutex &queueLock)
 {
+	std::stringstream ss;
+	ss << std::this_thread::get_id();
+
+	loguru::set_thread_name(("spider@" + ss.str()).c_str());
+
 	while (true) 
 	{
+		int filesc = files.size();
+		Logger::logDebug(std::to_string(filesc) + " files left", __FILE__, __LINE__);
 		// Lock the queue.
 		queueLock.lock();
-		if (files.size() <= 0)
+		if (filesc <= 0)
 		{
 			queueLock.unlock();
+
+			loguru::set_thread_name("spider");
 			return;
 		}
 		std::vector<std::string> blameFiles;
@@ -79,13 +90,6 @@ void GitSpider::singleThread(std::string const &repoPath, int &blamedPaths, cons
 		
 		// Blame files with git.
 		git.blameFiles(repoPath, blameFiles);
-		
-		cmdLock.lock();
-		// Update progress.
-		blamedPaths += filesCount;
-		std::cout << '\r' << "Blaming files: " << (100 * blamedPaths) / totalPaths <<
-			"% (" << blamedPaths << '/' << totalPaths << ')';
-		cmdLock.unlock();
 	}
 }
 
@@ -103,10 +107,9 @@ AuthorData GitSpider::parseBlameData(std::string const &repoPath)
 			&& Filesystem::isRegularFile(str) && path.path().extension() == ".meta";
 	};
 	auto paths = Filesystem::getFilepaths(repoPath, pred);
-	int processedPaths = 0;
-	const int totalPaths = paths.size();
 
 	// Loop over all files.
+	Logger::logInfo("Processing blame data of " + std::to_string(paths.size()) + " files...", __FILE__, __LINE__);
 	while (paths.size() > 0)
 	{
 		auto path = paths.front();
@@ -119,14 +122,9 @@ AuthorData GitSpider::parseBlameData(std::string const &repoPath)
 
 		// Add blame data.
 		authorData.insert(std::pair<std::string, std::vector<CodeBlock>>(str, git.getBlameData(path.string())));
-
-		// Report progress.
-		processedPaths++;
-		std::cout << '\r' << "Processing blame data: " << (100 * processedPaths) / totalPaths << "% ("
-					<< processedPaths << '/' << totalPaths << ')';
 	}
+	Logger::logInfo("Finished processing blame data", __FILE__, __LINE__);
 
-	std::cout << ", done." << std::endl;
 	return authorData;
 }
 
