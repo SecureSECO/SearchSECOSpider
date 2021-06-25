@@ -41,9 +41,12 @@ std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpid
 		errno = 1;
 		return std::make_tuple(AuthorData(), "", std::vector<std::string>());
 	}
+
+	// Set up spider.
 	spider->setThreads(threads);
 	spider->setParsableExts(EXTS);
 
+	// Try to download authordata.
 	AuthorData authordata;
 	try
 	{
@@ -55,11 +58,14 @@ std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpid
 		return std::make_tuple(AuthorData(), "", std::vector<std::string>());
 	}
 
+	// Get additional info from repository.
 	std::string commitHash = getCommitHash(nextTag, filePath);
 	std::vector<std::string> unchangedFiles = spider->getUnchangedFiles();
 
+	// Cleanup spider.
 	delete spider;
 
+	// Prepare output.
 	auto output = std::make_tuple(authordata, commitHash, unchangedFiles);
 
 	Logger::logInfo("Spidering successful, returning control to the Controller",

@@ -112,6 +112,7 @@ class LinkValidationParameterizedTestFixture : public ::testing::TestWithParam<s
 {
 };
 
+// Tuples of links and a bool that indicates if the link is valid.
 INSTANTIATE_TEST_CASE_P(GetSpider, LinkValidationParameterizedTestFixture, 
 	::testing::Values(
 			std::make_tuple("nonsensehttps://www.github.com", false), 
@@ -128,16 +129,16 @@ TEST_P(LinkValidationParameterizedTestFixture, LinkValidity)
 	auto data = GetParam();
 	std::string link = std::get<0>(data);
 
-	// Invalid links.
-	if (!std::get<1>(data))
-	{
-		EXPECT_EQ(nullptr, RunSpider::getSpider(link));
-	}
 	// Valid links.
-	else
+	if (std::get<1>(data))
 	{
 		auto ptr = RunSpider::getSpider(link);
 		EXPECT_NE(nullptr, ptr);
 		delete ptr;
+	}
+	// Invalid links.
+	else
+	{
+		EXPECT_EQ(nullptr, RunSpider::getSpider(link));
 	}
 }
