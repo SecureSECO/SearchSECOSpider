@@ -5,8 +5,13 @@ Utrecht University within the Software Project course.
 */
 
 #pragma once
-#include <string>
+
+// Spider includes.
 #include "CodeBlock.h"
+
+// External includes.
+#include <string>
+
 
 class Spider
 {
@@ -82,4 +87,3 @@ private:
 	/// <returns> AuthorData of the files in the repository. </returns>
 	virtual AuthorData downloadAuthor(std::string const &filePath) = 0;
 };
-

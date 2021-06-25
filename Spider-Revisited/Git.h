@@ -5,13 +5,13 @@ Utrecht University within the Software Project course.
 */
 
 #pragma once
+
+// Spider includes.
 #include "CodeBlock.h"
-#include <map>
-#include <string>
-#include <vector>
 
 #define RECONNECT_TRIES 2
 #define RECONNECT_DELAY 1
+
 
 class Git
 {
