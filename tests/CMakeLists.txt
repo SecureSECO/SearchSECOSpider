@@ -5,9 +5,9 @@
 
 # Required by FetchContent_MakeAvailable
 cmake_minimum_required(VERSION 3.13)
-project(spider_tests)
+project(tests)
 
-add_subdirectory(../Spider-Revisited ./Spider-Revisited)
+add_subdirectory(../libSearchSECOSpider ./libSearchSECOSpider)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -24,12 +24,12 @@ endif()
 
 
 set(CMAKE_CXX_STANDARD 20)
-set(TEST_NAME spider_tests)
+set(TEST_NAME tests)
 add_executable(${TEST_NAME} Git_test.cpp Gitspider_test.cpp Mock_test.cpp ExecuteCommand_test.cpp Integration_test.cpp testMocks.cpp)
 target_link_libraries(${TEST_NAME} gtest_main spider )
 
 
-target_include_directories(${TEST_NAME} PUBLIC "${PROJECT_BINARY_DIR}" ../Spider-Revisited)
+target_include_directories(${TEST_NAME} PUBLIC "${PROJECT_BINARY_DIR}" ../libSearchSECOSpider)
 
 enable_testing()
 include(GoogleTest)
