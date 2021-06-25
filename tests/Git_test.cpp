@@ -95,7 +95,7 @@ TEST(BlameToFile, MultipleBlameToFile)
 	ExecuteCommandObjMock *execMock = ExecuteCommandObjMock::setExecuteCommand();
 	git.blameFiles("repo", std::vector<std::string> {"repo/local/path", "repo/local2/path1", "repo/p"});
 	EXPECT_EQ(execMock->execString, 
-		"cd \"repo\" && git blame -p \"local/path\" >> \"local/path.meta\" && "
+		"cd \"repo\" && git blame -p \"local/path\" >> \"local/path.meta\" &&"
 		" git blame -p \"local2/path1\" >> \"local2/path1.meta\" && git blame -p \"p\" >> \"p.meta\"");
 	ExecuteCommandObjMock::resetExecuteCommand(execMock);
 }
