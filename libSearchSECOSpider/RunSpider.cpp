@@ -27,7 +27,7 @@ std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpid
 		__FILE__, __LINE__);
 
 	// Delete the folder at filepath, so that git does not throw an error.
-	std::cout << "Deleting old files..." << std::endl;
+	Logger::logInfo("Deleting old files from ./" + filePath + "/", __FILE__, __LINE__);
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 	ExecuteCommand::exec(("rmdir \"" + filePath + "\"/S /Q").c_str());
 #else

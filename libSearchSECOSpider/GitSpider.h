@@ -44,7 +44,7 @@ private:
 	/// <param name="totalPaths"> Total paths that need to be blamed. </param>
 	/// <param name="files"> Queue containing all files to be blamed. </param>
 	/// <param name="queueLock"> Lock to prevent racing conditions. </param>
-	void singleThread(std::string const &repoPath, int &blamedPaths, const int &totalPaths,
+	void singleThread(std::string const &repoPath, const int &totalPaths,
 			std::queue<std::filesystem::path> &files, std::mutex &queueLock);
 
 	/// <summary>
@@ -68,4 +68,3 @@ public:
 	/// <returns>Vector of filepaths.</returns>
 	std::vector<std::string> getUnchangedFiles() override;
 };
-
