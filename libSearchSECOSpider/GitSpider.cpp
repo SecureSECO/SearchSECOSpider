@@ -4,13 +4,16 @@ Utrecht University within the Software Project course.
 © Copyright Utrecht University (Department of Information and Computing Sciences)
 */
 
+// Spider includes.
 #include "Filesystem.h"
 #include "GitSpider.h"
+
+// External includes.
 #include <iostream>
-#include <filesystem>
 #include <thread>
 
 #define FILES_PER_CALL 16
+
 
 // Global locks.
 std::mutex cmdLock;

@@ -5,9 +5,13 @@ Utrecht University within the Software Project course.
 */
 
 #pragma once
-#include <memory>
+
+// External includes.
 #include <map>
+#include <memory>
+#include <string>
 #include <vector>
+
 
 /// <summary>
 /// Contains various data related to the blame of a commit.

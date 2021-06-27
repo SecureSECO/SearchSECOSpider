@@ -4,15 +4,16 @@ Utrecht University within the Software Project course.
 © Copyright Utrecht University (Department of Information and Computing Sciences)
 */
 
-#include <iostream>
-#include <sstream>
-#include <regex>
+// Spider includes.
 #include "ExecuteCommand.h"
-#include <sstream>
 #include "GitSpider.h"
-#include "RunSpider.h"
-#include "Spider.h"
 #include "Logger.h"
+#include "RunSpider.h"
+
+// External includes.
+#include <iostream>
+#include <regex>
+
 
 std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpider(
 	std::string const &url,

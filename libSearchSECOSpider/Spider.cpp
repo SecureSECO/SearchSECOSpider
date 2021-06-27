@@ -4,9 +4,9 @@ Utrecht University within the Software Project course.
 © Copyright Utrecht University (Department of Information and Computing Sciences)
 */
 
+// Spider includes.
 #include "Spider.h"
-#include <iostream>
-#include <map>
+
 
 AuthorData Spider::download(std::string const &url, std::string const &filePath, std::string const &branch,
 						std::string const &tag, std::string const &nextTag)

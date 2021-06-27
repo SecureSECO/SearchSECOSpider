@@ -4,10 +4,11 @@ Utrecht University within the Software Project course.
 © Copyright Utrecht University (Department of Information and Computing Sciences)
 */
 
+// Spider includes.
 #include "Logger.h"
-#include <stdlib.h>
 
 #define BASE 200
+
 
 void Logger::logDebug(std::string const &message, const char *file, unsigned int line)
 {
