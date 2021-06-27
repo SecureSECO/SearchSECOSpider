@@ -4,14 +4,17 @@ Utrecht University within the Software Project course.
 © Copyright Utrecht University (Department of Information and Computing Sciences)
 */
 
+// Spider includes.
+#include "ErrorSpider.h"
 #include "ExecuteCommand.h"
 #include "Logger.h"
+
+// External includes.
 #include <array>
-#include <iostream>
 #include <memory>
-#include "ErrorSpider.h"
 
 #define bufferSize 1024
+
 
 void ExecuteCommandObj::exec(const char* cmd)
 {

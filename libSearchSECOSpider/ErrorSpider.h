@@ -6,8 +6,9 @@ Utrecht University within the Software Project course.
 
 #pragma once
 
+// External includes.
 #include <map>
-#include <string>
+
 
 enum class ErrorType
 {

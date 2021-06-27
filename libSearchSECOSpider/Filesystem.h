@@ -5,10 +5,13 @@ Utrecht University within the Software Project course.
 */
 
 #pragma once
+
+// External includes.
 #include <filesystem>
 #include <functional>
 #include <queue>
 #include <string>
+
 
 class FilesystemImp
 {

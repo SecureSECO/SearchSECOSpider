@@ -4,13 +4,12 @@ Utrecht University within the Software Project course.
 © Copyright Utrecht University (Department of Information and Computing Sciences)
 */
 
-#include <filesystem>
-#include <fstream>
-#include <functional>
-#include <queue>
-#include <streambuf>
-#include <string>
+// Spider includes.
 #include "Filesystem.h"
+
+// External includes.
+#include <fstream>
+
 
 std::string FilesystemImp::readFile(std::string const &filePath)
 {

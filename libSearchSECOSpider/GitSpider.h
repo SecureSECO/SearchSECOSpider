@@ -5,12 +5,16 @@ Utrecht University within the Software Project course.
 */
 
 #pragma once
-#include "Spider.h"
+
+// Spider includes.
 #include "Git.h"
+#include "Spider.h"
+
+// External includes.
 #include <filesystem>
 #include <mutex>
 #include <queue>
-#include <map>
+
 
 class GitSpider : public Spider
 {
