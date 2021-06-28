@@ -34,14 +34,14 @@ TEST(BlameParse, BasicParse)
 	EXPECT_TRUE(codedata[9].commit->author == "A");
 
 	// Check if commit data isn't duplicated.
-	// A
+	// A.
 	EXPECT_TRUE(codedata[0].commit == codedata[4].commit);
 	EXPECT_TRUE(codedata[4].commit == codedata[7].commit);
 	EXPECT_TRUE(codedata[7].commit == codedata[9].commit);
-	// B
+	// B.
 	EXPECT_TRUE(codedata[1].commit == codedata[3].commit);
 	EXPECT_TRUE(codedata[3].commit == codedata[6].commit);
-	// D D
+	// D D.
 	EXPECT_TRUE(codedata[5].commit == codedata[8].commit);
 
 	// Check if every line has been stored.
@@ -94,22 +94,25 @@ TEST(BlameToFile, MultipleBlameToFile)
 	Git git;
 	ExecuteCommandObjMock *execMock = ExecuteCommandObjMock::setExecuteCommand();
 	git.blameFiles("repo", std::vector<std::string> {"repo/local/path", "repo/local2/path1", "repo/p"});
-	EXPECT_EQ(execMock->execString, "cd \"repo\" && git blame -p \"local/path\" >> \"local/path.meta\" && git blame -p \"local2/path1\" >> \"local2/path1.meta\" && git blame -p \"p\" >> \"p.meta\"");
+	EXPECT_EQ(execMock->execString, 
+		"cd \"repo\" && git blame -p \"local/path\" >> \"local/path.meta\" &&"
+		" git blame -p \"local2/path1\" >> \"local2/path1.meta\" && git blame -p \"p\" >> \"p.meta\"");
 	ExecuteCommandObjMock::resetExecuteCommand(execMock);
 }
 
 TEST(CloneTest, NoResponse)
 {
-    Git git;
-    ExecuteCommandObjMock *execMock = ExecuteCommandObjMock::setExecuteCommand();
-    EXPECT_ANY_THROW(git.clone("url", "path", "branch", "*.c", "HEAD", ""));
-    ExecuteCommandObjMock::resetExecuteCommand(execMock);
+	Git git;
+	ExecuteCommandObjMock *execMock = ExecuteCommandObjMock::setExecuteCommand();
+	EXPECT_ANY_THROW(git.clone("url", "path", "branch", "*.c", "HEAD", ""));
+	ExecuteCommandObjMock::resetExecuteCommand(execMock);
 }
 
 class LinkValidationParameterizedTestFixture : public ::testing::TestWithParam<std::tuple<std::string, bool>>
 {
 };
 
+// Tuples of links and a bool that indicates if the link is valid.
 INSTANTIATE_TEST_CASE_P(GetSpider, LinkValidationParameterizedTestFixture, 
 	::testing::Values(
 			std::make_tuple("nonsensehttps://www.github.com", false), 
@@ -126,16 +129,16 @@ TEST_P(LinkValidationParameterizedTestFixture, LinkValidity)
 	auto data = GetParam();
 	std::string link = std::get<0>(data);
 
-	// Invalid links.
-	if (!std::get<1>(data))
-	{
-		EXPECT_EQ(nullptr, RunSpider::getSpider(link));
-	}
 	// Valid links.
-	else
+	if (std::get<1>(data))
 	{
 		auto ptr = RunSpider::getSpider(link);
 		EXPECT_NE(nullptr, ptr);
 		delete ptr;
+	}
+	// Invalid links.
+	else
+	{
+		EXPECT_EQ(nullptr, RunSpider::getSpider(link));
 	}
 }

@@ -24,7 +24,8 @@ private:
 	{
 		{ErrorType::GitCloneError, "Git cloning failed"},
 		{ErrorType::PipeOpenFailed, "popen() failed."},
-		{ErrorType::FileExtensionsNotFound, "File extensions file not found. Please re-add this file to your project. No files will be cloned."},
+		{ErrorType::FileExtensionsNotFound, "File extensions file not found. Please re-add this file to your project."
+				" No files will be cloned."},
 	};
 
 public:
@@ -34,5 +35,4 @@ public:
 	/// <param name="e">The error.</param>
 	/// <returns>A specific message for the error.</returns>
 	static const char* getErrorMessage(ErrorType e);
-
 };

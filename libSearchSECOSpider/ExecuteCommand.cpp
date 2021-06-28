@@ -28,7 +28,8 @@ void ExecuteCommandObj::exec(const char* cmd)
 #endif
 	if (!pipe)
 	{
-		Logger::logFatal(Error::getErrorMessage(ErrorType::PipeOpenFailed), __FILE__, __LINE__, (int) ErrorType::PipeOpenFailed);
+		Logger::logFatal(Error::getErrorMessage(ErrorType::PipeOpenFailed),
+			__FILE__, __LINE__, (int) ErrorType::PipeOpenFailed);
 		throw 1;
 	}
 	// Amount of data read, is less then bufferSize if output ends.
@@ -51,7 +52,8 @@ std::string ExecuteCommandObj::execOut(const char *cmd)
 #endif
 	if (!pipe)
 	{
-		Logger::logFatal(Error::getErrorMessage(ErrorType::PipeOpenFailed), __FILE__, __LINE__, (int)ErrorType::PipeOpenFailed);
+		Logger::logFatal(Error::getErrorMessage(ErrorType::PipeOpenFailed),
+			__FILE__, __LINE__, (int)ErrorType::PipeOpenFailed);
 		throw 1;
 	}
 	// Amount of data read, is less then bufferSize if output ends.

@@ -28,7 +28,7 @@ std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpid
 		__FILE__, __LINE__);
 
 	// Delete the folder at filepath, so that git does not throw an error.
-	std::cout << "Deleting old files..." << std::endl;
+	Logger::logInfo("Deleting old files from ./" + filePath + "/", __FILE__, __LINE__);
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 	ExecuteCommand::exec(("rmdir \"" + filePath + "\"/S /Q").c_str());
 #else
@@ -42,9 +42,12 @@ std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpid
 		errno = 1;
 		return std::make_tuple(AuthorData(), "", std::vector<std::string>());
 	}
+
+	// Set up spider.
 	spider->setThreads(threads);
 	spider->setParsableExts(EXTS);
 
+	// Try to download authordata.
 	AuthorData authordata;
 	try
 	{
@@ -56,11 +59,14 @@ std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpid
 		return std::make_tuple(AuthorData(), "", std::vector<std::string>());
 	}
 
+	// Get additional info from repository.
 	std::string commitHash = getCommitHash(nextTag, filePath);
 	std::vector<std::string> unchangedFiles = spider->getUnchangedFiles();
 
+	// Cleanup spider.
 	delete spider;
 
+	// Prepare output.
 	auto output = std::make_tuple(authordata, commitHash, unchangedFiles);
 
 	Logger::logInfo("Spidering successful, returning control to the Controller",
@@ -92,7 +98,7 @@ std::vector<std::pair<std::string, long long>> RunSpider::getTags(std::string co
 		command = "cd \"" + filePath + "\" && git show -1 -s --format=%ct " + to;
 		std::string timeStampStr = ExecuteCommand::execOut(command.c_str());
 
-		// Add to pair
+		// Add to pair.
 		long long timeStamp = stoll(timeStampStr);
 		tags.push_back(std::make_pair(to, timeStamp));
 	}

@@ -53,6 +53,8 @@ public:
 	/// <summary>
 	/// Reads from node-based filesystem.
 	/// </summary>
+	/// <param name="filePath"> Path to the file that should be read. </param>
+	/// <returns> Contents of the file. </returns>
 	std::string readFile(std::string const &filePath) override;
 
 	/// <summary>

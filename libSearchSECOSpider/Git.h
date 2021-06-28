@@ -30,11 +30,12 @@ private:
 	/// </summary>
 	/// <param name="url">The url from which the project needs to be cloned.</param>
 	/// <param name="filePath">The path to which the project gets cloned to.</param>
-	/// <param name="branch">The branch that needs to be cloned. Giving an empty string will return the master branch.</param>
+	/// <param name="branch">The branch that needs to be cloned.
+	///  Giving an empty string will return the master branch.</param>
 	/// <param name="exts">Extensions that should be downloaded.</param>
 	/// <returns>A string representing the command.</returns>
 	std::string getCloneCommand(std::string const &url, std::string const &filePath, std::string const &branch,
-							std::string const &exts);
+								std::string const &exts);
 
 	/// <summary>
 	/// Tries to download a project from the url.
@@ -42,20 +43,21 @@ private:
 	/// <param name="url">The url from which the project needs to be cloned.</param>
 	/// <param name="filePath">The path to which the project gets cloned to.</param>
 	/// <param name="branch">The branch that needs to be cloned. Giving an empty string will return the master
-	/// branch.</param> <param name="exts">Extensions that should be downloaded.</param>
+	/// branch.</param> 
+	/// <param name="exts">Extensions that should be downloaded.</param>
 	/// <returns> Response that the console gave. </returns>
-	std::string tryClone(std::string const &url, std::string const &filePath, std::string const &branch,
+	void tryClone(std::string const &url, std::string const &filePath, std::string const &branch,
 							 std::string const &exts);
 
 	/// <summary>
 	/// Gets difference between two tags and deletes all files that haven't been changed.
 	/// </summary>
 	/// <param name="tag"> Tag that came before nextTag, used to calculate differences. </param>
-	/// <param name="nextTag"> Tag to download.. </param>
-	/// HEAD can be given as argument to compare with newest version. </param>
+	/// <param name="nextTag"> Tag to download. HEAD can be given as argument to compare with newest version. </param>
 	/// <param name="filePath"> Location where the local repository is. </param>
 	/// <returns> Vector of removed/unchanged files. </returns>
-	std::vector<std::string> getDifference(std::string const &tag, std::string const &nextTag, std::string const &filePath);
+	std::vector<std::string> getDifference(std::string const &tag, std::string const &nextTag,
+											std::string const &filePath);
 
 public:
 	// Stores which files were unchanged during difference check.

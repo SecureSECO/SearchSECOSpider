@@ -1,29 +1,31 @@
 # Spider Revisited
 
-This is the Spider of the SearchSECO project. The Spider is responsible for retrieving all relevant data (source files and author data) from (Git-based) sources on the internet and comminicating this data to the Controller component of the system. The spider needs a stable connection to the source in question to be able to clone projects, to then process these locally.
+This is the Spider of the SearchSECO project. The Spider is responsible for retrieving data (source files and author data) from (Git-based) sources on the internet and communicating this data to the Controller component of the system. The spider needs a stable internet connection to the source in question to be able to clone projects, to then process these locally.
 
 # Installation
 
 Download the .zip containing the source files and extract the files.
 # Dependencies
 * c++17, we use std::filesystem.
-* Windows 10.
+* Windows 10. Might also work on other systems, but has not been tested.
 # Building
 
 ## Stand-alone
-The standalone .exe file can only be built using Visual Studio.
+The standalone .exe file can only be built using Visual Studio 2019.
 ### Visual Studio
-Open the solution file and build the project in Visual Studio, with Standalone as startup project. Note that this will always spider the same repository, as defined in main.
+Open the solution file and build the project in Visual Studio 2019, with Standalone as startup project.
+The standalone project was made for testing purposes to be able to run the project, as opposed to only building a library.
+There are no practical uses for the standalone project apart from testing the SearchSECOSpider library.
 
 ## Library
-The spider can be built as a library using both Visual Studio and CMake.
+The spider can be built as a library using both Visual Studio 2019 and CMake.
 ### Visual Studio
-Open the solution file and build the Spider-Revisited project in Visual Studio. The library can then be found under ../x64/Debug/Spider-Revisited.lib.
+Open the solution file and build the Spider-Revisited project in Visual Studio 2019. The library can then be found under ../x64/Debug/libSearchSECOSpider.lib.
 
 ### CMake
 Make sure to have CMake [https://cmake.org/](https://cmake.org/) installed. Start a command prompt in the root folder and run the following commands:
 - `mkdir build && cd build`
-- `cmake ../Spider-Revisited`
+- `cmake ../libSearchSECOSpider`
 - `cmake --build .`
 The library can then be found from the build directory under /Debug/spider.lib.
 

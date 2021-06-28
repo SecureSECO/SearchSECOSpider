@@ -13,19 +13,24 @@ Utrecht University within the Software Project course.
 
 std::string FilesystemImp::readFile(std::string const &filePath)
 {
+	// Open file.
 	std::ifstream file;
 	file.exceptions(std::ifstream::badbit);
 	file.open(filePath);
+
+	// Write content of file to string.
 	std::string res((std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()));
 	return res;
 }
 
 std::queue<std::filesystem::path> FilesystemImp::getFilepaths(std::string const &repoPath,
-													std::function<bool(std::filesystem::directory_entry)> predicate)
+												std::function<bool(std::filesystem::directory_entry)> predicate)
 {
+	// Loop over files.
 	std::queue<std::filesystem::path> files;
 	for (const auto &path : std::filesystem::recursive_directory_iterator(repoPath))
 	{
+		// Add file to queue if path passes the predicate.
 		if (predicate(path))
 		{
 			files.push(path);

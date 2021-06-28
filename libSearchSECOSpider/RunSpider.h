@@ -28,7 +28,8 @@ public:
 	/// <param name="branch"> Which branchs of the repository to download. </param>
 	/// <returns> Authordata which contains which lines were written by which author. </returns>
 	static std::tuple<AuthorData, std::string, std::vector<std::string>> runSpider(std::string const &url,
-		std::string const &filePath, int threads, std::string const &tag, std::string const &nextTag, std::string const &branch = "");
+		std::string const &filePath, int threads, std::string const &tag, std::string const &nextTag,
+		std::string const &branch = "");
 
 	/// <summary>
 	/// Gets tags from downloaded repository.
@@ -38,7 +39,7 @@ public:
 	static std::vector<std::pair<std::string, long long>> getTags(std::string const &filePath);
 
 	/// <summary>
-	/// Returns commit hash of a tag or HEAD
+	/// Returns commit hash of a tag or HEAD.
 	/// </summary>
 	/// <param name="tag">Tag or HEAD.</param>
 	/// <returns>Commit hash</returns>
