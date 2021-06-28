@@ -51,7 +51,7 @@ public:
 	virtual void setParsableExts(std::string const &exts);
 
 	/// <summary>
-	/// Get the unchanged files that were delete by last
+	/// Get the unchanged files that were deleted by last
 	/// difference check between tags.
 	/// </summary>
 	/// <returns>Vector of filepaths.</returns>

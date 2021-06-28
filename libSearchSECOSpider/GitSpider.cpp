@@ -22,7 +22,7 @@ std::mutex cmdLock;
 int GitSpider::downloadSource(std::string const &url, std::string const &repoPath, std::string const &branch,
 							  std::string const &tag, std::string const &nextTag)
 {
-    return git.clone(url, repoPath, branch, parsableExts, tag, nextTag);
+	return git.clone(url, repoPath, branch, parsableExts, tag, nextTag);
 }
 
 AuthorData GitSpider::downloadAuthor(std::string const &repoPath)
