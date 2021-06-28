@@ -36,7 +36,7 @@ private:
 	/// <summary>
 	/// Implements the abstract downloadAuthor method from the Spider class.
 	/// </summary>
-	/// <param name="filePath"> Local location of the repository. </param>
+	/// <param name="repoPath"> Local location of the repository. </param>
 	/// <returns> AuthorData of the files in the repository. </returns>
 	AuthorData downloadAuthor(std::string const &repoPath) override;
 
@@ -65,7 +65,7 @@ public:
 	void setParsableExts(std::string const &exts) override;
 
 	/// <summary>
-	/// Get the unchanged files that were delete by last
+	/// Get the unchanged files that were deleted by last
 	/// difference check between tags. These filenames
 	/// have to be sent to the output later.
 	/// </summary>
