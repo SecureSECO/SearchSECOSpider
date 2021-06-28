@@ -27,7 +27,8 @@ public:
 	/// <param name="branch"> Which branch of the source to download. </param>
 	/// <param name="tag"> Tag that came before nextTag, used to calculate differences. </param>
 	/// <param name="nextTag"> Tag to download. Pass HEAD to download most recent version. </param>
-	/// <returns></returns>
+	/// /// <returns>A datastructure (DTO) containing the author data. This is a map that maps from
+	/// a filename (std::string) to a vector of CodeBlocks.</returns>
 	virtual AuthorData download(std::string const &url, std::string const &filePath, std::string const &branch,
 							  std::string const &tag, std::string const &nextTag);
 
