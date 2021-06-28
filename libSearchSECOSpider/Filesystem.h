@@ -29,6 +29,7 @@ class FilesystemImp
 	/// Ignores paths that don't fulfill the predicate.
 	/// </summary>
 	/// <param name="repoPath"> From which folder to get the files. </param>
+	/// <param name="predicate"> Files are only added to queue if they can pass the predicate. </param>
 	/// <returns> Queue containing the filepaths. </returns>
 	virtual std::queue<std::filesystem::path>getFilepaths(std::string const &repoPath, 
 		std::function<bool(std::filesystem::directory_entry)> predicate);
@@ -69,6 +70,7 @@ public:
 	/// Ignores paths that don't fulfill the predicate.
 	/// </summary>
 	/// <param name="repoPath"> From which folder to get the files. </param>
+	/// <param name="predicate"> Files are only added to queue if they can pass the query. </param>
 	/// <returns> Queue containing the filepaths. </returns>
 	static std::queue<std::filesystem::path> getFilepaths(std::string const &repoPath, 
 		std::function<bool(std::filesystem::directory_entry)> predicate)
@@ -87,7 +89,7 @@ public:
 	}
 
 	/// <summary>
-	/// Deletes a files.
+	/// Deletes a file.
 	/// </summary>
 	/// <param name="path"> Path to delete. </param>
 	static void remove(std::string const& path)

@@ -11,8 +11,10 @@ Utrecht University within the Software Project course.
 AuthorData Spider::download(std::string const &url, std::string const &filePath, std::string const &branch,
 						std::string const &tag, std::string const &nextTag)
 {
+	// Download the source.
 	int result = downloadSource(url, filePath, branch, tag, nextTag);
 
+	// Collect author data from downloaded source.
 	AuthorData output = downloadAuthor(filePath);
 
 	return output;

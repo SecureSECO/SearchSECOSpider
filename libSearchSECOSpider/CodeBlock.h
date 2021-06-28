@@ -41,4 +41,9 @@ struct CodeBlock
 	std::shared_ptr<CommitData> commit;
 };
 
+/// <summary>
+/// The AuthorData data structure is a map that has a filename
+/// as it's key. For each file there is a vector of codeblocks that
+/// contain commitdata for every line in the file.
+/// </summary>
 typedef std::map<std::string, std::vector<CodeBlock>> AuthorData;
