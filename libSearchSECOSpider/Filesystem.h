@@ -16,7 +16,8 @@ Utrecht University within the Software Project course.
 class FilesystemImp
 {
   public:
-	  FilesystemImp() {};
+	FilesystemImp() {};
+
 	/// <summary>
 	/// Reads all data from a file and stores it into a string.
 	/// </summary>

@@ -59,6 +59,7 @@ TEST(IntegrationTest, BasicParse)
 		EXPECT_EQ(commitData[0].commit->committerMail, "<noreply@github.com>");
 	}
 }
+
 TEST(IntegrationTest, LineBreaksConversion)
 {
 	auto ret = RunSpider::runSpider("https://github.com/SoftwareProj2021/TestRepo", "Downloads", 1, "", "HEAD");
@@ -89,7 +90,4 @@ TEST(IntegrationTest, LineBreaksConversion)
 	}
 
 	EXPECT_TRUE(true);
-
-	
-
 }
