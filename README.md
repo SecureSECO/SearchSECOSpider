@@ -29,10 +29,11 @@ Make sure to have CMake [https://cmake.org/](https://cmake.org/) installed. Star
 - `cmake --build .`
 The library can then be found from the build directory under /Debug/spider.lib.
 
-# Copyright
+# License
+
+This project is licensed under the GNU Affero General Public License v3.0. See [LICENSE](LICENSE) for more info.
 
 This program has been developed by students from the bachelor Computer Science at Utrecht University within the Software Project course.
-
 © Copyright Utrecht University (Department of Information and Computing Sciences)
 
 
