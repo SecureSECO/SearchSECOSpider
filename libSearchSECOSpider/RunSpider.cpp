@@ -24,11 +24,11 @@ std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpid
 	std::string const &branch)
 {
 	loguru::set_thread_name("spider");
-	Logger::logInfo("Received control from the Controller, start spidering " + url + " @ " + branch, 
+	Logger::logInfo("Start spidering " + url + (branch == "" ? "" : " @ " + branch), 
 		__FILE__, __LINE__);
 
 	// Delete the folder at filepath, so that git does not throw an error.
-	Logger::logInfo("Deleting old files from ./" + filePath + "/", __FILE__, __LINE__);
+	Logger::logDebug("Deleting old files from ./" + filePath + "/", __FILE__, __LINE__);
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 	ExecuteCommand::exec(("rmdir \"" + filePath + "\"/S /Q").c_str());
 #else
@@ -69,7 +69,7 @@ std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpid
 	// Prepare output.
 	auto output = std::make_tuple(authordata, commitHash, unchangedFiles);
 
-	Logger::logInfo("Spidering successful, returning control to the Controller",
+	Logger::logInfo("Spidering successful",
 		__FILE__, __LINE__);
 
 	errno = 0;
