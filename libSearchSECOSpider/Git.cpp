@@ -31,6 +31,11 @@ std::vector<std::string> splitString(std::string const &str, char c)
 	return lines;
 }
 
+std::string Git::getCheckoutTagCommand(std::string filePath, std::string nextTag)
+{
+	return "cd \"" + filePath + "\" && git checkout tags/" + nextTag + " --quiet";
+}
+
 int Git::clone(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts,
 			   std::string const &tag, std::string const &nextTag)
 {
@@ -39,8 +44,7 @@ int Git::clone(std::string const &url, std::string const &filePath, std::string 
 	// Jump to tag.
 	if (tag == nextTag)
 	{
-		std::string command = "cd \"" + filePath + "\" && git checkout tags/" + nextTag + " --quiet";
-		ExecuteCommand::exec(command.c_str());
+		ExecuteCommand::exec(this->getCheckoutTagCommand(filePath, nextTag).c_str());
 		Logger::logDebug("Switched to tag: " + nextTag, __FILE__, __LINE__);
 	}
 	// Get differences.
@@ -106,8 +110,7 @@ std::vector<std::string> Git::getDifference(std::string const &tag, std::string 
 	std::string command = "cd \"" + filePath + "\" && git diff --name-status " + tag + " " + nextTag;
 	std::string changed = ExecuteCommand::execOut(command.c_str());
 	auto changedFiles = getFilepaths(changed, filePath);
-	command = "cd \"" + filePath + "\" && git checkout tags/" + nextTag + " --quiet";
-	ExecuteCommand::exec(command.c_str());
+	ExecuteCommand::exec(this->getCheckoutTagCommand(filePath, nextTag).c_str());
 	Logger::logDebug("Switched to tag: " + nextTag, __FILE__, __LINE__);
 
 	// Get all files in repository.
