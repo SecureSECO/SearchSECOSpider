@@ -151,7 +151,7 @@ std::string Git::getCloneCommand(std::string const &url, std::string const &file
 	// Switch branch if specified.
 	if (!branch.empty())
 	{
-		command.append(" && git checkout " + branch);
+		command.append(" && git checkout " + branch + " --quiet");
 	}
 
 	return command;
