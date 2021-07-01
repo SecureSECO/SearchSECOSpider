@@ -31,23 +31,16 @@ std::vector<std::string> splitString(std::string const &str, char c)
 	return lines;
 }
 
-std::string Git::getCheckoutTagCommand(std::string filePath, std::string nextTag)
-{
-	return "cd \"" + filePath + "\" && git checkout tags/" + nextTag + " --quiet";
-}
-
 int Git::clone(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts,
 			   std::string const &tag, std::string const &nextTag)
 {
-	int tries = RECONNECT_TRIES;
-	int delay = RECONNECT_DELAY;
-
 	tryClone(url, filePath, branch, exts);
 
 	// Jump to tag.
 	if (tag == nextTag)
 	{
-		ExecuteCommand::exec(this->getCheckoutTagCommand(filePath, nextTag).c_str());
+		std::string command = "cd \"" + filePath + "\" && git checkout tags/" + nextTag + " --quiet";
+		ExecuteCommand::exec(command.c_str());
 		Logger::logDebug("Switched to tag: " + nextTag, __FILE__, __LINE__);
 	}
 	// Get differences.
@@ -66,6 +59,14 @@ void Git::tryClone(std::string const &url, std::string const &filePath, std::str
 	// Get .git folder.
 	ExecuteCommand::exec(downloadCommand.c_str());
 
+	// If target folder doesn't exist, then the git clone failed.
+	if (!Filesystem::exists(filePath))
+	{
+		Logger::logFatal(Error::getErrorMessage(ErrorType::GitCloneError), 
+			__FILE__, __LINE__, (int)ErrorType::GitCloneError);
+		throw 1;
+	}
+
 	// Get default branch.
 	std::string brch = branch;
 	std::string command;
@@ -78,7 +79,7 @@ void Git::tryClone(std::string const &url, std::string const &filePath, std::str
 
 	// Get files.
 	command = "cd \"" + filePath + "\" && git checkout " + brch + " --quiet";
-	ExecuteCommand::execOut(command.c_str());
+	ExecuteCommand::exec(command.c_str());
 }
 
 // Gets filepaths of all files that changed from 'git diff' command.
@@ -105,7 +106,8 @@ std::vector<std::string> Git::getDifference(std::string const &tag, std::string 
 	std::string command = "cd \"" + filePath + "\" && git diff --name-status " + tag + " " + nextTag;
 	std::string changed = ExecuteCommand::execOut(command.c_str());
 	auto changedFiles = getFilepaths(changed, filePath);
-	ExecuteCommand::exec(this->getCheckoutTagCommand(filePath, nextTag).c_str());
+	command = "cd \"" + filePath + "\" && git checkout tags/" + nextTag + " --quiet";
+	ExecuteCommand::exec(command.c_str());
 	Logger::logDebug("Switched to tag: " + nextTag, __FILE__, __LINE__);
 
 	// Get all files in repository.
@@ -146,7 +148,7 @@ std::string Git::getCloneCommand(std::string const &url, std::string const &file
 	// Switch branch if specified.
 	if (!branch.empty())
 	{
-		command.append(" && git checkout " + branch + " --quiet");
+		command.append(" && git checkout " + branch);
 	}
 
 	return command;

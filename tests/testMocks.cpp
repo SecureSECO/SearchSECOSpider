@@ -115,6 +115,22 @@ std::queue<std::filesystem::path> FilesystemMock::getFilepaths(std::string const
 	return files;
 }
 
+bool FilesystemMock::exists(std::string const &path)
+{
+	try
+	{
+		// Try to find the node.
+		findNode(mainNode, splitFilepath(path));
+	}
+	catch (...)
+	{
+		// File doesn't exists if findNode function throws an exception.
+		return false;
+	}
+
+	return true;
+}
+
 void FilesystemMock::remove(std::string const &path)
 {
 	auto pathSplit = splitFilepath(path);
@@ -138,6 +154,7 @@ FilesystemMock *FilesystemMock::setFilesystemMock()
 	Filesystem::fs = fsMock;
 	return fsMock;
 }
+
 
 void FilesystemMock::resetFileSystem(FilesystemMock *filesystemMock)
 {

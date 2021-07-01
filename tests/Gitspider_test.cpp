@@ -43,7 +43,7 @@ TEST(SpiderDownload, BlameDataCalls)
 	gitspider.download("test.url", "repo", "master", "", "HEAD");
 
 	// Ensure that a gitblame has been called to all the files.
-	std::string cmd = execMock->calls[1];
+	std::string cmd = execMock->calls[2];
 	EXPECT_NE(cmd.find("file0.c.meta"), std::string::npos);
 	EXPECT_NE(cmd.find("file1.c.meta"), std::string::npos);
 	EXPECT_NE(cmd.find("file2.c.meta"), std::string::npos);
