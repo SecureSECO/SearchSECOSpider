@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.13)
 set(CMAKE_CXX_STANDARD 20)
 
-message("Building the spider...")
+message("Building libSearchSECOSpider...")
 if(NOT DEFINED LOGURU_INCLUDED)
    set(LOGURU_FILES
    loguru/loguru.hpp
@@ -27,7 +27,7 @@ set(SPIDER_HEADER_LIST
    Logger.h
 )
 
-add_library(spider
+add_library(libSearchSECOSpider
    ExecuteCommand.cpp
    Filesystem.cpp
    Git.cpp
@@ -41,5 +41,5 @@ add_library(spider
 )
 
 if(CMAKE_DL_LIBS)
-    target_link_libraries(spider ${CMAKE_DL_LIBS})
+    target_link_libraries(libSearchSECOSpider ${CMAKE_DL_LIBS})
 endif()
