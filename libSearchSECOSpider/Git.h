@@ -59,6 +59,11 @@ private:
 	std::vector<std::string> getDifference(std::string const &tag, std::string const &nextTag,
 											std::string const &filePath);
 
+	/// <summary>
+	/// Returns the command string to check out the tag nextTag.
+	/// </summary>
+	std::string getCheckoutTagCommand(std::string filePath, std::string nextTag);
+
 public:
 	// Stores which files were unchanged during difference check.
 	std::vector<std::string> unchangedFiles;
