@@ -24,7 +24,7 @@ std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpid
 	std::string const &branch)
 {
 	loguru::set_thread_name("spider");
-	Logger::logInfo("Start spidering " + url + (branch == "" ? "" : " @ " + branch), 
+	Logger::logInfo("Downloading project source files" + (branch == "" ? "" : " from the " + branch + " branch"), 
 		__FILE__, __LINE__);
 
 	// Delete the folder at filepath, so that git does not throw an error.
@@ -75,7 +75,7 @@ std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpid
 	// Prepare output.
 	auto output = std::make_tuple(authordata, commitHash, unchangedFiles);
 
-	Logger::logInfo("Spidering successful",
+	Logger::logInfo("Download successful",
 		__FILE__, __LINE__);
 
 	errno = 0;
