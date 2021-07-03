@@ -28,7 +28,7 @@ public:
 	/// <param name="branch"> Which branchs of the repository to download. </param>
 	/// <returns> Authordata which contains which lines were written by which author. </returns>
 	static std::tuple<AuthorData, std::string, std::vector<std::string>> runSpider(std::string const &url,
-		std::string const &filePath, int threads, std::string const &tag, std::string const &nextTag,
+		std::string const &filePath, int threads, std::string const &tag, std::string nextTag,
 		std::string const &branch = "");
 
 	/// <summary>

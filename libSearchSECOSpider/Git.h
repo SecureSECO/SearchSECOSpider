@@ -9,10 +9,6 @@ Utrecht University within the Software Project course.
 // Spider includes.
 #include "CodeBlock.h"
 
-#define RECONNECT_TRIES 2
-#define RECONNECT_DELAY 1
-
-
 class Git
 {
 private:
@@ -42,7 +38,7 @@ private:
 	/// </summary>
 	/// <param name="url">The url from which the project needs to be cloned.</param>
 	/// <param name="filePath">The path to which the project gets cloned to.</param>
-	/// <param name="branch">The branch that needs to be cloned. Giving an empty string will return the master
+	/// <param name="branch">The branch that needs to be cloned. Giving an empty string will return the master 
 	/// branch.</param> 
 	/// <param name="exts">Extensions that should be downloaded.</param>
 	/// <returns> Response that the console gave. </returns>

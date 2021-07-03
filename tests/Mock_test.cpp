@@ -51,6 +51,10 @@ TEST(Filesystemmock, retrieveFiles)
 	EXPECT_NE(std::find(paths.begin(), paths.end(), "repo\\file4")              , paths.end());
 	EXPECT_NE(std::find(paths.begin(), paths.end(), "repo\\fold2\\file5")       , paths.end());
 
+	// Test exists function.
+	EXPECT_EQ(Filesystem::exists("repo\\fold0\\file1"), true);
+	EXPECT_EQ(Filesystem::exists("repo\\fold0\\nonexistant"), false);
+
 	FilesystemMock::resetFileSystem(fs);
 }
 

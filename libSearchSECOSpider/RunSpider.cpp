@@ -20,7 +20,7 @@ std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpid
 	std::string const &filePath, 
 	int threads, 
 	std::string const &tag, 
-	std::string const &nextTag, 
+	std::string nextTag, 
 	std::string const &branch)
 {
 	loguru::set_thread_name("spider");
@@ -46,6 +46,12 @@ std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpid
 	// Set up spider.
 	spider->setThreads(threads);
 	spider->setParsableExts(EXTS);
+
+	// Set nextTag to HEAD if no tag was specified.
+	if (nextTag == "")
+	{
+		nextTag = "HEAD";
+	}
 
 	// Try to download authordata.
 	AuthorData authordata;

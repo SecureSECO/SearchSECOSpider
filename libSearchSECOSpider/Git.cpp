@@ -39,9 +39,6 @@ std::string Git::getCheckoutTagCommand(std::string filePath, std::string nextTag
 int Git::clone(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts,
 			   std::string const &tag, std::string const &nextTag)
 {
-	int tries = RECONNECT_TRIES;
-	int delay = RECONNECT_DELAY;
-
 	tryClone(url, filePath, branch, exts);
 
 	// Jump to tag.
@@ -66,6 +63,14 @@ void Git::tryClone(std::string const &url, std::string const &filePath, std::str
 	// Get .git folder.
 	ExecuteCommand::exec(downloadCommand.c_str());
 
+	// If target folder doesn't exist, then the git clone failed.
+	if (!Filesystem::exists(filePath))
+	{
+		Logger::logFatal(Error::getErrorMessage(ErrorType::GitCloneError), 
+			__FILE__, __LINE__, (int)ErrorType::GitCloneError);
+		throw 1;
+	}
+
 	// Get default branch.
 	std::string brch = branch;
 	std::string command;
@@ -78,7 +83,7 @@ void Git::tryClone(std::string const &url, std::string const &filePath, std::str
 
 	// Get files.
 	command = "cd \"" + filePath + "\" && git checkout " + brch + " --quiet";
-	ExecuteCommand::execOut(command.c_str());
+	ExecuteCommand::exec(command.c_str());
 }
 
 // Gets filepaths of all files that changed from 'git diff' command.
