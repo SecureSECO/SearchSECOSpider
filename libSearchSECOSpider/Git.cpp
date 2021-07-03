@@ -61,6 +61,7 @@ void Git::tryClone(std::string const &url, std::string const &filePath, std::str
 {
 	std::string downloadCommand = getCloneCommand(url, filePath, branch, exts);
 	// Get .git folder.
+	Logger::logWarn(downloadCommand, __FILE__, __LINE__);
 	ExecuteCommand::exec(downloadCommand.c_str());
 
 	// If target folder doesn't exist, then the git clone failed.
@@ -146,7 +147,12 @@ std::string Git::getCloneCommand(std::string const &url, std::string const &file
 	std::string command = "git clone " + url + " \"" + filePath + "\" --no-checkout --quiet";
 	command.append(" && cd \"" + filePath + "\" && git sparse-checkout set ");
 	command.append(exts);
-	command.append(" --quiet && git config --global core.autocrlf true");
+#ifdef __linux__
+	command.append(" > /dev/null 2>&1");
+#else
+	command.append(" --quiet");
+#endif
+	command.append(" && git config core.autocrlf true");
 
 	// Switch branch if specified.
 	if (!branch.empty())

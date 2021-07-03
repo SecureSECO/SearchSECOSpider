@@ -24,8 +24,12 @@ std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpid
 	std::string const &branch)
 {
 	loguru::set_thread_name("spider");
-	Logger::logInfo("Downloading project source files" + (branch == "" ? "" : " from the " + branch + " branch"), 
-		__FILE__, __LINE__);
+	std::string entryLog = "Downloading project source files";
+	if (!branch.empty())
+	{
+		entryLog += " from the " + branch + " branch";
+	}
+	Logger::logInfo(entryLog, __FILE__, __LINE__);
 
 	// Delete the folder at filepath, so that git does not throw an error.
 	Logger::logDebug("Deleting old files from ./" + filePath + "/", __FILE__, __LINE__);
