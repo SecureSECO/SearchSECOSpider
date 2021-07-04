@@ -74,6 +74,13 @@ public:
 	bool isRegularFile(std::string const &path) override;
 
 	/// <summary>
+	/// Checks path corresponds to an existing file or directory. 
+	/// </summary>
+	/// <param name="path"> Path to check. </param>
+	/// <returns> Bool indicating if file exists. </returns>
+	bool exists(std::string const& path) override;
+
+	/// <summary>
 	/// Deletes file at location.
 	/// </summary>
 	/// <param name="path"> Path to delete file at. </param>

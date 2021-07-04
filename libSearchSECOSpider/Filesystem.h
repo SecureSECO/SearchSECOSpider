@@ -36,6 +36,13 @@ class FilesystemImp
 		std::function<bool(std::filesystem::directory_entry)> predicate);
 
 	/// <summary>
+	/// Checks path corresponds to an existing file or directory. 
+	/// </summary>
+	/// <param name="path"> Path to check. </param>
+	/// <returns> Bool indicating if file exists. </returns>
+	virtual bool exists(std::string const& path);
+
+	/// <summary>
 	/// Checks if file at location is a regular file.
 	/// </summary>
 	/// <param name="path"> Path to check. </param>
@@ -77,6 +84,16 @@ public:
 		std::function<bool(std::filesystem::directory_entry)> predicate)
 	{
 		return fs->getFilepaths(repoPath, predicate);    
+	}
+
+	/// <summary>
+	/// Checks path corresponds to an existing file or directory. 
+	/// </summary>
+	/// <param name="path"> Path to check. </param>
+	/// <returns> Bool indicating if file exists. </returns>
+	static bool exists(std::string const& path)
+	{
+		return fs->exists(path);
 	}
 
 	/// <summary>

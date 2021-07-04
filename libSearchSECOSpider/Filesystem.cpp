@@ -44,6 +44,11 @@ bool FilesystemImp::isRegularFile(std::string const &path)
 	return std::filesystem::is_regular_file(path);
 }
 
+bool FilesystemImp::exists(std::string const &path)
+{
+	return std::filesystem::exists(path);
+}
+
 void FilesystemImp::remove(std::string const &path)
 {
 	std::filesystem::remove(path);
