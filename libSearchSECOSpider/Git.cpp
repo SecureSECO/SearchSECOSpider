@@ -61,7 +61,6 @@ void Git::tryClone(std::string const &url, std::string const &filePath, std::str
 {
 	std::string downloadCommand = getCloneCommand(url, filePath, branch, exts);
 	// Get .git folder.
-	Logger::logWarn(downloadCommand, __FILE__, __LINE__);
 	ExecuteCommand::exec(downloadCommand.c_str());
 
 	// If target folder doesn't exist, then the git clone failed.
