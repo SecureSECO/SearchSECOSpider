@@ -43,7 +43,7 @@ AuthorData GitSpider::downloadAuthor(std::string const &repoPath)
 	const int totalPaths = files.size();
 
 	// Construct threads to process the queue.
-	Logger::logInfo("Blaming and processing " + std::to_string(totalPaths) + " files...", __FILE__, __LINE__);
+	Logger::logInfo("Blaming and processing " + std::to_string(totalPaths) + " files", __FILE__, __LINE__);
 	for (int i = 0; i < threadsCount; i++)
 	{
 		threads.push_back(std::thread(&GitSpider::singleThread, this, repoPath,
@@ -126,7 +126,7 @@ AuthorData GitSpider::parseBlameData(std::string const &repoPath)
 		// Add blame data.
 		authorData.insert(std::pair<std::string, std::vector<CodeBlock>>(str, git.getBlameData(path.string())));
 	}
-	Logger::logInfo("Finished blaming and processing files", __FILE__, __LINE__);
+	Logger::logDebug("Finished blaming and processing files", __FILE__, __LINE__);
 
 	return authorData;
 }
