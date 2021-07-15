@@ -29,7 +29,7 @@ std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpid
 	{
 		entryLog += " from the " + branch + " branch";
 	}
-	Logger::logInfo(entryLog, __FILE__, __LINE__);
+	Logger::logDebug(entryLog, __FILE__, __LINE__);
 
 	// Delete the folder at filepath, so that git does not throw an error.
 	Logger::logDebug("Deleting old files from ./" + filePath + "/", __FILE__, __LINE__);
@@ -79,7 +79,7 @@ std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpid
 	// Prepare output.
 	auto output = std::make_tuple(authordata, commitHash, unchangedFiles);
 
-	Logger::logInfo("Download successful",
+	Logger::logDebug("Download successful",
 		__FILE__, __LINE__);
 
 	errno = 0;
