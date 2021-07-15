@@ -13,6 +13,7 @@ Utrecht University within the Software Project course.
 // External includes.
 #include <iostream>
 #include <regex>
+#include <sstream>
 
 
 std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpider(

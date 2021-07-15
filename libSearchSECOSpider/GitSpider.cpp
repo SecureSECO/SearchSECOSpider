@@ -12,6 +12,7 @@ Utrecht University within the Software Project course.
 // External includes.
 #include <iostream>
 #include <thread>
+#include <sstream>
 
 #define FILES_PER_CALL 16
 
