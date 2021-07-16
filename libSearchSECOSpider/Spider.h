@@ -50,6 +50,8 @@ public:
 	virtual std::vector<std::string>
         update(std::string const &filePath, std::string const &prevTag, std::string const &newTag) = 0;
 
+	virtual void switchVersion(std::string const &filePath, std::string const &tag) = 0;
+
 	/// <summary>
 	/// downloadAuthor gets the author data for each file using git blame.
 	/// Required is that this is the same path as is supplied

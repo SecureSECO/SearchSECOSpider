@@ -56,6 +56,8 @@ public:
 
 	std::vector<std::string> update(std::string const &filePath, 
 										std::string const &prevTag, std::string const &newTag) override;
+
+	void switchVersion(std::string const &filePath, std::string const &tag) override;
 	
 	/// <summary>
 	/// Implements the abstract downloadAuthor method from the Spider class.

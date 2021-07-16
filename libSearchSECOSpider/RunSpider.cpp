@@ -157,6 +157,19 @@ std::vector<std::string> RunSpider::updateVersion(Spider *spider, std::string co
 	return res;
 }
 
+void RunSpider::switchVersion(Spider *spider, std::string const &tag, std::string const &filePath)
+{
+    // Try to switch repository.
+    try
+    {
+        spider->switchVersion(filePath, tag);
+    }
+    catch (int e)
+    {
+        errno = e;
+    }
+}
+
 AuthorData RunSpider::getAuthors(Spider *spider, std::string const &filePath)
 {
 	AuthorData res;

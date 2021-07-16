@@ -33,6 +33,11 @@ std::vector<std::string> GitSpider::update(std::string const &filePath, std::str
     return git.getDifference(prevTag, newTag, filePath);
 }
 
+void GitSpider::switchVersion(std::string const &filePath, std::string const &tag)
+{
+    git.changeTag(tag, filePath);
+}
+
 AuthorData GitSpider::downloadAuthor(std::string const &repoPath)
 {
 	std::vector<std::thread> threads;
