@@ -46,7 +46,7 @@ public:
 	/// </summary>
 	/// <param name="filePath"> Location of repository. </param>
 	/// <returns> List of tags and their UNIX timestamp. Sorted from newest to oldest. </returns>
-	static std::vector<std::pair<std::string, long long>> getTags(std::string const &filePath);
+	static std::vector<std::tuple<std::string, long long, std::string>> getTags(std::string const &filePath);
 
 	/// <summary>
 	/// Returns commit hash of a tag or HEAD.
