@@ -114,7 +114,7 @@ void RunSpider::downloadRepo(Spider *spider, std::string const &url, std::string
 	{
 		entryLog += " from the " + branch + " branch";
 	}
-	Logger::logInfo(entryLog, __FILE__, __LINE__);
+	Logger::logDebug(entryLog, __FILE__, __LINE__);
 
 	// Delete the folder at filepath, so that git does not throw an error.
 	Logger::logDebug("Deleting old files from ./" + filePath + "/", __FILE__, __LINE__);
@@ -135,7 +135,7 @@ void RunSpider::downloadRepo(Spider *spider, std::string const &url, std::string
 		return;
 	}
 
-	Logger::logInfo("Download successful", __FILE__, __LINE__);
+	Logger::logDebug("Download successful", __FILE__, __LINE__);
 	return;
 }
 
