@@ -15,7 +15,7 @@ Utrecht University within the Software Project course.
 class RunSpider
 {
 public:
-	/// <summary>
+	/*/// <summary>
 	/// This is the entry point of the Spider functionality. It is supplied
 	/// a HTTPS link to the Git repository to be spidered and the name of the directory
 	/// into which the extracted files should be downloaded. It returns an exit code.
@@ -29,7 +29,17 @@ public:
 	/// <returns> Authordata which contains which lines were written by which author. </returns>
 	static std::tuple<AuthorData, std::string, std::vector<std::string>> runSpider(std::string const &url,
 		std::string const &filePath, int threads, std::string const &tag, std::string nextTag,
-		std::string const &branch = "");
+		std::string const &branch = "");*/
+
+	static Spider *setupSpider(std::string const &url, int threads);
+
+	static void downloadRepo(Spider *spider, std::string const &url, std::string const &filePath,
+						std::string const &branch = "");
+
+	static std::vector<std::string> updateVersion(Spider *spider, std::string const &filePath,
+                                                      std::string const &prevTag, std::string const &newTag);
+
+	static AuthorData getAuthors(Spider *spider, std::string const &filePath);
 
 	/// <summary>
 	/// Gets tags from downloaded repository.

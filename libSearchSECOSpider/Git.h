@@ -46,16 +46,6 @@ private:
 							 std::string const &exts);
 
 	/// <summary>
-	/// Gets difference between two tags and deletes all files that haven't been changed.
-	/// </summary>
-	/// <param name="tag"> Tag that came before nextTag, used to calculate differences. </param>
-	/// <param name="nextTag"> Tag to download. HEAD can be given as argument to compare with newest version. </param>
-	/// <param name="filePath"> Location where the local repository is. </param>
-	/// <returns> Vector of removed/unchanged files. </returns>
-	std::vector<std::string> getDifference(std::string const &tag, std::string const &nextTag,
-											std::string const &filePath);
-
-	/// <summary>
 	/// Returns the command string to check out the tag nextTag.
 	/// </summary>
 	std::string getCheckoutTagCommand(std::string filePath, std::string nextTag);
@@ -64,7 +54,22 @@ public:
 	// Stores which files were unchanged during difference check.
 	std::vector<std::string> unchangedFiles;
 
+	void clone(std::string const &url, std::string const &filePath, std::string const &branch,
+				std::string const &exts);
+
+	void changeTag(std::string const &filePath, std::string const &tag);
+
 	/// <summary>
+	/// Gets difference between two tags and deletes all files that haven't been changed.
+	/// </summary>
+	/// <param name="tag"> Tag that came before nextTag, used to calculate differences. </param>
+	/// <param name="nextTag"> Tag to download. HEAD can be given as argument to compare with newest version.
+	/// </param> <param name="filePath"> Location where the local repository is. </param> <returns> Vector of
+	/// removed/unchanged files. </returns>
+	std::vector<std::string> getDifference(std::string const &tag, std::string const &nextTag,
+											std::string const &filePath);
+
+	/*/// <summary>
 	/// Mirrors the full Clone functionality of the Git system; it requires
 	/// a HTTPS link to the Git repository to be cloned, together with the location
 	/// where the repository should be cloned into and returns an integer to indicate
@@ -76,8 +81,8 @@ public:
 	/// <param name="tag"> Tag that came before nextTag, used to calculate differences. </param>
 	/// <param name="nextTag"> Tag to download. Pass HEAD to download most recent version. </param>
 	/// <returns> Error code. </returns>
-	int clone(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts,
-				std::string const &tag, std::string const &nextTag);
+	int clonedepr(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts,
+				std::string const &tag, std::string const &nextTag);*/
 
 	/// <summary>
 	/// Mirrors the Blame functionality of the Git system; it requires the

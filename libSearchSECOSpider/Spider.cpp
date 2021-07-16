@@ -8,7 +8,7 @@ Utrecht University within the Software Project course.
 #include "Spider.h"
 
 
-AuthorData Spider::download(std::string const &url, std::string const &filePath, std::string const &branch,
+/*AuthorData Spider::downloaddepr(std::string const &url, std::string const &filePath, std::string const &branch,
 						std::string const &tag, std::string const &nextTag)
 {
 	// Download the source.
@@ -19,6 +19,7 @@ AuthorData Spider::download(std::string const &url, std::string const &filePath,
 
 	return output;
 }
+*/
 
 void Spider::setThreads(int threads)
 {

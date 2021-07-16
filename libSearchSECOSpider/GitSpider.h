@@ -21,7 +21,7 @@ class GitSpider : public Spider
 private:
 	Git git;
 
-	/// <summary>
+	/*/// <summary>
 	/// Implements the abstract downloadSource method from the Spider class.
 	/// </summary>
 	/// <param name="url"> Url to repository to download. </param>
@@ -30,15 +30,9 @@ private:
 	/// <param name="tag"> Tag that came before nextTag, used to calculate differences. </param>
 	/// <param name="nextTag"> Tag to download. Pass HEAD to download most recent version. </param>
 	/// <returns> Error code. </returns>
-	int downloadSource(std::string const &url, std::string const &repoPath, std::string const &branch,
-						std::string const &tag, std::string const &nextTag) override;
+	int downloadSource(std::string const &url, std::string const &filePath, std::string const &branch,
+						std::string const &tag, std::string const &nextTag) override;*/
 
-	/// <summary>
-	/// Implements the abstract downloadAuthor method from the Spider class.
-	/// </summary>
-	/// <param name="repoPath"> Local location of the repository. </param>
-	/// <returns> AuthorData of the files in the repository. </returns>
-	AuthorData downloadAuthor(std::string const &repoPath) override;
 
 	/// <summary>
 	/// Run on a single thread, takes files from the queue and blames these sequentially.
@@ -58,6 +52,18 @@ private:
 	AuthorData parseBlameData(std::string const &repoPath);
 
 public:
+	void download(std::string const &url, std::string const &filePath, std::string const &branch) override;
+
+	std::vector<std::string> update(std::string const &filePath, 
+										std::string const &prevTag, std::string const &newTag) override;
+	
+	/// <summary>
+	/// Implements the abstract downloadAuthor method from the Spider class.
+	/// </summary>
+	/// <param name="repoPath"> Local location of the repository. </param>
+	/// <returns> AuthorData of the files in the repository. </returns>
+	AuthorData downloadAuthor(std::string const &repoPath) override;
+
 	/// <summary>
 	/// Sets the extensions the spider should download.
 	/// Format: .c .cpp .h .cs

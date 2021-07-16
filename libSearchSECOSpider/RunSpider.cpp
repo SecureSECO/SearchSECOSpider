@@ -16,7 +16,7 @@ Utrecht University within the Software Project course.
 #include <sstream>
 
 
-std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpider(
+/*std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpider(
 	std::string const &url,
 	std::string const &filePath, 
 	int threads, 
@@ -85,6 +85,93 @@ std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpid
 
 	errno = 0;
 	return output;
+}*/
+
+Spider* RunSpider::setupSpider(std::string const &url, int threads)
+{
+    // Check which spider to use for link.
+    Spider* spider = getSpider(url);
+    if (spider == nullptr)
+    {
+        errno = 1;
+        return nullptr;
+    }
+
+    // Set up spider.
+    spider->setThreads(threads);
+    spider->setParsableExts(EXTS);
+
+	return spider;
+}
+
+void RunSpider::downloadRepo(Spider *spider, std::string const &url, std::string const &filePath,
+                             std::string const &branch)
+{
+    errno = 0;
+    loguru::set_thread_name("spider");
+    std::string entryLog = "Downloading project source files";
+    if (!branch.empty())
+    {
+        entryLog += " from the " + branch + " branch";
+    }
+    Logger::logInfo(entryLog, __FILE__, __LINE__);
+
+    // Delete the folder at filepath, so that git does not throw an error.
+    Logger::logDebug("Deleting old files from ./" + filePath + "/", __FILE__, __LINE__);
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+    ExecuteCommand::exec(("rmdir \"" + filePath + "\"/S /Q").c_str());
+#else
+    ExecuteCommand::exec(("rm -rf " + filePath).c_str());
+#endif
+
+    // Try to clone repository.
+    try
+    {
+        spider->download(url, filePath, branch);
+    }
+    catch (int e)
+    {
+        errno = e;
+        return;
+    }
+
+    Logger::logInfo("Download successful", __FILE__, __LINE__);
+    return;
+}
+
+std::vector<std::string> RunSpider::updateVersion(Spider *spider, std::string const &filePath, std::string const &prevTag,
+                                                  std::string const &newTag)
+{
+    std::vector<std::string> res;
+
+    // Try to update repository.
+    try
+    {
+        res = spider->update(filePath, prevTag, newTag);
+    }
+    catch (int e)
+    {
+        errno = e;
+        res = std::vector<std::string>();
+    }
+    return res;
+}
+
+AuthorData RunSpider::getAuthors(Spider *spider, std::string const &filePath)
+{
+    AuthorData res;
+
+    // Try to extract authors.
+    try
+    {
+        res = spider->downloadAuthor(filePath);
+    }
+    catch (int e)
+    {
+        errno = e;
+        res = AuthorData();
+    }
+    return res;
 }
 
 bool sortByTimestamp(std::pair<std::string, long long> const &a, std::pair<std::string, long long> const &b)

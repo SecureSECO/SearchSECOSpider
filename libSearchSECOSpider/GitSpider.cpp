@@ -5,25 +5,32 @@ Utrecht University within the Software Project course.
 */
 
 // Spider includes.
-#include "Filesystem.h"
 #include "GitSpider.h"
+#include "Filesystem.h"
 #include "Logger.h"
 
 // External includes.
 #include <iostream>
-#include <thread>
 #include <sstream>
+#include <thread>
 
 #define FILES_PER_CALL 16
 
-
-// Global locks.
-std::mutex cmdLock;
-
-int GitSpider::downloadSource(std::string const &url, std::string const &repoPath, std::string const &branch,
+/*int GitSpider::downloadSource(std::string const &url, std::string const &filePath, std::string const &branch,
 							  std::string const &tag, std::string const &nextTag)
 {
-	return git.clone(url, repoPath, branch, parsableExts, tag, nextTag);
+	return git.clonedepr(url, filePath, branch, parsableExts, tag, nextTag);
+}*/
+
+void GitSpider::download(std::string const &url, std::string const &filePath, std::string const &branch)
+{
+	return git.clone(url, filePath, branch, parsableExts);
+}
+
+std::vector<std::string> GitSpider::update(std::string const &filePath, std::string const &prevTag, 
+														std::string const &newTag)
+{
+    return git.getDifference(prevTag, newTag, filePath);
 }
 
 AuthorData GitSpider::downloadAuthor(std::string const &repoPath)
@@ -31,11 +38,10 @@ AuthorData GitSpider::downloadAuthor(std::string const &repoPath)
 	std::vector<std::thread> threads;
 
 	// Thread-safe queue (with lock).
-	auto pred = [repoPath](std::filesystem::directory_entry path)
-	{
+	auto pred = [repoPath](std::filesystem::directory_entry path) {
 		std::string str = path.path().string();
-		return !(str.rfind(repoPath + "\\.git", 0) == 0 || str.rfind(repoPath + "/.git", 0) == 0)
-				&& Filesystem::isRegularFile(str);
+		return !(str.rfind(repoPath + "\\.git", 0) == 0 || str.rfind(repoPath + "/.git", 0) == 0) &&
+			   Filesystem::isRegularFile(str);
 	};
 	std::queue<std::filesystem::path> files = Filesystem::getFilepaths(repoPath, pred);
 	std::mutex queueLock;
@@ -47,12 +53,13 @@ AuthorData GitSpider::downloadAuthor(std::string const &repoPath)
 	Logger::logInfo("Blaming and processing " + std::to_string(totalPaths) + " files", __FILE__, __LINE__);
 	for (int i = 0; i < threadsCount; i++)
 	{
-		threads.push_back(std::thread(&GitSpider::singleThread, this, repoPath,
-			std::ref(totalPaths), std::ref(files), std::ref(queueLock)));
+		threads.push_back(std::thread(&GitSpider::singleThread, this, repoPath, std::ref(totalPaths), std::ref(files),
+									  std::ref(queueLock)));
 	}
 
 	// Wait on threads to finish.
-	for (auto& th : threads) {
+	for (auto &th : threads)
+	{
 		th.join();
 	}
 	Logger::logDebug("Finished blaming files", __FILE__, __LINE__);
@@ -69,7 +76,7 @@ void GitSpider::singleThread(std::string const &repoPath, const int &totalPaths,
 
 	loguru::set_thread_name(("spider@" + ss.str()).c_str());
 
-	while (true) 
+	while (true)
 	{
 		int filesc = files.size();
 		Logger::logDebug(std::to_string(filesc) + " files left", __FILE__, __LINE__);
@@ -91,7 +98,7 @@ void GitSpider::singleThread(std::string const &repoPath, const int &totalPaths,
 		}
 		int filesCount = blameFiles.size();
 		queueLock.unlock();
-		
+
 		// Blame files with git.
 		git.blameFiles(repoPath, blameFiles);
 	}
@@ -104,11 +111,10 @@ AuthorData GitSpider::parseBlameData(std::string const &repoPath)
 	std::mutex mapLock;
 
 	// Variables for displaying progress.
-	auto pred = [repoPath](std::filesystem::directory_entry path)
-	{
+	auto pred = [repoPath](std::filesystem::directory_entry path) {
 		std::string str = path.path().string();
-		return !(str.rfind(repoPath + "\\.git", 0) == 0 || str.rfind(repoPath + "/.git", 0) == 0)
-			&& Filesystem::isRegularFile(str) && path.path().extension() == ".meta";
+		return !(str.rfind(repoPath + "\\.git", 0) == 0 || str.rfind(repoPath + "/.git", 0) == 0) &&
+			   Filesystem::isRegularFile(str) && path.path().extension() == ".meta";
 	};
 	auto paths = Filesystem::getFilepaths(repoPath, pred);
 

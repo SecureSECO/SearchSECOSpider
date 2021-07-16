@@ -8,6 +8,9 @@ Utrecht University within the Software Project course.
 
 int main()
 {
-	RunSpider::runSpider("https://github.com/official-stockfish/stockfish", "Downloads", 2, "", "HEAD");
-	return 0;
+    Spider *s = RunSpider::setupSpider("https://github.com/nlohmann/json", 2);
+    RunSpider::downloadRepo(s, "https://github.com/nlohmann/json", "Downloads");
+    AuthorData a = RunSpider::getAuthors(s, "Downloads");
+    delete s;
+    return 0;
 }

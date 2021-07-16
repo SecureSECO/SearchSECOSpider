@@ -37,7 +37,15 @@ std::string Git::getCheckoutTagCommand(std::string filePath, std::string nextTag
 	return "cd \"" + filePath + "\" && git checkout tags/" + nextTag + " --quiet";
 }
 
-int Git::clone(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts,
+void Git::clone(std::string const &url, std::string const &filePath, std::string const &branch,
+                   std::string const &exts)
+{
+    tryClone(url, filePath, branch, exts);
+
+    return;
+}
+
+/*int Git::clonedepr(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts,
 			   std::string const &tag, std::string const &nextTag)
 {
 	tryClone(url, filePath, branch, exts);
@@ -55,7 +63,7 @@ int Git::clone(std::string const &url, std::string const &filePath, std::string 
 	}
 
 	return 0;
-}
+}*/
 
 void Git::tryClone(std::string const &url, std::string const &filePath, std::string const &branch,
 					 std::string const &exts)
@@ -85,6 +93,12 @@ void Git::tryClone(std::string const &url, std::string const &filePath, std::str
 	// Get files.
 	command = "cd \"" + filePath + "\" && git checkout " + brch + " --quiet";
 	ExecuteCommand::exec(command.c_str());
+}
+
+void Git::changeTag(std::string const &filePath, std::string const &tag)
+{
+    ExecuteCommand::exec(this->getCheckoutTagCommand(filePath, tag).c_str());
+    Logger::logDebug("Switched to tag: " + tag, __FILE__, __LINE__);
 }
 
 // Gets filepaths of all files that changed from 'git diff' command.
