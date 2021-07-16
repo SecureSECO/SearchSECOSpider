@@ -39,7 +39,7 @@ public:
 	static std::vector<std::string> updateVersion(Spider *spider, std::string const &filePath,
                                                       std::string const &prevTag, std::string const &newTag);
 
-	void switchVersion(Spider *spider, std::string const &tag, std::string const &filePath);
+	static void switchVersion(Spider *spider, std::string const &tag, std::string const &filePath);
 
 	static AuthorData getAuthors(Spider *spider, std::string const &filePath);
 
