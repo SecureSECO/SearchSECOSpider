@@ -15,7 +15,9 @@ Utrecht University within the Software Project course.
 
 TEST(IntegrationTest, BasicParse)
 {
-	auto ret = RunSpider::runSpider("https://github.com/SoftwareProj2021/TestRepo", "Downloads", 1, "", "HEAD");
+    Spider *s = RunSpider::setupSpider("https://github.com/SoftwareProj2021/TestRepo", 1);
+
+	RunSpider::downloadRepo(s, "https://github.com/SoftwareProj2021/TestRepo", "Downloads");
 
 	// File names of files in project.
 	std::string files[] = {"File0.cpp", "File1.c", "LF line breaks.c", "Headers/File0.h", "Headers/File1.h",
@@ -23,7 +25,7 @@ TEST(IntegrationTest, BasicParse)
 	std::string filesB[] = {"File0.cpp", "File1.c", "LF line breaks.c", "Headers\\File0.h", "Headers\\File1.h",
 		"Headers\\Folder0\\Folder1\\file3.cpp"};
 
-	AuthorData authordata = std::get<0>(ret);
+	AuthorData authordata = RunSpider::getAuthors(s, "Downloads");
 	// Check if all files are found.
 	ASSERT_EQ(authordata.size(), 6);
 
@@ -62,7 +64,10 @@ TEST(IntegrationTest, BasicParse)
 
 TEST(IntegrationTest, LineBreaksConversion)
 {
-	auto ret = RunSpider::runSpider("https://github.com/SoftwareProj2021/TestRepo", "Downloads", 1, "", "HEAD");
+    Spider *s = RunSpider::setupSpider("https://github.com/SoftwareProj2021/TestRepo", 1);
+
+    RunSpider::downloadRepo(s, "https://github.com/SoftwareProj2021/TestRepo", "Downloads");
+
 	std::string path = "Downloads/LF line breaks.c";
 	std::ifstream fin(path, std::ios::binary);
 	std::string content((std::istreambuf_iterator<char>(fin)),
