@@ -55,7 +55,8 @@ public:
 	void download(std::string const &url, std::string const &filePath, std::string const &branch) override;
 
 	std::vector<std::string> update(std::string const &filePath, 
-										std::string const &prevTag, std::string const &newTag) override;
+										std::string const &prevTag, std::string const &newTag,
+									std::vector<std::string> prevUnchangedFiles) override;
 
 	void switchVersion(std::string const &filePath, std::string const &tag) override;
 	

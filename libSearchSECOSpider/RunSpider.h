@@ -37,7 +37,8 @@ public:
 						std::string const &branch = "");
 
 	static std::vector<std::string> updateVersion(Spider *spider, std::string const &filePath,
-                                                      std::string const &prevTag, std::string const &newTag);
+												  std::string const &prevTag, std::string const &newTag,
+												  std::vector<std::string> prevUnchangedFiles);
 
 	static void switchVersion(Spider *spider, std::string const &tag, std::string const &filePath);
 

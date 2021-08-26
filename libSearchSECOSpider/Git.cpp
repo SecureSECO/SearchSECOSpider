@@ -38,11 +38,11 @@ std::string Git::getCheckoutTagCommand(std::string filePath, std::string nextTag
 }
 
 void Git::clone(std::string const &url, std::string const &filePath, std::string const &branch,
-                   std::string const &exts)
+				   std::string const &exts)
 {
-    tryClone(url, filePath, branch, exts);
+	tryClone(url, filePath, branch, exts);
 
-    return;
+	return;
 }
 
 /*int Git::clonedepr(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts,
@@ -97,8 +97,8 @@ void Git::tryClone(std::string const &url, std::string const &filePath, std::str
 
 void Git::changeTag(std::string const &filePath, std::string const &tag)
 {
-    ExecuteCommand::exec(this->getCheckoutTagCommand(filePath, tag).c_str());
-    Logger::logDebug("Switched to tag: " + tag, __FILE__, __LINE__);
+	ExecuteCommand::exec(this->getCheckoutTagCommand(filePath, tag).c_str());
+	Logger::logDebug("Switched to tag: " + tag, __FILE__, __LINE__);
 }
 
 // Gets filepaths of all files that changed from 'git diff' command.
@@ -119,12 +119,16 @@ std::vector<std::filesystem::path> getFilepaths(std::string const &changes, std:
 }
 
 std::vector<std::string> Git::getDifference(std::string const &tag, std::string const &nextTag,
-											std::string const &filePath)
+											std::string const &filePath, std::vector<std::string> prevUnchangedFiles)
 {
 	// Get list of changed files.
-	std::string command = "cd \"" + filePath + "\" && git diff --name-status " + tag + " " + nextTag;
-	std::string changed = ExecuteCommand::execOut(command.c_str());
-	auto changedFiles = getFilepaths(changed, filePath);
+	std::vector<std::filesystem::path> changedFiles = std::vector<std::filesystem::path>();
+	if (tag != "")
+	{
+		std::string command = "cd \"" + filePath + "\" && git diff --name-status " + tag + " " + nextTag;
+		std::string changed = ExecuteCommand::execOut(command.c_str());
+		changedFiles = getFilepaths(changed, filePath);
+	}
 	ExecuteCommand::exec(this->getCheckoutTagCommand(filePath, nextTag).c_str());
 	Logger::logDebug("Switched to tag: " + nextTag, __FILE__, __LINE__);
 
@@ -138,17 +142,28 @@ std::vector<std::string> Git::getDifference(std::string const &tag, std::string 
 
 	// Delete all unchanged files.
 	std::vector<std::string> removedFiles;
-	while (!files.empty())
+	if (tag != "")
 	{
-		std::filesystem::path file = files.front();
-		files.pop();
-		if (std::find(changedFiles.begin(), changedFiles.end(), file) == changedFiles.end())
+		for (int i = 0; i < prevUnchangedFiles.size(); i++)
 		{
-			// Remove local path from filepath.
-			removedFiles.push_back(file.string().substr(filePath.length()+1));
-			
-			// Delete file locally.
-			Filesystem::remove(file.string());
+			if (std::find(changedFiles.begin(), changedFiles.end(), prevUnchangedFiles[i]) == changedFiles.end())
+			{
+				removedFiles.push_back(prevUnchangedFiles[i]);
+			}
+		}
+		while (!files.empty())
+		{
+			std::filesystem::path file = files.front();
+			files.pop();
+			Logger::logInfo("Checking if file is changed: " + file.string(), __FILE__, __LINE__);
+			if (std::find(changedFiles.begin(), changedFiles.end(), file) == changedFiles.end())
+			{
+				// Remove local path from filepath.
+				removedFiles.push_back(file.string().substr(filePath.length() + 1));
+
+				// Delete file locally.
+				Filesystem::remove(file.string());
+			}
 		}
 	}
 

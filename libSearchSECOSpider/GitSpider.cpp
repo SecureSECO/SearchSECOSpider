@@ -28,9 +28,9 @@ void GitSpider::download(std::string const &url, std::string const &filePath, st
 }
 
 std::vector<std::string> GitSpider::update(std::string const &filePath, std::string const &prevTag, 
-														std::string const &newTag)
+														std::string const &newTag, std::vector<std::string> prevUnchangedFiles)
 {
-    return git.getDifference(prevTag, newTag, filePath);
+    return git.getDifference(prevTag, newTag, filePath, prevUnchangedFiles);
 }
 
 void GitSpider::switchVersion(std::string const &filePath, std::string const &tag)

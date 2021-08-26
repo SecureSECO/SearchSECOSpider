@@ -47,8 +47,8 @@ public:
 
 	virtual void download(std::string const &url, std::string const &filePath, std::string const &branch) = 0;
 
-	virtual std::vector<std::string>
-        update(std::string const &filePath, std::string const &prevTag, std::string const &newTag) = 0;
+	virtual std::vector<std::string> update(std::string const &filePath, std::string const &prevTag,
+											std::string const &newTag, std::vector<std::string> prevUnchangedFiles) = 0;
 
 	virtual void switchVersion(std::string const &filePath, std::string const &tag) = 0;
 

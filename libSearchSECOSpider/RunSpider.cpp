@@ -139,15 +139,15 @@ void RunSpider::downloadRepo(Spider *spider, std::string const &url, std::string
 	return;
 }
 
-std::vector<std::string> RunSpider::updateVersion(Spider *spider, std::string const &filePath, std::string const &prevTag,
-												  std::string const &newTag)
+std::vector<std::string> RunSpider::updateVersion(Spider *spider, std::string const &filePath, std::string const &prevTag, std::string const &newTag,
+												  std::vector<std::string> prevUnchangedFiles)
 {
 	std::vector<std::string> res;
 
 	// Try to update repository.
 	try
 	{
-		res = spider->update(filePath, prevTag, newTag);
+		res = spider->update(filePath, prevTag, newTag, prevUnchangedFiles);
 	}
 	catch (int e)
 	{

@@ -67,7 +67,7 @@ public:
 	/// </param> <param name="filePath"> Location where the local repository is. </param> <returns> Vector of
 	/// removed/unchanged files. </returns>
 	std::vector<std::string> getDifference(std::string const &tag, std::string const &nextTag,
-											std::string const &filePath);
+										   std::string const &filePath, std::vector<std::string> prevUnchangedFiles);
 
 	/*/// <summary>
 	/// Mirrors the full Clone functionality of the Git system; it requires
