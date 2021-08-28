@@ -22,7 +22,7 @@ public:
 	/// locally at the location defined by filePath.
 	/// </summary>
 	/// <param name="url"> Url to source to download. </param>
-	/// <param name="filePath"> Local path where to store the source.</param>
+	/// <param name="filePath"> Local path where to store the source. </param>
 	/// <param name="branch"> Branch of the source to download. </param>
 	virtual void download(std::string const &url, std::string const &filePath, std::string const &branch) = 0;
 
@@ -42,8 +42,8 @@ public:
 	/// <summary>
 	/// Switches local project to different version.
 	/// </summary>
-	/// <param name="filePath">The path into which the project was cloned.</param>
-	/// <param name="tag">Name of the version to update to.</param>
+	/// <param name="filePath"> The path into which the project was cloned. </param>
+	/// <param name="tag"> Name of the version to update to. </param>
 	virtual void switchVersion(std::string const &filePath, std::string const &tag) = 0;
 
 	/// <summary>
@@ -78,7 +78,7 @@ public:
 	/// Get the unchanged files that were deleted by last
 	/// difference check between tags.
 	/// </summary>
-	/// <returns>Vector of filepaths.</returns>
+	/// <returns> Vector of filepaths. </returns>
 	virtual std::vector<std::string> getUnchangedFiles() = 0;
 
 protected:

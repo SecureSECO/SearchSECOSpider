@@ -64,8 +64,8 @@ public:
 	/// <summary>
 	/// Checks out locally cloned repo to a given tag.
 	/// </summary>
-	/// <param name="filePath">The path into which the project was cloned.</param>
-	/// <param name="tag">Name of the tag to checkout.</param>
+	/// <param name="filePath"> The path into which the project was cloned. </param>
+	/// <param name="tag"> Name of the tag to checkout. </param>
 	void switchVersion(std::string const &filePath, std::string const &tag) override;
 	
 	/// <summary>
@@ -79,7 +79,7 @@ public:
 	/// Sets the extensions the spider should download.
 	/// Format: .c .cpp .h .cs
 	/// </summary>
-	/// <param name="exts">List of extensions to download.</param>
+	/// <param name="exts"> List of extensions to download. </param>
 	void setParsableExts(std::string const &exts) override;
 
 	/// <summary>
@@ -87,6 +87,6 @@ public:
 	/// difference check between tags. These filenames
 	/// have to be sent to the output later.
 	/// </summary>
-	/// <returns>Vector of filepaths.</returns>
+	/// <returns> Vector of filepaths. </returns>
 	std::vector<std::string> getUnchangedFiles() override;
 };
