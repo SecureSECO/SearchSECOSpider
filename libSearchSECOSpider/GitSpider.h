@@ -21,19 +21,6 @@ class GitSpider : public Spider
 private:
 	Git git;
 
-	/*/// <summary>
-	/// Implements the abstract downloadSource method from the Spider class.
-	/// </summary>
-	/// <param name="url"> Url to repository to download. </param>
-	/// <param name="filePath"> Local path where to store the repository. </param>
-	/// <param name="branch"> Branch of the source to download. </param>
-	/// <param name="tag"> Tag that came before nextTag, used to calculate differences. </param>
-	/// <param name="nextTag"> Tag to download. Pass HEAD to download most recent version. </param>
-	/// <returns> Error code. </returns>
-	int downloadSource(std::string const &url, std::string const &filePath, std::string const &branch,
-						std::string const &tag, std::string const &nextTag) override;*/
-
-
 	/// <summary>
 	/// Run on a single thread, takes files from the queue and blames these sequentially.
 	/// </summary>
@@ -52,12 +39,33 @@ private:
 	AuthorData parseBlameData(std::string const &repoPath);
 
 public:
+	/// <summary>
+	/// Downloads project from a given url locally (clone).
+	/// </summary>
+	/// <param name="url"> Url to repository to download. </param>
+	/// <param name="filePath"> Local path where to store the repository. </param>
+	/// <param name="branch"> Branch of the source to download. </param>
 	void download(std::string const &url, std::string const &filePath, std::string const &branch) override;
 
+	/// <summary>
+	/// Updates repo from one tag to another, keeping track of unchanged files. 
+	/// Tags should be in chronological order. Deletes unchanged files from local repo.
+	/// </summary>
+	/// <param name="filePath"> Local path where repository is stored. </param>
+	/// <param name="prevTag"> Name of current checked out tag. </param>
+	/// <param name="newTag"> Name of tag to update to. </param>
+	/// <param name="prevUnchangedFiles"> Name of previous unchanged files, which were 
+	/// deleted from the repo. </param>
+	/// <returns> Unchanged files between tags. </returns>
 	std::vector<std::string> update(std::string const &filePath, 
 										std::string const &prevTag, std::string const &newTag,
 									std::vector<std::string> prevUnchangedFiles) override;
 
+	/// <summary>
+	/// Checks out locally cloned repo to a given tag.
+	/// </summary>
+	/// <param name="filePath">The path into which the project was cloned.</param>
+	/// <param name="tag">Name of the tag to checkout.</param>
 	void switchVersion(std::string const &filePath, std::string const &tag) override;
 	
 	/// <summary>
@@ -71,6 +79,7 @@ public:
 	/// Sets the extensions the spider should download.
 	/// Format: .c .cpp .h .cs
 	/// </summary>
+	/// <param name="exts">List of extensions to download.</param>
 	void setParsableExts(std::string const &exts) override;
 
 	/// <summary>

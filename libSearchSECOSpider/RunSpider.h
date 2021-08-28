@@ -15,33 +15,56 @@ Utrecht University within the Software Project course.
 class RunSpider
 {
 public:
-	/*/// <summary>
-	/// This is the entry point of the Spider functionality. It is supplied
-	/// a HTTPS link to the Git repository to be spidered and the name of the directory
-	/// into which the extracted files should be downloaded. It returns an exit code.
+
+	/// <summary>
+	/// Sets up specific spider, based on host website of the project and max number of threads.
 	/// </summary>
 	/// <param name="url"> Link to repository to download. </param>
 	/// <param name="filePath"> Local path where to store the repository. </param>
 	/// <param name="threads"> Amount of threads the spider can use. </param>
-	/// <param name="tag"> Tag that came before nextTag, used to calculate differences. </param>
-	/// <param name="nextTag"> Tag to download. Pass HEAD to download most recent version. </param>
-	/// <param name="branch"> Which branchs of the repository to download. </param>
-	/// <returns> Authordata which contains which lines were written by which author. </returns>
-	static std::tuple<AuthorData, std::string, std::vector<std::string>> runSpider(std::string const &url,
-		std::string const &filePath, int threads, std::string const &tag, std::string nextTag,
-		std::string const &branch = "");*/
-
+	/// <returns> Pointer to Spider. </returns>
 	static Spider *setupSpider(std::string const &url, int threads);
 
+	/// <summary>
+	/// Downloads a repository from a given source and stores it
+	/// locally at the location defined by filePath.
+	/// </summary>
+	/// <param name="spider"> Specific spider to use. </param>
+	/// <param name="url"> Url to source to download. </param>
+	/// <param name="filePath"> Local path where to store the source.</param>
+	/// <param name="branch"> Branch of the source to download. </param>
 	static void downloadRepo(Spider *spider, std::string const &url, std::string const &filePath,
 						std::string const &branch = "");
 
+	/// <summary>
+	/// Updates project from one version to another, keeping track of unchanged files.
+	/// Versions should be in chronological order. Deletes unchanged files from local project.
+	/// </summary>
+	/// <param name="spider"> Specific spider to use. </param>
+	/// <param name="filePath"> Local path where project is stored. </param>
+	/// <param name="prevTag"> Name of current version. </param>
+	/// <param name="newTag"> Name of version to update to. </param>
+	/// <param name="prevUnchangedFiles"> Name of previous unchanged files, which were
+	/// deleted from the local project. </param>
+	/// <returns> Unchanged files between versions. </returns>
 	static std::vector<std::string> updateVersion(Spider *spider, std::string const &filePath,
 												  std::string const &prevTag, std::string const &newTag,
 												  std::vector<std::string> prevUnchangedFiles);
 
+	/// <summary>
+	/// Switches local project to different version.
+	/// </summary>
+	/// <param name="spider"> Specific spider to use. </param>
+	/// <param name="tag"> Name of the version to update to. </param>
+	/// <param name="filePath"> Local path where project is stored. </param>
 	static void switchVersion(Spider *spider, std::string const &tag, std::string const &filePath);
 
+	/// <summary>
+	/// Extracts author data from locally stored project.
+	/// </summary>
+	/// <param name="spider"> Specific spider to use. </param>
+	/// <param name="filePath"> Local path where project is stored. </param>
+	/// <returns> AuthorData object containing extracted author data. </returns>
 	static AuthorData getAuthors(Spider *spider, std::string const &filePath);
 
 	/// <summary>

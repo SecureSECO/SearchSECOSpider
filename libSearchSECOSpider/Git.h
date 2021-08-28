@@ -48,15 +48,31 @@ private:
 	/// <summary>
 	/// Returns the command string to check out the tag nextTag.
 	/// </summary>
+	/// <param name="filePath">The path into which the project was cloned.</param>
+	/// <param name="nextTag">Name of the next tag.</param>
 	std::string getCheckoutTagCommand(std::string filePath, std::string nextTag);
 
 public:
 	// Stores which files were unchanged during difference check.
 	std::vector<std::string> unchangedFiles;
 
+	/// <summary>
+	/// Mirrors the full Clone functionality of the Git system; it requires
+	/// a HTTPS link to the Git repository to be cloned, together with the location
+	/// where the repository should be cloned into.
+	/// </summary>
+	/// <param name="url">Url to repository.</param>
+	/// <param name="filePath">Location to store repository locally.</param>
+	/// <param name="branch">Branch of repository to download.</param>
+	/// <param name="exts">Extensions that should be downloaded.</param>
 	void clone(std::string const &url, std::string const &filePath, std::string const &branch,
 				std::string const &exts);
 
+	/// <summary>
+	/// Updates locally cloned repo to a given tag.
+	/// </summary>
+	/// <param name="filePath">The path into which the project was cloned.</param>
+	/// <param name="tag">Name of the tag to checkout.</param>
 	void changeTag(std::string const &filePath, std::string const &tag);
 
 	/// <summary>
@@ -68,21 +84,6 @@ public:
 	/// removed/unchanged files. </returns>
 	std::vector<std::string> getDifference(std::string const &tag, std::string const &nextTag,
 										   std::string const &filePath, std::vector<std::string> prevUnchangedFiles);
-
-	/*/// <summary>
-	/// Mirrors the full Clone functionality of the Git system; it requires
-	/// a HTTPS link to the Git repository to be cloned, together with the location
-	/// where the repository should be cloned into and returns an integer to indicate
-	/// the result of the clone operation (success or specific failure).
-	/// </summary>
-	/// <param name="url"> Url to repository. </param>
-	/// <param name="filePath"> Location to store repository locally. </param>
-	/// <param name="branch"> Branch of repository to download. </param>
-	/// <param name="tag"> Tag that came before nextTag, used to calculate differences. </param>
-	/// <param name="nextTag"> Tag to download. Pass HEAD to download most recent version. </param>
-	/// <returns> Error code. </returns>
-	int clonedepr(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts,
-				std::string const &tag, std::string const &nextTag);*/
 
 	/// <summary>
 	/// Mirrors the Blame functionality of the Git system; it requires the

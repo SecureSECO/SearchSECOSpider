@@ -45,26 +45,6 @@ void Git::clone(std::string const &url, std::string const &filePath, std::string
 	return;
 }
 
-/*int Git::clonedepr(std::string const &url, std::string const &filePath, std::string const &branch, std::string const &exts,
-			   std::string const &tag, std::string const &nextTag)
-{
-	tryClone(url, filePath, branch, exts);
-
-	// Jump to tag.
-	if (tag == nextTag)
-	{
-		ExecuteCommand::exec(this->getCheckoutTagCommand(filePath, nextTag).c_str());
-		Logger::logDebug("Switched to tag: " + nextTag, __FILE__, __LINE__);
-	}
-	// Get differences.
-	else if (nextTag != "HEAD")
-	{
-		unchangedFiles = getDifference(tag, nextTag, filePath);
-	}
-
-	return 0;
-}*/
-
 void Git::tryClone(std::string const &url, std::string const &filePath, std::string const &branch,
 					 std::string const &exts)
 {

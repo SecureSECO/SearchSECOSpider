@@ -16,12 +16,6 @@ Utrecht University within the Software Project course.
 
 #define FILES_PER_CALL 16
 
-/*int GitSpider::downloadSource(std::string const &url, std::string const &filePath, std::string const &branch,
-							  std::string const &tag, std::string const &nextTag)
-{
-	return git.clonedepr(url, filePath, branch, parsableExts, tag, nextTag);
-}*/
-
 void GitSpider::download(std::string const &url, std::string const &filePath, std::string const &branch)
 {
 	return git.clone(url, filePath, branch, parsableExts);
@@ -30,12 +24,12 @@ void GitSpider::download(std::string const &url, std::string const &filePath, st
 std::vector<std::string> GitSpider::update(std::string const &filePath, std::string const &prevTag, 
 														std::string const &newTag, std::vector<std::string> prevUnchangedFiles)
 {
-    return git.getDifference(prevTag, newTag, filePath, prevUnchangedFiles);
+	return git.getDifference(prevTag, newTag, filePath, prevUnchangedFiles);
 }
 
 void GitSpider::switchVersion(std::string const &filePath, std::string const &tag)
 {
-    git.changeTag(tag, filePath);
+	git.changeTag(tag, filePath);
 }
 
 AuthorData GitSpider::downloadAuthor(std::string const &repoPath)
