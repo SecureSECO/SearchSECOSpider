@@ -41,7 +41,7 @@ TEST(SpiderDownload, BlameDataCalls)
 	gitspider.setThreads(1);
 	gitspider.setParsableExts(".c");
 	gitspider.download("test.url", "repo", "master");
-    gitspider.downloadAuthor("repo");
+	gitspider.downloadAuthor("repo");
 
 	// Ensure that a gitblame has been called to all the files.
 	std::string cmd = execMock->calls[2];

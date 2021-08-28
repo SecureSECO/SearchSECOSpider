@@ -15,7 +15,7 @@ Utrecht University within the Software Project course.
 
 TEST(IntegrationTest, BasicParse)
 {
-    Spider *s = RunSpider::setupSpider("https://github.com/SoftwareProj2021/TestRepo", 1);
+	Spider *s = RunSpider::setupSpider("https://github.com/SoftwareProj2021/TestRepo", 1);
 
 	RunSpider::downloadRepo(s, "https://github.com/SoftwareProj2021/TestRepo", "Downloads");
 
@@ -64,9 +64,9 @@ TEST(IntegrationTest, BasicParse)
 
 TEST(IntegrationTest, LineBreaksConversion)
 {
-    Spider *s = RunSpider::setupSpider("https://github.com/SoftwareProj2021/TestRepo", 1);
+	Spider *s = RunSpider::setupSpider("https://github.com/SoftwareProj2021/TestRepo", 1);
 
-    RunSpider::downloadRepo(s, "https://github.com/SoftwareProj2021/TestRepo", "Downloads");
+	RunSpider::downloadRepo(s, "https://github.com/SoftwareProj2021/TestRepo", "Downloads");
 
 	std::string path = "Downloads/LF line breaks.c";
 	std::ifstream fin(path, std::ios::binary);
