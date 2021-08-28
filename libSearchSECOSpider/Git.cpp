@@ -155,7 +155,6 @@ std::vector<std::string> Git::getDifference(std::string const &tag, std::string 
 		{
 			std::filesystem::path file = files.front();
 			files.pop();
-			Logger::logInfo("Checking if file is changed: " + file.string(), __FILE__, __LINE__);
 			if (std::find(changedFiles.begin(), changedFiles.end(), file) == changedFiles.end())
 			{
 				// Remove local path from filepath.
