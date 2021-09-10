@@ -13,23 +13,36 @@ Utrecht University within the Software Project course.
 // External includes.
 #include <iostream>
 #include <regex>
+#include <sstream>
 
-
-std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpider(
-	std::string const &url,
-	std::string const &filePath, 
-	int threads, 
-	std::string const &tag, 
-	std::string nextTag, 
-	std::string const &branch)
+Spider* RunSpider::setupSpider(std::string const &url, int threads)
 {
+	// Check which spider to use for link.
+	Spider* spider = getSpider(url);
+	if (spider == nullptr)
+	{
+		errno = 1;
+		return nullptr;
+	}
+
+	// Set up spider.
+	spider->setThreads(threads);
+	spider->setParsableExts(EXTS);
+
+	return spider;
+}
+
+void RunSpider::downloadRepo(Spider *spider, std::string const &url, std::string const &filePath,
+							 std::string const &branch)
+{
+	errno = 0;
 	loguru::set_thread_name("spider");
 	std::string entryLog = "Downloading project source files";
 	if (!branch.empty())
 	{
 		entryLog += " from the " + branch + " branch";
 	}
-	Logger::logInfo(entryLog, __FILE__, __LINE__);
+	Logger::logDebug(entryLog, __FILE__, __LINE__);
 
 	// Delete the folder at filepath, so that git does not throw an error.
 	Logger::logDebug("Deleting old files from ./" + filePath + "/", __FILE__, __LINE__);
@@ -38,66 +51,83 @@ std::tuple<AuthorData, std::string, std::vector<std::string>> RunSpider::runSpid
 #else
 	ExecuteCommand::exec(("rm -rf " + filePath).c_str());
 #endif
-	
-	// Check which spider to use for link.
-	Spider *spider = getSpider(url);
-	if (spider == nullptr)
-	{
-		errno = 1;
-		return std::make_tuple(AuthorData(), "", std::vector<std::string>());
-	}
 
-	// Set up spider.
-	spider->setThreads(threads);
-	spider->setParsableExts(EXTS);
-
-	// Set nextTag to HEAD if no tag was specified.
-	if (nextTag == "")
-	{
-		nextTag = "HEAD";
-	}
-
-	// Try to download authordata.
-	AuthorData authordata;
+	// Try to clone repository.
 	try
 	{
-		authordata = spider->download(url, filePath, branch, tag, nextTag);
+		spider->download(url, filePath, branch);
 	}
 	catch (int e)
 	{
 		errno = e;
-		return std::make_tuple(AuthorData(), "", std::vector<std::string>());
+		return;
 	}
 
-	// Get additional info from repository.
-	std::string commitHash = getCommitHash(nextTag, filePath);
-	std::vector<std::string> unchangedFiles = spider->getUnchangedFiles();
-
-	// Cleanup spider.
-	delete spider;
-
-	// Prepare output.
-	auto output = std::make_tuple(authordata, commitHash, unchangedFiles);
-
-	Logger::logInfo("Download successful",
-		__FILE__, __LINE__);
-
-	errno = 0;
-	return output;
+	Logger::logDebug("Download successful", __FILE__, __LINE__);
+	return;
 }
 
-bool sortByTimestamp(std::pair<std::string, long long> const &a, std::pair<std::string, long long> const &b)
+std::vector<std::string> RunSpider::updateVersion(Spider *spider, std::string const &filePath, std::string const &prevTag, std::string const &newTag,
+												  std::vector<std::string> prevUnchangedFiles)
 {
-	return a.second < b.second;
+	std::vector<std::string> res;
+
+	// Try to update repository.
+	try
+	{
+		res = spider->update(filePath, prevTag, newTag, prevUnchangedFiles);
+	}
+	catch (int e)
+	{
+		errno = e;
+		res = std::vector<std::string>();
+	}
+	return res;
 }
 
-std::vector<std::pair<std::string, long long>> RunSpider::getTags(std::string const &filePath)
+void RunSpider::switchVersion(Spider *spider, std::string const &tag, std::string const &filePath)
+{
+	// Try to switch repository.
+	try
+	{
+		spider->switchVersion(filePath, tag);
+	}
+	catch (int e)
+	{
+		errno = e;
+	}
+}
+
+AuthorData RunSpider::getAuthors(Spider *spider, std::string const &filePath)
+{
+	AuthorData res;
+
+	// Try to extract authors.
+	try
+	{
+		res = spider->downloadAuthor(filePath);
+	}
+	catch (int e)
+	{
+		errno = e;
+		res = AuthorData();
+	}
+	return res;
+}
+
+bool sortByTimestamp(std::tuple<std::string, long long, std::string> const &a,
+					 std::tuple<std::string, long long, std::string> const &b)
+{
+	return std::get<1>(a) < std::get<1>(b);
+}
+
+std::vector<std::tuple<std::string, long long, std::string>> RunSpider::getTags(std::string const &filePath)
 {
 	// Get all the tags in the repository.
 	std::string command = "cd \"" + filePath + "\" && git tag";
 	std::string tagsStr = ExecuteCommand::execOut(command.c_str());
 
-	std::vector<std::pair<std::string, long long>> tags;
+	std::vector<std::tuple<std::string, long long, std::string>> tags;
 	
 	std::stringstream ss(tagsStr);
 	std::string to;
@@ -108,9 +138,10 @@ std::vector<std::pair<std::string, long long>> RunSpider::getTags(std::string co
 		command = "cd \"" + filePath + "\" && git show -1 -s --format=%ct " + to;
 		std::string timeStampStr = ExecuteCommand::execOut(command.c_str());
 
-		// Add to pair.
-		long long timeStamp = stoll(timeStampStr);
-		tags.push_back(std::make_pair(to, timeStamp));
+		// Git show resolution is 1 second, multiply by 1000 to convert to milliseconds.
+		long long timeStamp = stoll(timeStampStr) * 1000;
+		std::string commitHash = getCommitHash(to, filePath);
+		tags.push_back(std::make_tuple(to, timeStamp, commitHash));
 	}
 
 	// Sort the tags by timestamp.
