@@ -138,10 +138,13 @@ std::vector<std::tuple<std::string, long long, std::string>> RunSpider::getTags(
 		command = "cd \"" + filePath + "\" && git show -1 -s --format=%ct " + to;
 		std::string timeStampStr = ExecuteCommand::execOut(command.c_str());
 
-		// Git show resolution is 1 second, multiply by 1000 to convert to milliseconds.
-		long long timeStamp = stoll(timeStampStr) * 1000;
-		std::string commitHash = getCommitHash(to, filePath);
-		tags.push_back(std::make_tuple(to, timeStamp, commitHash));
+		if (timeStampStr != "")
+		{
+			// Git show resolution is 1 second, multiply by 1000 to convert to milliseconds.
+			long long timeStamp = stoll(timeStampStr) * 1000;
+			std::string commitHash = getCommitHash(to, filePath);
+			tags.push_back(std::make_tuple(to, timeStamp, commitHash));
+		}
 	}
 
 	// Sort the tags by timestamp.
