@@ -9,7 +9,7 @@ jobs:
       - name: Install dependencies
         run: |
              sudo apt-get -qq update
-             apt-get -y -qq dist-upgrade
+             sudo apt-get -y -qq dist-upgrade
              sudo apt-get -y -qq install gcc g++ cmake autoconf git
       - name: Tests
         run: |
@@ -26,7 +26,7 @@ jobs:
       - name: Install dependencies
         run: |
              sudo apt-get -qq update
-             apt-get -y -qq dist-upgrade
+             sudo apt-get -y -qq dist-upgrade
              sudo apt-get -y -qq install gcc g++ cmake autoconf clang clang-tidy clang-format
       - name: Run linting
         run: |
