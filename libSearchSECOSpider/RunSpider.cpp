@@ -100,6 +100,7 @@ void RunSpider::switchVersion(Spider *spider, std::string const &tag, std::strin
 
 AuthorData RunSpider::getAuthors(Spider *spider, std::string const &filePath)
 {
+	errno = 0;
 	AuthorData res;
 
 	// Try to extract authors.

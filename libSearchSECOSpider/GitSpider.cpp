@@ -29,7 +29,7 @@ std::vector<std::string> GitSpider::update(std::string const &filePath, std::str
 
 void GitSpider::switchVersion(std::string const &filePath, std::string const &tag)
 {
-	git.changeTag(tag, filePath);
+	git.changeTag(filePath, tag);
 }
 
 AuthorData GitSpider::downloadAuthor(std::string const &repoPath)

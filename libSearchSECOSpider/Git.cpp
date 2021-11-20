@@ -34,7 +34,7 @@ std::vector<std::string> splitString(std::string const &str, char c)
 
 std::string Git::getCheckoutTagCommand(std::string filePath, std::string nextTag)
 {
-	return "cd \"" + filePath + "\" && git checkout tags/" + nextTag + " --quiet";
+	return "cd \"" + filePath + "\" && git checkout \"" + nextTag + "\" --quiet";
 }
 
 void Git::clone(std::string const &url, std::string const &filePath, std::string const &branch,
