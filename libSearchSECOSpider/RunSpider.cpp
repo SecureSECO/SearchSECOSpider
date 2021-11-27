@@ -98,6 +98,20 @@ void RunSpider::switchVersion(Spider *spider, std::string const &tag, std::strin
 	}
 }
 
+void RunSpider::trimFiles(Spider *spider, std::map<std::string, std::vector<int>> const lines, std::string const &filePath)
+{
+	// Try to switch repository.
+	try
+	{
+		spider->trimFiles(filePath, lines);
+	}
+	catch (int e)
+	{
+		errno = e;
+	}
+}
+
+
 AuthorData RunSpider::getAuthors(Spider *spider, std::string const &filePath)
 {
 	errno = 0;

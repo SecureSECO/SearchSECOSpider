@@ -46,6 +46,8 @@ public:
 	/// <param name="tag"> Name of the version to update to. </param>
 	virtual void switchVersion(std::string const &filePath, std::string const &tag) = 0;
 
+	virtual void trimFiles(std::string const &filePath, std::map<std::string, std::vector<int>> const lines) = 0;
+
 	/// <summary>
 	/// downloadAuthor gets the author data for each file using git blame.
 	/// Required is that this is the same path as is supplied

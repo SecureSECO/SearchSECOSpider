@@ -32,6 +32,29 @@ void GitSpider::switchVersion(std::string const &filePath, std::string const &ta
 	git.changeTag(filePath, tag);
 }
 
+void GitSpider::trimFiles(std::string const &filePath, std::map<std::string, std::vector<int>> const lines)
+{
+	// Get all files in repository.
+	auto pred = [filePath](std::filesystem::directory_entry path) {
+		std::string str = path.path().string();
+		return !(str.rfind(filePath + "\\.git", 0) == 0 || str.rfind(filePath + "/.git", 0) == 0) &&
+			   Filesystem::isRegularFile(str);
+	};
+	auto files = Filesystem::getFilepaths(filePath, pred);
+
+	// Delete all unneeded files.
+	while (!files.empty())
+	{
+		std::filesystem::path file = files.front();
+		files.pop();
+		if (lines.count(file.string()) == 0)
+		{
+			// Delete file locally.
+			Filesystem::remove(file.string());
+		}
+	}
+}
+
 AuthorData GitSpider::downloadAuthor(std::string const &repoPath)
 {
 	std::vector<std::thread> threads;

@@ -59,6 +59,8 @@ public:
 	/// <param name="filePath"> Local path where project is stored. </param>
 	static void switchVersion(Spider *spider, std::string const &tag, std::string const &filePath);
 
+	static void trimFiles(Spider *spider, std::map<std::string, std::vector<int>> const lines, std::string const &filePath);
+
 	/// <summary>
 	/// Extracts author data from locally stored project.
 	/// </summary>
