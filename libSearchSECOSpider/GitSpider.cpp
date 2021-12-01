@@ -47,7 +47,9 @@ void GitSpider::trimFiles(std::string const &filePath, std::map<std::string, std
 	{
 		std::filesystem::path file = files.front();
 		files.pop();
-		if (lines.count(file.string()) == 0)
+		std::string fileString = file.string().substr(filePath.length() + 1);
+		std::replace(fileString.begin(), fileString.end(), '\\', '/');
+		if (lines.count(fileString) == 0)
 		{
 			// Delete file locally.
 			Filesystem::remove(file.string());

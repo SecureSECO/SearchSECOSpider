@@ -59,6 +59,12 @@ public:
 	/// <param name="filePath"> Local path where project is stored. </param>
 	static void switchVersion(Spider *spider, std::string const &tag, std::string const &filePath);
 
+	/// <summary>
+	/// Trims the local files to only keep the specified ones.
+	/// </summary>
+	/// <param name="spider"> Specific spider to use. </param>
+	/// <param name="lines"> The files to keep. </param>
+	/// <param name="filePath"> Local path where project is stored. </param>
 	static void trimFiles(Spider *spider, std::map<std::string, std::vector<int>> const lines, std::string const &filePath);
 
 	/// <summary>
