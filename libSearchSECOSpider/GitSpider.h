@@ -67,6 +67,13 @@ public:
 	/// <param name="filePath"> The path into which the project was cloned. </param>
 	/// <param name="tag"> Name of the tag to checkout. </param>
 	void switchVersion(std::string const &filePath, std::string const &tag) override;
+
+	/// <summary>
+	/// Trims the local files to only keep the specified ones.
+	/// </summary>
+	/// <param name="filePath"> The path into which the project was cloned. </param>
+	/// <param name="lines"> The files to keep. </param>
+	void trimFiles(std::string const &filePath, std::map<std::string, std::vector<int>> const lines);
 	
 	/// <summary>
 	/// Implements the abstract downloadAuthor method from the Spider class.

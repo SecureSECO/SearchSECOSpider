@@ -138,7 +138,9 @@ std::vector<std::string> Git::getDifference(std::string const &tag, std::string 
 			if (std::find(changedFiles.begin(), changedFiles.end(), file) == changedFiles.end())
 			{
 				// Remove local path from filepath.
-				removedFiles.push_back(file.string().substr(filePath.length() + 1));
+				std::string fileString = file.string().substr(filePath.length() + 1);
+				std::replace(fileString.begin(), fileString.end(), '\\', '/');
+				removedFiles.push_back(fileString);
 
 				// Delete file locally.
 				Filesystem::remove(file.string());
