@@ -105,7 +105,7 @@ std::vector<std::string> Git::getDifference(std::string const &tag, std::string 
 	std::vector<std::filesystem::path> changedFiles = std::vector<std::filesystem::path>();
 	if (tag != "")
 	{
-		std::string command = "cd \"" + filePath + "\" && git diff --name-status " + tag + " " + nextTag;
+		std::string command = "cd \"" + filePath + "\" && git diff -l 32767 --name-status " + tag + " " + nextTag;
 		std::string changed = ExecuteCommand::execOut(command.c_str());
 		changedFiles = getFilepaths(changed, filePath);
 	}
