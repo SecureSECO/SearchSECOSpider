@@ -83,6 +83,22 @@ public:
 	static std::vector<std::tuple<std::string, long long, std::string>> getTags(std::string const &filePath);
 
 	/// <summary>
+	/// Gets the commits related to vulnearbilities.
+	/// </summary>
+	/// <param name="filePath"> Location of repository. </param>
+	/// <returns> The commits fixing a vulnerability with their code and lines. </returns>
+	static std::vector<std::tuple<std::string, std::string, std::map<std::string, std::vector<int>>>>
+	getVulns(std::string const &filePath);
+
+	/// <summary>
+	/// Get the time of a version.
+	/// </summary>
+	/// <param name="version"> The version to get the time for. </param>
+	/// <param name="filePath"> Location of the repository. </param>
+	/// <returns> The time of the version. </returns>
+	static std::string getVersionTime(std::string version, std::string const &filePath);
+
+	/// <summary>
 	/// Returns commit hash of a tag or HEAD.
 	/// </summary>
 	/// <param name="tag">Tag or HEAD.</param>
