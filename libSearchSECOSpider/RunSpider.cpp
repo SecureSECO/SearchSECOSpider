@@ -202,7 +202,7 @@ RunSpider::getVulns(std::string const &filePath)
 		}
 		else if (to.starts_with("Parent: "))
 		{
-			currParent = to.substr(8);
+			currParent = to.substr(8, to.find(' ', 8) - 8);
 		}
 		else if (to.starts_with("Title: ") || to.starts_with("Message: "))
 		{
