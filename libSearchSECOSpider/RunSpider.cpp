@@ -198,6 +198,7 @@ RunSpider::getVulns(std::string const &filePath)
 					currLines));
 			}
 			currMessage = "";
+			currLines = std::map<std::string, std::vector<int>>();
 			message = true;
 		}
 		else if (to.starts_with("Parent: "))
