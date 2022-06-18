@@ -219,7 +219,6 @@ RunSpider::getVulns(std::string const &filePath)
 		}
 		else if (to.starts_with("@@"))
 		{
-			Logger::logDebug(to, __FILE__, __LINE__);
 			std::string line = to.substr(4, to.find(' ', 4) - 4);
 			if (line.find(',') != std::string::npos)
 			{

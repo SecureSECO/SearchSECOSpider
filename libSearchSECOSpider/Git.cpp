@@ -77,7 +77,7 @@ void Git::tryClone(std::string const &url, std::string const &filePath, std::str
 
 void Git::changeTag(std::string const &filePath, std::string const &tag)
 {
-	ExecuteCommand::exec(this->getCheckoutTagCommand(filePath, tag).c_str());
+	ExecuteCommand::exec(("cd \"" + filePath + "\" && git checkout \"" + tag + "\" --quiet -f && git clean -f").c_str());
 	Logger::logDebug("Switched to tag: " + tag, __FILE__, __LINE__);
 }
 
