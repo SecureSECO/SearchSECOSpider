@@ -34,7 +34,7 @@ std::vector<std::string> splitString(std::string const &str, char c)
 
 std::string Git::getCheckoutTagCommand(std::string filePath, std::string nextTag)
 {
-	return "cd \"" + filePath + "\" && git checkout tags/" + nextTag + " --quiet";
+	return "cd \"" + filePath + "\" && git checkout \"" + nextTag + "\" --quiet";
 }
 
 void Git::clone(std::string const &url, std::string const &filePath, std::string const &branch,
@@ -77,7 +77,7 @@ void Git::tryClone(std::string const &url, std::string const &filePath, std::str
 
 void Git::changeTag(std::string const &filePath, std::string const &tag)
 {
-	ExecuteCommand::exec(this->getCheckoutTagCommand(filePath, tag).c_str());
+	ExecuteCommand::exec(("cd \"" + filePath + "\" && git checkout \"" + tag + "\" --quiet -f && git clean -f").c_str());
 	Logger::logDebug("Switched to tag: " + tag, __FILE__, __LINE__);
 }
 
@@ -105,7 +105,7 @@ std::vector<std::string> Git::getDifference(std::string const &tag, std::string 
 	std::vector<std::filesystem::path> changedFiles = std::vector<std::filesystem::path>();
 	if (tag != "")
 	{
-		std::string command = "cd \"" + filePath + "\" && git diff --name-status " + tag + " " + nextTag;
+		std::string command = "cd \"" + filePath + "\" && git diff -l 32767 --name-status " + tag + " " + nextTag;
 		std::string changed = ExecuteCommand::execOut(command.c_str());
 		changedFiles = getFilepaths(changed, filePath);
 	}
@@ -138,7 +138,9 @@ std::vector<std::string> Git::getDifference(std::string const &tag, std::string 
 			if (std::find(changedFiles.begin(), changedFiles.end(), file) == changedFiles.end())
 			{
 				// Remove local path from filepath.
-				removedFiles.push_back(file.string().substr(filePath.length() + 1));
+				std::string fileString = file.string().substr(filePath.length() + 1);
+				std::replace(fileString.begin(), fileString.end(), '\\', '/');
+				removedFiles.push_back(fileString);
 
 				// Delete file locally.
 				Filesystem::remove(file.string());

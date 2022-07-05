@@ -98,8 +98,23 @@ void RunSpider::switchVersion(Spider *spider, std::string const &tag, std::strin
 	}
 }
 
+void RunSpider::trimFiles(Spider *spider, std::map<std::string, std::vector<int>> const lines, std::string const &filePath)
+{
+	// Try to switch repository.
+	try
+	{
+		spider->trimFiles(filePath, lines);
+	}
+	catch (int e)
+	{
+		errno = e;
+	}
+}
+
+
 AuthorData RunSpider::getAuthors(Spider *spider, std::string const &filePath)
 {
+	errno = 0;
 	AuthorData res;
 
 	// Try to extract authors.
@@ -138,16 +153,114 @@ std::vector<std::tuple<std::string, long long, std::string>> RunSpider::getTags(
 		command = "cd \"" + filePath + "\" && git show -1 -s --format=%ct " + to;
 		std::string timeStampStr = ExecuteCommand::execOut(command.c_str());
 
-		// Git show resolution is 1 second, multiply by 1000 to convert to milliseconds.
-		long long timeStamp = stoll(timeStampStr) * 1000;
-		std::string commitHash = getCommitHash(to, filePath);
-		tags.push_back(std::make_tuple(to, timeStamp, commitHash));
+		if (timeStampStr != "")
+		{
+			// Git show resolution is 1 second, multiply by 1000 to convert to milliseconds.
+			long long timeStamp = stoll(timeStampStr) * 1000;
+			std::string commitHash = getCommitHash(to, filePath);
+			tags.push_back(std::make_tuple(to, timeStamp, commitHash));
+		}
 	}
 
 	// Sort the tags by timestamp.
 	std::sort(tags.begin(), tags.end(), sortByTimestamp);
 
 	return tags;
+}
+
+std::vector<std::tuple<std::string, std::string, std::map<std::string, std::vector<int>>>>
+RunSpider::getVulns(std::string const &filePath)
+{
+	// Get all the tags in the repository.
+	std::string command = "cd \"" + filePath + "\" && git --no-pager log --all -p --unified=0 --no-prefix --pretty=format:\"START%nParent: %P%nTitle: %s%nMessage: %b%nEND%n\" --grep=\"CVE-20\"";
+	std::string vulnsStr = ExecuteCommand::execOut(command.c_str());	
+
+	std::vector<std::tuple<std::string, std::string, std::map<std::string, std::vector<int>>>> vulns;
+
+	std::stringstream ss(vulnsStr);
+	std::string to;
+
+	std::string currParent;
+	std::string currMessage;
+	std::string currFile;
+	bool message = false;
+	std::map<std::string, std::vector<int>> currLines;
+	// Get UNIX timestamp for each tag.
+	while (std::getline(ss, to, '\n'))
+	{
+		if (to.starts_with("START"))
+		{
+			if (currMessage != "" && !std::regex_search(currMessage, std::regex("[Mm]erge|[Rr]evert|[Uu]pgrade")))
+			{
+				int codePos = currMessage.find("CVE-");
+				vulns.push_back(std::make_tuple(
+					currParent, currMessage.substr(codePos, currMessage.find_first_not_of("1234567890-", codePos+4) - codePos),
+					currLines));
+			}
+			currMessage = "";
+			currLines = std::map<std::string, std::vector<int>>();
+			message = true;
+		}
+		else if (to.starts_with("Parent: "))
+		{
+			currParent = to.substr(8, to.find(' ', 8) - 8);
+		}
+		else if (to.starts_with("Title: ") || to.starts_with("Message: "))
+		{
+			currMessage += to.substr(to.find(' ')) + "\n";
+		}
+		else if (to.starts_with("diff"))
+		{
+			currFile = to.substr(11, to.find(' ', 11) - 11);
+			currLines[currFile] = std::vector<int>();
+		}
+		else if (to.starts_with("END"))
+		{
+			message = false;
+		}
+		else if (to.starts_with("@@"))
+		{
+			std::string line = to.substr(4, to.find(' ', 4) - 4);
+			if (line.find(',') != std::string::npos)
+			{
+				int start = std::stoi(line.substr(0, line.find(',')));
+				int length = std::stoi(line.substr(line.find(',') + 1));
+				for (int i = 0; i < length; i++)
+				{
+					currLines[currFile].push_back(start + i);
+				}
+			}
+			else
+			{
+				currLines[currFile].push_back(std::stoi(line));
+			}			
+		}
+		else if (message)
+		{
+			currMessage += to + "\n";
+		}
+	}
+
+	if (currMessage != "" && !std::regex_search(currMessage, std::regex("[Mm]erge|[Rr]evert|[Uu]pgrade")))
+	{
+		int codePos = currMessage.find("CVE");
+		vulns.push_back(std::make_tuple(
+			currParent,
+			currMessage.substr(codePos, currMessage.find_first_not_of("1234567890-", codePos + 4) - codePos),
+			currLines));
+	}
+
+	return vulns;
+}
+
+std::string RunSpider::getVersionTime(std::string version, std::string const &filePath)
+{
+	// Get all the tags in the repository.
+	std::string command = "cd \"" + filePath +
+						  "\" && git show -s --format=%ct " + version;
+	std::string timeStr = ExecuteCommand::execOut(command.c_str());
+
+	return timeStr.substr(0, timeStr.find('\n')) + "000";
 }
 
 std::string RunSpider::getCommitHash(std::string const &tag, std::string const &filePath)

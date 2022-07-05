@@ -61,38 +61,3 @@ TEST(IntegrationTest, BasicParse)
 		EXPECT_EQ(commitData[0].commit->committerMail, "<noreply@github.com>");
 	}
 }
-
-TEST(IntegrationTest, LineBreaksConversion)
-{
-	Spider *s = RunSpider::setupSpider("https://github.com/SoftwareProj2021/TestRepo", 1);
-
-	RunSpider::downloadRepo(s, "https://github.com/SoftwareProj2021/TestRepo", "Downloads");
-
-	std::string path = "Downloads/LF line breaks.c";
-	std::ifstream fin(path, std::ios::binary);
-	std::string content((std::istreambuf_iterator<char>(fin)),
-		(std::istreambuf_iterator<char>()));
-	std::string correctLineBreak = "\r\n";
-	std::string incorrectLineBreak = "\n";
-
-	if (content.find(correctLineBreak) != std::string::npos)
-	{
-		std::string::size_type i = content.find(correctLineBreak);
-		//From https://stackoverflow.com/questions/32435003/how-to-remove-all-substrings-from-a-string/32435148.
-		while (i != std::string::npos) 
-		{
-			content.erase(i, correctLineBreak.length());
-			i = content.find(correctLineBreak, i);
-		}
-		if (content.find(incorrectLineBreak) != std::string::npos)
-		{
-			EXPECT_TRUE(false);
-		}
-	}
-	else
-	{
-		EXPECT_TRUE(false);
-	}
-
-	EXPECT_TRUE(true);
-}

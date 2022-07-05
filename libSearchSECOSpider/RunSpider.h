@@ -60,6 +60,14 @@ public:
 	static void switchVersion(Spider *spider, std::string const &tag, std::string const &filePath);
 
 	/// <summary>
+	/// Trims the local files to only keep the specified ones.
+	/// </summary>
+	/// <param name="spider"> Specific spider to use. </param>
+	/// <param name="lines"> The files to keep. </param>
+	/// <param name="filePath"> Local path where project is stored. </param>
+	static void trimFiles(Spider *spider, std::map<std::string, std::vector<int>> const lines, std::string const &filePath);
+
+	/// <summary>
 	/// Extracts author data from locally stored project.
 	/// </summary>
 	/// <param name="spider"> Specific spider to use. </param>
@@ -73,6 +81,22 @@ public:
 	/// <param name="filePath"> Location of repository. </param>
 	/// <returns> List of tags and their UNIX timestamp. Sorted from newest to oldest. </returns>
 	static std::vector<std::tuple<std::string, long long, std::string>> getTags(std::string const &filePath);
+
+	/// <summary>
+	/// Gets the commits related to vulnearbilities.
+	/// </summary>
+	/// <param name="filePath"> Location of repository. </param>
+	/// <returns> The commits fixing a vulnerability with their code and lines. </returns>
+	static std::vector<std::tuple<std::string, std::string, std::map<std::string, std::vector<int>>>>
+	getVulns(std::string const &filePath);
+
+	/// <summary>
+	/// Get the time of a version.
+	/// </summary>
+	/// <param name="version"> The version to get the time for. </param>
+	/// <param name="filePath"> Location of the repository. </param>
+	/// <returns> The time of the version. </returns>
+	static std::string getVersionTime(std::string version, std::string const &filePath);
 
 	/// <summary>
 	/// Returns commit hash of a tag or HEAD.

@@ -1,4 +1,5 @@
 # SearchSECOSpider
+![Testing](https://github.com/SecureSECO/SearchSECOSpider/actions/workflows/testing.yml/badge.svg)
 
 This is the Spider of the SearchSECO project. The Spider is responsible for retrieving data (source files and author data) from (Git-based) sources on the internet and communicating this data to the Controller component of the system. The spider needs a stable internet connection to the source in question to be able to clone projects, to then process these locally.
 
