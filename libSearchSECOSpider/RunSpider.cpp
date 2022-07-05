@@ -192,7 +192,7 @@ RunSpider::getVulns(std::string const &filePath)
 		{
 			if (currMessage != "" && !std::regex_search(currMessage, std::regex("[Mm]erge|[Rr]evert|[Uu]pgrade")))
 			{
-				int codePos = currMessage.find("CVE");
+				int codePos = currMessage.find("CVE-");
 				vulns.push_back(std::make_tuple(
 					currParent, currMessage.substr(codePos, currMessage.find_first_not_of("1234567890-", codePos+4) - codePos),
 					currLines));
