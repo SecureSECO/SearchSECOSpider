@@ -7,7 +7,7 @@ This is the Spider of the SearchSECO project. The Spider is responsible for retr
 
 Download the .zip containing the source files and extract the files.
 # Dependencies
-* c++17, we use std::filesystem.
+* c++20
 * Windows 10. Might also work on other systems, but has not been tested.
 # Building
 
