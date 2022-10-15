@@ -157,6 +157,7 @@ std::string Git::getCloneCommand(std::string const &url, std::string const &file
 	std::string command = "git clone " + url + " \"" + filePath + "\" --no-checkout --quiet";
 	command.append(" && cd \"" + filePath + "\" && git sparse-checkout set ");
 	command.append(exts);
+	command.append(" --no-cone "); // https://github.com/SecureSECO/SearchSECOSpider/issues/17
 #ifdef __linux__
 	command.append(" > /dev/null 2>&1");
 #else
